@@ -1,0 +1,151 @@
+\name{rpygeo.geoprocessor}
+\alias{rpygeo.geoprocessor}
+\title{ArcGIS Geoprocessor Workhorse}
+\description{This function creates a Python geoprocessing script
+file and runs it from the operating system using the ArcGIS
+Geoprocessor.}
+\usage{
+rpygeo.geoprocessor(fun, args = NULL, py.file = "rpygeo.py", 
+    msg.file = "rpygeo.msg", env = rpygeo.env, extensions = NULL, 
+    working.directory = getwd(), quote.args = TRUE, add.gp = TRUE, 
+    wait = TRUE, clean.up = wait, detect.required.extensions = TRUE)
+}
+\arguments{
+  \item{fun}{This can be either a complete Python geoprocessing 
+      command (see examples), a single geoprocessing function 
+      name, or a vector of function or Python expressions to be
+      evaluated by the Python geoprocessor.}
+  \item{args}{Vector or list of arguments to be passed to the 
+      function listed in \code{fun}. The argument \code{quote.args}
+      determines whether these arguments will be decorated with 
+      quotation marks.}
+  \item{py.file}{Name of the temporary Python script file
+      (in the \code{working.directory}).}
+  \item{msg.file}{Name of the temporary file in which to dump 
+      Python/ArcGIS error messages (in the \code{working.directory}).}
+  \item{env}{A list defining the RPyGeo working environment.
+      Defaults to the standard working environment \code{rpygeo.env},
+      which is created at start-up.
+      See \code{\link{rpygeo.build.env}} for details.}
+  \item{extensions}{Optional character vector listing ArcGIS
+      extension that should be enabled before using the geoprocessing
+      \code{fun}ction. This adds to any extensions that are listed
+      in the \code{env}ironment or eventually detected by
+      \code{rpygeo.required.extensions}.}
+  \item{working.directory}{The working directory for temporary 
+      files (i.e. the Python script and error message files);
+      defaults to R's current working directory.}
+  \item{quote.args}{Logical value (default: \code{TRUE}) or logical 
+      vector that determines whether quotation marks have to be 
+      added to the \code{args} arguments before passing them to 
+      Python. If this is a vector, it must have the same length as 
+      \code{args}. See Details.}
+  \item{add.gp}{Logical (default: \code{TRUE}). See Details.}
+  \item{wait}{Logical (default: \code{TRUE}). Experimental(!) 
+      option. If \code{FALSE} (NOT recommended), do not wait for 
+      the operating system / ArcGIS to finish the Python 
+      geoprocessing script.}
+  \item{clean.up}{Logical (default \code{TRUE}) or character vector
+         (\code{"msg"}, \code{"py"}, or \code{c("msg","py")}).
+         Determines whether the error message file, the Python 
+         script file, or both (default) should be deleted after 
+         geoprocessing is finished. Ignored if \code{wait} 
+         is \code{FALSE}.}
+  \item{detect.required.extensions}{Logical (default: \code{TRUE}). 
+      Determines whether \code{rpygeo.required.extensions} should 
+      try to find out which ArcGIS extensions are required 
+      to evaluate the \code{fun}ction(s).}
+}
+\details{This function is the R geoprocessing workhorse that creates a
+    Python geoprocessing script, runs it, and returns any error messages.
+
+    If \code{fun} is a ready-to-use Python expression such as
+    \code{}, then \code{add.gp} only determines whether the \code{"gp."}
+    has to be added as a prefix to access the Python geoprocessor or not.
+    
+    In most cases however, \code{fun} will be a single ArcGIS geoprocessing
+    script function such as \code{"Slope_sa"}, where \code{"_sa"}
+    tells us that this function can be found in the Spatial Analyst extension
+    of ArcGIS (\code{rpygeo.required.extensions} will check this for you
+    if the \code{detected...} argument is \code{TRUE})
+    Now \code{args} will be a vector or list of arguments to \code{Slope_sa},
+    e.g. \code{c("dem","slope")} or \code{list("dem","slope","PERCENT_RISE",2)}
+    (see ArcGIS help files for information on the arguments of \code{Slope_sa}).
+    These will result in Python expressions
+    \code{gp.Slope_sa("dem", "slope")} and \code{gp.Slope_sa("dem", "slope", "PERCENT_RISE", 2)}
+    if \code{add.gp==TRUE} and if we use the \code{quote.args} arguments
+    \code{TRUE} and \code{c(T,T,T,F)}, respectively.
+    
+    Dataset names will always be relative to the path or geodatabase
+    defined in the geoprocessing environment settings \code{env$workspace}.
+    Also, ArcGIS will be allowed to overwrite any existing output files
+    (\code{env$overwriteoutput==1}) or not (\code{==0}).
+    See \code{\link{rpygeo.build.env}} for details.
+    }
+\value{The function returns \code{NULL} if is was successful,
+   or otherwise a character vector with the ArcGIS error message.
+   In addition, the ArcGIS function will generate the output described in
+   the ArcGIS help files etc.
+   Depending on the \code{clean.up} argument, the Python code may
+   still be available in the \code{py.file}, and error messages in
+   \code{msg.file}.
+}
+% \references{ ~put references to the literature/web site here ~ }
+\author{Alexander Brenning}
+\note{The Python script created by this geoprocessor
+    is loaded with initialization code for setting up
+    the ArcGIS workspace and enabling ArcGIS extensions.
+    This makes this function pretty inefficient, but you save
+    a lot of time because you don't have to switch between three
+    applications and two programming languages...
+    
+    ArcGIS is pretty flexible with respect to numeric arguments such
+    as the z factor in \code{Slope_sa} being passed as character string.
+    As a consequence, \code{quote.args=TRUE} will normally work fine.
+    
+    \code{wait==FALSE} is experimental and not recommended. Watch for
+    file name conflicts if you really want to try it - competing 
+    geoprocessing scripts must use different temporary
+    Python script files etc.}
+\seealso{\code{\link{rpygeo.build.env}}}
+\examples{
+# Allow ArcGIS to overwrite existing datasets:
+\dontrun{rpygeo.env$overwriteoutput = 1}
+# Calculate the slope of a DEM raster dataset
+# in the current ArcGIS workspace:
+\dontrun{rpygeo.geoprocessor("Slope_sa",c("dem","slope"))}
+# Same:
+\dontrun{rpygeo.geoprocessor("Slope_sa('dem','slope')")}
+# Same, using the more convenient wrapper:
+\dontrun{rpygeo.Slope.sa("dem","slope")}
+
+# Three at a time or separately:
+\dontrun{date()}
+\dontrun{rpygeo.geoprocessor("Slope_sa('dem','slope')",
+  "Aspect_sa('dem','aspect')", "Hillshade_sa('dem','hshd')")}
+\dontrun{date()} # ~20 sec on my computer
+\dontrun{rpygeo.Slope.sa("dem","slope")}
+\dontrun{rpygeo.Aspect.sa("dem","aspect")}
+\dontrun{rpygeo.Hillshade.sa("dem","hshd")}
+\dontrun{date()} # ~50 sec
+\dontrun{rpygeo.Delete.management("slope")}
+\dontrun{rpygeo.Delete.management("aspect")}
+\dontrun{rpygeo.Delete.management("hshd")}
+
+# Calculate the Euclidian distance from railway lines
+# up to a max. distance of 1000 map units:
+\dontrun{rpygeo.geoprocessor("EucDistance_sa",
+    args=list("rail.shp","raildist",1000))}
+# Same:
+\dontrun{rpygeo.EucDistance.sa("rail.shp","raildist",maxdist=1000)}
+
+# Use MapAlgebra to calculate a distance-decay function:
+\dontrun{rpygeo.geoprocessor("SingleOutputMapAlgebra_sa",
+    args=c("exp( raildist / -100 )","distdecay"))}
+
+# Or why not in just one step if you like MapAlgebra:
+\dontrun{rpygeo.geoprocessor( "SingleOutputMapAlgebra_sa",
+    args=c("exp( EucDistance( rail.shp, \#, \#, 1000 ) / -100 )","distdecay") )}
+}
+\keyword{interface}
+\keyword{database}

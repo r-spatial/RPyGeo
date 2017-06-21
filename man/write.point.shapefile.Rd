@@ -1,0 +1,36 @@
+\name{RPyGeo Helper Functions}
+\alias{write.point.shapefile}
+\alias{write.temp.point.shapefile}
+\alias{rpygeo.extent.to.character}
+\title{Helper functions for RPyGeo}
+\description{Helper functions.}
+\usage{
+write.point.shapefile(d, file, x.field = "x", y.field = "y", 
+    id.field = NULL)
+write.temp.point.shapefile(d, pattern = "file", tmpdir = tempdir(), ...)
+rpygeo.extent.to.character(x)
+}
+\arguments{
+  \item{d}{\code{data.frame} representing point data}
+  \item{file}{name of shapefile (WITHOUT file extension)}
+  \item{x.field, y.field}{names of attributes with x and y
+        coordinates in \code{d} }
+  \item{id.field}{(optional) name of attribute that serves as
+        unique identifier; will use values \code{1:nrow(d)} if
+        not specified}
+  \item{pattern}{initial part of temporary shapefile name}
+  \item{tmpdir}{folder where temporary shapefiles should be stored}
+  \item{x}{list with components \code{x} and \code{y}, each
+    a vector of length 2, specifying lower and upper x/y limits.}
+  \item{\dots}{additional arguments for \code{write.point.shapefile}}
+}
+% \details{}
+% \value{}
+%\references{ ~put references to the literature/web site here ~ }
+\author{Alexander Brenning}
+%\note{}
+\seealso{\code{\link{rpygeo.geoprocessor}}, \code{\link{rpygeo.build.env}},
+    \code{write.shapefile}}
+%\examples{}
+\keyword{interface}
+\keyword{database}

@@ -1,0 +1,63 @@
+\name{rpygeo.build.env}
+\alias{rpygeo.build.env}
+\alias{rpygeo.env}
+\title{RPyGeo Geoprocessing Environments}
+\description{Set up a geoprocessing environment for ArcGIS/Python scripting}
+\usage{
+rpygeo.build.env(modules = "arcgisscripting",
+    init = "gp = arcgisscripting.create()",
+    workspace = NULL, cellsize = NULL, extent = NULL,
+    mask = NULL, snapraster = NULL,
+    overwriteoutput = 0, extensions = NULL,
+    python.path = "C:\\\\software\\\\Python24",
+    python.command = "python.exe")
+rpygeo.env
+}
+\arguments{
+  \item{modules}{(Do not modify!)
+      Name of Python module for ArcGIS geoprocessing.}
+  \item{init}{(Do not modify!)
+      Python code for initializing the Python geoprocessor.}
+  \item{workspace}{Path of ArcGIS workspace (or name of geodatabase)
+      in which to perform the geoprocessing.}
+  \item{cellsize}{Default cellsize (default: maximum(?) of
+      inputs - see ArcGIS documentation).}
+  \item{extent, mask, snapraster}{Optional datasets or character strings defining the
+      analysis extent and mask and what to snap to - see ArcGIS documentation.}
+  \item{overwriteoutput}{Overwrite existing ArcGIS datasets (\code{=1})
+      or not (\code{=0} - default)?}
+  \item{extensions}{Names of extensions to be used in geoprocessing;
+      it is usually not necessary to specify this here.
+      Possible values: \code{"Spatial","3d","geostats","network",
+      "datainteroperability"}.}
+  \item{python.path}{Where to find the Python interpreter
+      (depends on Python version).}
+  \item{python.command}{Name of the Python command line interpreter
+      executable.}
+}
+\details{
+See ArcGIS documentation.
+This geoprocessing environment reflects only a small fraction of the
+ArcGIS environment settings. Future releases of this package may include
+more than the properties listed above.
+}
+\value{A list whose components are exactly the arguments passed to
+the \code{rpygeo.build.env} function.}
+%\references{ ~put references to the literature/web site here ~ }
+\author{Alexander Brenning}
+%\note{}
+\seealso{\code{\link{rpygeo.geoprocessor}}}
+\examples{
+# Everything in this workspace will be masked with DEM extent
+# and have a cellsize of 100m:
+\dontrun{env.lo <- rpygeo.build.env( mask="clip", cellsize=100 )}
+# and this is for high-resolution output:
+\dontrun{env.hi <- rpygeo.build.env( mask="clip", cellsize=1 )}
+
+# Slope from different DEMs at different target resolutions
+# (which may be different from the original DEM resolution):
+\dontrun{rpygeo.Slope.sa("srtm-dem","slope-lo",env=env.lo)}
+\dontrun{rpygeo.Slope.sa("laser-dem","slope-hi",env=env.hi)}
+}
+\keyword{ interface }
+\keyword{ database }
