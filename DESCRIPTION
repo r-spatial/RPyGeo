@@ -1,11 +1,15 @@
 Package: RPyGeo
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
-Encoding: UTF-8
-LazyData: true
+Title: ArcGIS Geoprocessing in R via Python
+Version: 0.9-3
+Date: 2011-09-07
+Author: Alexander Brenning
+Maintainer: Alexander Brenning <brenning@uwaterloo.ca>
+Description: Provide access to (virtually any) ArcGIS Geoprocessing
+        tool from within R by running Python geoprocessing scripts
+        without writing Python code or touching ArcGIS.
+        Requires ArcGIS >=9.2, a suitable version of Python
+        (for ArcGIS 9.2: Python 2.4; for ArcGIS 10.0: 2.6), and Windows.
+License: GPL
+Depends: shapefiles, RSAGA
+SystemRequirements: Windows, Python (>= 2.4.0), ArcGIS (>= 9.2)
