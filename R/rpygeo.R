@@ -22,13 +22,13 @@
 #   that aggregates several calls using the same geoprocessing
 #   environment!
 
-# library(RSAGA)
+library(RSAGA)
 # RPyGeo uses default.file.extension, match.arg.ext, get.file.extension
 # functions from RSAGA package.
 
-##############################################
-# Helper functions
-##############################################
+#*********************************************
+# Helper functions --------------------------
+#*********************************************
 
 rpygeo.extent.to.character = function(x) {
     if (is.null(x)) return(x)
@@ -41,13 +41,13 @@ rpygeo.extent.to.character = function(x) {
 
 
 #' RPyGeo Geoprocessing Environments
-#' 
+#'
 #' Set up a geoprocessing environment for ArcGIS/Python scripting
-#' 
+#'
 #' See ArcGIS documentation. This geoprocessing environment reflects only a
 #' small fraction of the ArcGIS environment settings. Future releases of this
 #' package may include more than the properties listed above.
-#' 
+#'
 #' @aliases rpygeo.build.env rpygeo.env
 #' @param modules (Do not modify!)  Name of Python module for ArcGIS
 #' geoprocessing.
@@ -75,19 +75,21 @@ rpygeo.extent.to.character = function(x) {
 #' @seealso \code{\link{rpygeo.geoprocessor}}
 #' @keywords interface database
 #' @examples
-#' 
+#'
 #' # Everything in this workspace will be masked with DEM extent
 #' # and have a cellsize of 100m:
 #' \dontrun{env.lo <- rpygeo.build.env( mask="clip", cellsize=100 )}
 #' # and this is for high-resolution output:
 #' \dontrun{env.hi <- rpygeo.build.env( mask="clip", cellsize=1 )}
-#' 
+#'
 #' # Slope from different DEMs at different target resolutions
 #' # (which may be different from the original DEM resolution):
 #' \dontrun{rpygeo.Slope.sa("srtm-dem","slope-lo",env=env.lo)}
 #' \dontrun{rpygeo.Slope.sa("laser-dem","slope-hi",env=env.hi)}
-#' 
+#'
 #' @export rpygeo.build.env
+#'
+#'
 rpygeo.build.env = function(
     modules = "arcgisscripting",
     init = "gp = arcgisscripting.create()",
@@ -161,9 +163,9 @@ write.temp.point.shapefile = function(d, pattern = "file",
 
 
 
-##############################################
-# Geoprocessing environment
-##############################################
+#*********************************************
+# Geoprocessing environment -----------------
+#*********************************************
 
 #rpygeo.env = rpygeo.build.env()
 
@@ -183,11 +185,11 @@ rpygeo.env = list(
 
 
 #' Check required ArcGIS extensions
-#' 
+#'
 #' Internal function that checks which ArcGIS extensions have to be enabled to
 #' evaluate a Python expression.
-#' 
-#' 
+#'
+#'
 #' @param expr A vector or list of character strings with Python geoprocessing
 #' expressions or function names.
 #' @return Returns a character vector with the ArcGIS extension names
@@ -220,24 +222,24 @@ rpygeo.required.extensions = function(expr) {
 
 
 
-##############################################
-# RPyGeo Geoprocessor - the workhorse
-##############################################
+#*********************************************
+# RPyGeo Geoprocessor - the workhorse --------
+#*********************************************
 
 
 
 #' ArcGIS Geoprocessor Workhorse
-#' 
+#'
 #' This function creates a Python geoprocessing script file and runs it from
 #' the operating system using the ArcGIS Geoprocessor.
-#' 
+#'
 #' This function is the R geoprocessing workhorse that creates a Python
 #' geoprocessing script, runs it, and returns any error messages.
-#' 
+#'
 #' If \code{fun} is a ready-to-use Python expression such as \code{}, then
 #' \code{add.gp} only determines whether the \code{"gp."} has to be added as a
 #' prefix to access the Python geoprocessor or not.
-#' 
+#'
 #' In most cases however, \code{fun} will be a single ArcGIS geoprocessing
 #' script function such as \code{"Slope_sa"}, where \code{"_sa"} tells us that
 #' this function can be found in the Spatial Analyst extension of ArcGIS
@@ -250,13 +252,13 @@ rpygeo.required.extensions = function(expr) {
 #' \code{gp.Slope_sa("dem", "slope", "PERCENT_RISE", 2)} if \code{add.gp==TRUE}
 #' and if we use the \code{quote.args} arguments \code{TRUE} and
 #' \code{c(T,T,T,F)}, respectively.
-#' 
+#'
 #' Dataset names will always be relative to the path or geodatabase defined in
 #' the geoprocessing environment settings \code{env$workspace}.  Also, ArcGIS
 #' will be allowed to overwrite any existing output files
 #' (\code{env$overwriteoutput==1}) or not (\code{==0}).  See
 #' \code{\link{rpygeo.build.env}} for details.
-#' 
+#'
 #' @param fun This can be either a complete Python geoprocessing command (see
 #' examples), a single geoprocessing function name, or a vector of function or
 #' Python expressions to be evaluated by the Python geoprocessor.
@@ -303,11 +305,11 @@ rpygeo.required.extensions = function(expr) {
 #' extensions.  This makes this function pretty inefficient, but you save a lot
 #' of time because you don't have to switch between three applications and two
 #' programming languages...
-#' 
+#'
 #' ArcGIS is pretty flexible with respect to numeric arguments such as the z
 #' factor in \code{Slope_sa} being passed as character string.  As a
 #' consequence, \code{quote.args=TRUE} will normally work fine.
-#' 
+#'
 #' \code{wait==FALSE} is experimental and not recommended. Watch for file name
 #' conflicts if you really want to try it - competing geoprocessing scripts
 #' must use different temporary Python script files etc.
@@ -315,7 +317,7 @@ rpygeo.required.extensions = function(expr) {
 #' @seealso \code{\link{rpygeo.build.env}}
 #' @keywords interface database
 #' @examples
-#' 
+#'
 #' # Allow ArcGIS to overwrite existing datasets:
 #' \dontrun{rpygeo.env$overwriteoutput = 1}
 #' # Calculate the slope of a DEM raster dataset
@@ -325,7 +327,7 @@ rpygeo.required.extensions = function(expr) {
 #' \dontrun{rpygeo.geoprocessor("Slope_sa('dem','slope')")}
 #' # Same, using the more convenient wrapper:
 #' \dontrun{rpygeo.Slope.sa("dem","slope")}
-#' 
+#'
 #' # Three at a time or separately:
 #' \dontrun{date()}
 #' \dontrun{rpygeo.geoprocessor("Slope_sa('dem','slope')",
@@ -338,22 +340,22 @@ rpygeo.required.extensions = function(expr) {
 #' \dontrun{rpygeo.Delete.management("slope")}
 #' \dontrun{rpygeo.Delete.management("aspect")}
 #' \dontrun{rpygeo.Delete.management("hshd")}
-#' 
+#'
 #' # Calculate the Euclidian distance from railway lines
 #' # up to a max. distance of 1000 map units:
 #' \dontrun{rpygeo.geoprocessor("EucDistance_sa",
 #'     args=list("rail.shp","raildist",1000))}
 #' # Same:
 #' \dontrun{rpygeo.EucDistance.sa("rail.shp","raildist",maxdist=1000)}
-#' 
+#'
 #' # Use MapAlgebra to calculate a distance-decay function:
 #' \dontrun{rpygeo.geoprocessor("SingleOutputMapAlgebra_sa",
 #'     args=c("exp( raildist / -100 )","distdecay"))}
-#' 
+#'
 #' # Or why not in just one step if you like MapAlgebra:
 #' \dontrun{rpygeo.geoprocessor( "SingleOutputMapAlgebra_sa",
 #'     args=c("exp( EucDistance( rail.shp, \#, \#, 1000 ) / -100 )","distdecay") )}
-#' 
+#'
 #' @export rpygeo.geoprocessor
 rpygeo.geoprocessor = function(
         fun, args=NULL,
@@ -404,7 +406,7 @@ rpygeo.geoprocessor = function(
     msg.file = to.windows.filename( paste(working.directory,"/",msg.file,sep="") )
     R.msg.file = to.R.filename(msg.file)
 
-    #---------------------------------------
+    #*******************************************
     # Build the Python geoprocessing script:
     expr = ""
     # Added 2008-08-15
@@ -469,7 +471,7 @@ rpygeo.geoprocessor = function(
     expr = paste( expr, indent, 'f = open("', R.msg.file, '", "w")\n', sep="")
     expr = paste( expr, indent, "f.write(rpygeoresult)\n", sep="")
     expr = paste( expr, indent, "f.close()\n", sep="")
-    #-----------------------------------------
+    #**************************************************
 
 
     # Write the Python geoprocessing script to the `py.file':
@@ -515,9 +517,9 @@ rpygeo.geoprocessor = function(
 
 
 
-##############################################
-# Spatial Analyst tools
-##############################################
+#*********************************************
+# Spatial Analyst tools ---------------------
+#*********************************************
 
 # http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=Hillshade
 rpygeo.Hillshade.sa = function( in.raster, out.raster,
@@ -686,9 +688,9 @@ rpygeo.SingleOutputMapAlgebra.sa = function(expression.string, out.raster,
 }
 
 
-##############################################
-# Data Management functions
-##############################################
+#*********************************************
+# Data Management functions ------------------
+#*********************************************
 
 # http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=Delete_(Data_Management)
 rpygeo.Delete.management = function( in.data, data.type = NULL, ... )
@@ -701,9 +703,9 @@ rpygeo.Delete.management = function( in.data, data.type = NULL, ... )
 
 
 
-##############################################
-# Conversion functions
-##############################################
+#*********************************************
+# Conversion functions ----------------------
+#*********************************************
 
 
 # http://webhelp.esri.com/arcgisdesktop/9.2/body.cfm?tocVisable=1&ID=1309&TopicName=ASCII%20to%20Raster%20(Conversion)
