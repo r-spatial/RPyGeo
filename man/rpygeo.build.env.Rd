@@ -9,7 +9,7 @@ rpygeo.build.env(modules = "arcgisscripting",
   init = "gp = arcgisscripting.create()", workspace = NULL,
   cellsize = NULL, extent = NULL, mask = NULL, snapraster = NULL,
   overwriteoutput = 0, extensions = NULL,
-  python.path = "C:\\\\software\\\\Python24", python.command = "python.exe")
+  python.path = "C:\\\\software\\\\Python27", python.command = "python.exe")
 }
 \arguments{
 \item{modules}{(Do not modify!)  Name of Python module for ArcGIS
