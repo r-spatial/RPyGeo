@@ -58,3 +58,8 @@ py_run_string("Con('raster_kw.tif', 'DEGREE', 0.5)")
 # Save the output
 py_run_string("outSlope.save('C:/Users/f/Google Drive/MA/thesis/R_analysis/data/hellofromR.tif')")
 
+# check python config
+use_python(python = "C:/Python27/ArcGIS10.4/python.exe", required = TRUE)
+py_config()
+
+
