@@ -1,13 +1,23 @@
 library(reticulate)
 
+
+
+# TODO create environment list where user can define pyhton ArcGIS path, otherwise check in C/:Python27 path as default
 # paste arcgis python here
 use_python(python = "C:/Python27/ArcGIS10.4/python.exe", required = TRUE)
 
 # TODO check if python version is same bit
 
-# check python version
-py_config()
 
+
+# TODO check pyconfig -> includes conf$python "ArcGIS"
+# check python version
+conf <- py_config()
+
+
+
+# TODO write init function that sets paths and imports arcpy and all the selected libraries such as "spatial"
+# if user does not define ArcGIS libraries try to include all of them
 
 # import arcpy libraries
 py_run_string("import arcpy")
