@@ -68,6 +68,11 @@ arcpy$Slope_3d('C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif'
 #arcpy$sa$Slope
 
 
+# see all functions
+
+py_list_attributes(arcpy)
+
+
 #arcpy$Slope_3d('C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif', 'C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw_r.tif')
 
 
