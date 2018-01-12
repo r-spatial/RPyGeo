@@ -1,12 +1,17 @@
-#library(reticulate)
+#' @title  Initialize Arcpy module in R
+#'
+#' @description Initialises the Python "arcpy" site-package in R with the help
+#'   of reticulate
+#'
+#'
+#' @param path Root path to the Python version which contains "arcpy". If left empty, the function
+#'   looks for `python.exe` in the most likely location (C:\Python27\)
+#' @return Returns arcpy module in R
+#' @author Fabian Polakowski
+#' @export
 
-init = function (
-  path = NULL,
-  extensions = NULL
-  )
+init = function (path = NULL)
   {
-
-
 
   # set path
   # TODO check if it is really a arcpy python
@@ -17,11 +22,12 @@ init = function (
 
     if (length(dirs) == 1) {
       path <- dirs
-
     }
+
     if (length(dirs) > 1) {
       stop("multiple paths found, define ArcGIS Path\n")
     }
+
     if (length(dirs) < 1){
       stop("No python function found in 'C:/Python27' - please define python path\n")
     }
@@ -29,15 +35,17 @@ init = function (
   }
   if (!is.null(path)) {
     path == path
-
+    #TODO check if path is correct
   }
 
   # init
   use_python(python = path, required = TRUE)
 
-  # TODO handle extensions
 
 }
+
+
+
 
 
 
