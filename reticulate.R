@@ -65,7 +65,12 @@ py_run_string("arcpy.env.overwriteOutput = True")
 
 # working!!
 arcpy$Slope_3d('C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif', 'C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw_r.tif')
-#arcpy$sa$Slope
+
+
+# with eval
+eval(parse(text = paste0("arcpy$Slope_3d('C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif', 'C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw_r.tif')")))
+
+
 
 
 # see all functions
@@ -79,9 +84,7 @@ py_list_attributes(arcpy)
 
 
 
-
 # check source files C:\Program Files (x86)\ArcGIS\Desktop10.4\arcpy
-
 
 
 
