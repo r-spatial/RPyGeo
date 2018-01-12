@@ -9,8 +9,12 @@
 #' @return Returns arcpy module in R
 #' @author Fabian Polakowski
 #' @export
+#'
+#'
 
-init = function (path = NULL)
+#TODO add parameters such as overwrite or cellsize or extensions to build_env or to geoprocessor function?
+
+rpygeo_build_env = function (path = NULL)
   {
 
   # set path
@@ -40,8 +44,28 @@ init = function (path = NULL)
 
   # init
   use_python(python = path, required = TRUE)
+  return(import("arcpy"))
+
+}
 
 
+
+
+
+rpygeo_geoprocessor(
+
+  fun,
+  args = NULL,
+  env = NULL,
+  extensions = NULL
+
+)
+{
+  #
+
+  # process
+  # run process with eval and paste fun and args strings together
+  #eval(parse(text = paste0("arcpy$Slope_3d('C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif', 'C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw_r.tif')")))
 }
 
 
