@@ -1,4 +1,5 @@
-# library(testthat)
-# library(RPyGeo)
-#
-# test_check("RPyGeo")
+library(testthat)
+library(RPyGeo)
+
+test_check("RPyGeo")
+
