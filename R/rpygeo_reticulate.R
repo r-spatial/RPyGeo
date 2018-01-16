@@ -13,17 +13,27 @@
 #'
 #'
 
-#TODO add parameters such as overwrite or cellsize or extensions to build_env or to geoprocessor function?
+# TODO add parameters such as overwrite or cellsize or extensions to build_env or to geoprocessor function?
+# TODO add option to load ArcGIS Pro arcpy version
 
-rpygeo_build_env = function (path = NULL)
-  {
+rpygeo_build_env <- function(path = NULL, pro = FALSE) {
 
   # set path
   # TODO check if it is really a arcpy python
   if (is.null(path)) {
-    # TODO search for path
-    # search python.exe in most common path
-    dirs <- list.files(path = "C:/Python27", pattern = "python.exe", recursive = TRUE, full.names = TRUE)
+    if (pro) {
+      dirs <- list.files(
+        path = "C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3",
+        pattern = "python.exe", recursive = TRUE, full.names = TRUE
+      )
+    }
+
+    if (!pro) {
+      dirs <- list.files(
+        path = "C:/Python27", pattern = "python.exe", recursive = TRUE,
+        full.names = TRUE
+      )
+    }
 
     if (length(dirs) == 1) {
       path <- dirs
@@ -33,26 +43,25 @@ rpygeo_build_env = function (path = NULL)
       stop("multiple paths found, define ArcGIS Path\n")
     }
 
-    if (length(dirs) < 1){
+    if (length(dirs) < 1) {
       stop("No python function found in 'C:/Python27' - please define python path\n")
     }
-
   }
   if (!is.null(path)) {
     path == path
-    #TODO check if path is correct
+    # TODO check if path is correct
   }
 
   # init
   use_python(python = path, required = TRUE)
   return(import("arcpy"))
-
 }
 
 
 #' @title ArcGIS Geoprocessor Workhorse
 #'
-#' @description This function utilzes the arcpy site-package in R via the reticulate connection to perform a arcpy
+#' @description This function utilzes the arcpy site-package in R via the reticulate
+#' connection to perform a arcpy
 #' calculation in R. It returns error messages if an error appears.
 #'
 #'
@@ -117,15 +126,12 @@ rpygeo_build_env = function (path = NULL)
 #' @export
 
 
-rpygeo_geoprocessor = function (
-  lib,
-  fun,
-  args = NULL,
-  env = NULL,
-  extensions = NULL
-
-)
-{
+rpygeo_geoprocessor <- function(
+                                lib,
+                                fun,
+                                args = NULL,
+                                env = NULL,
+                                extensions = NULL) {
   # TODO checkout extension
 
 
@@ -141,7 +147,7 @@ rpygeo_geoprocessor = function (
   args <- paste0("'", args, "'", collapse = ",")
 
 
-  e <- paste0(lib,  "$", fun, "(", args, ")")
+  e <- paste0(lib, "$", fun, "(", args, ")")
 
   print(e)
 
@@ -149,12 +155,4 @@ rpygeo_geoprocessor = function (
   eval(parse(text = paste0(e)))
 
   return(NULL)
-
 }
-
-
-
-
-
-
-
