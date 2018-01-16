@@ -14,23 +14,23 @@
 #' @seealso \code{\link{rpygeo.geoprocessor}}
 #' @keywords interface database
 #' @export required_extensions
-required_extensions = function(expr) {
+required_extensions <- function(expr) {
   # See ArcGIS help on the CheckOutExtension method:
-  rpygeo_match_extensions = c("sa","3d","stats","na","di")
-  names(rpygeo_match_extensions) = c("Spatial","3d","geostats","network","datainteroperability")
-  ext = c()
+  rpygeo_match_extensions <- c("sa", "3d", "stats", "na", "di")
+  names(rpygeo_match_extensions) <- c("Spatial", "3d", "geostats", "network", "datainteroperability")
+  ext <- c()
   for (s in expr) {
-    sub_s = strsplit(s,"(",fixed=TRUE)[[1]]
+    sub_s <- strsplit(s, "(", fixed = TRUE)[[1]]
     for (t in sub_s) {
-      t = gsub(" ","",t)
-      if (substring(t,nchar(t)) == ")")  next
+      t <- gsub(" ", "", t)
+      if (substring(t, nchar(t)) == ")") next
       for (i in 1:length(rpygeo_match_extensions)) {
-        the.match = paste("_",tolower(rpygeo_match_extensions[i]),sep="")
-        if ( tolower(substring(t,nchar(t)+1-nchar(the.match))) == the.match )
-          ext = c( ext, names(rpygeo_match_extensions)[i] )
+        the.match <- paste("_", tolower(rpygeo_match_extensions[i]), sep = "")
+        if (tolower(substring(t, nchar(t) + 1 - nchar(the.match))) == the.match) {
+          ext <- c(ext, names(rpygeo_match_extensions)[i])
+        }
       }
     }
   }
   return(unique(ext))
 }
-
