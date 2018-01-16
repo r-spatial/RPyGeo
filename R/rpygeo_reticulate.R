@@ -135,10 +135,6 @@ rpygeo_geoprocessor <- function(
   # TODO checkout extension
 
 
-
-
-
-
   # process
   # paste togehter string to evalutate
 
