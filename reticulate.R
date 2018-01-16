@@ -89,6 +89,8 @@ py_list_attributes(arcpy)
 
 
 
+# arcgis pro version
+# use_python("C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/python.exe", required = TRUE)
 
 
 
