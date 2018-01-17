@@ -4,7 +4,8 @@
 \alias{rpygeo_geoprocessor}
 \title{ArcGIS Geoprocessor Workhorse}
 \usage{
-rpygeo_geoprocessor(lib, fun, args = NULL, env = NULL, extensions = NULL)
+rpygeo_geoprocessor(lib, fun, args = NULL, env = NULL, extensions = NULL,
+  overwrite = FALSE)
 }
 \arguments{
 \item{lib}{arcpy library name saved with \code{arcpy}}
@@ -34,7 +35,8 @@ Depending on the \code{clean.up} argument, the Python code may still be
 available in the \code{py.file}, and error messages in \code{msg.file}.
 }
 \description{
-This function utilzes the arcpy site-package in R via the reticulate connection to perform a arcpy
+This function utilzes the arcpy site-package in R via the reticulate
+connection to perform a arcpy
 calculation in R. It returns error messages if an error appears.
 
 
