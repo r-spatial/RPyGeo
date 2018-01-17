@@ -131,15 +131,40 @@ rpygeo_geoprocessor <- function(
                                 fun,
                                 args = NULL,
                                 env = NULL,
-                                extensions = NULL) {
-  # TODO checkout extension
+                                extensions = NULL,
+                                overwrite = FALSE) {
+
+  # lib to string
+  lib <- deparse(substitute(lib))
+
+
+  if (overwrite) {
+    py_run_string("arcpy.env.overwriteOutput = True")
+  }
+
+  # edit 'overwrite' back to FALSE if it was TRUE for a previous function
+  if (!overwrite) {
+    py_run_string("arcpy.env.overwriteOutput = False")
+  }
+
+
+  # checkout extension
+  if (is.null(extensions)) {
+    extension <- required_extensions(fun)
+
+
+    if (!is.null(extension)) {
+      e <- paste0(lib, "$CheckOutExtension('", extension, "')")
+
+      print(e)
+      eval(parse(text = e))
+    }
+  }
+
 
 
   # process
   # paste togehter string to evalutate
-
-  lib <- deparse(substitute(lib))
-
   args <- paste0("'", args, "'", collapse = ",")
 
 
