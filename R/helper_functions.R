@@ -10,14 +10,19 @@
 #' (currently e.g. "Spatial", "3d", "geostats", "network", and/or
 #' "datainteroperability").
 #' @note This internal function is used by \code{rpygeo.geoprocessor}.
-#' @author Alexander Brenning
+#' @author Alexander Brenning, Fabian Polakowski
 #' @seealso \code{\link{rpygeo.geoprocessor}}
 #' @keywords interface database
 #' @export required_extensions
+#'
+#'
+
+
+# TODO include all
 required_extensions <- function(expr) {
   # See ArcGIS help on the CheckOutExtension method:
-  rpygeo_match_extensions <- c("sa", "3d", "stats", "na", "di")
-  names(rpygeo_match_extensions) <- c("Spatial", "3d", "geostats", "network", "datainteroperability")
+  rpygeo_match_extensions <- c("sa", "3d", "stats", "na", "di", "ta")
+  names(rpygeo_match_extensions) <- c("Spatial", "3d", "geostats", "network", "datainteroperability", "Tracking")
   ext <- c()
   for (s in expr) {
     sub_s <- strsplit(s, "(", fixed = TRUE)[[1]]
