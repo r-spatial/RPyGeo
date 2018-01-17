@@ -61,6 +61,7 @@ arcpy$CheckOutExtension("3D")
 
 # define in init if overwrite should be TRUE
 py_run_string("arcpy.env.overwriteOutput = True")
+a$env$overwriteOutput <- TRUE
 
 
 # working!!
