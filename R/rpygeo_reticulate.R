@@ -132,7 +132,8 @@ rpygeo_geoprocessor <- function(
                                 args = NULL,
                                 env = NULL,
                                 extensions = NULL,
-                                overwrite = FALSE) {
+                                overwrite = FALSE,
+                                detect_require_extension) {
 
   # lib to string
   lib <- deparse(substitute(lib))
@@ -150,15 +151,19 @@ rpygeo_geoprocessor <- function(
 
   # checkout extension
   if (is.null(extensions)) {
-    extension <- required_extensions(fun)
-
-
-    if (!is.null(extension)) {
-      e <- paste0(lib, "$CheckOutExtension('", extension, "')")
+    req_extension <- required_extensions(fun)
+    if (!is.null(req_extension)) {
+      e <- paste0(lib, "$CheckOutExtension('", req_extension, "')")
 
       print(e)
       eval(parse(text = e))
     }
+  }
+
+  if (!is.null(extensions)) {
+    e <- paste0(lib, "$CheckOutExtension('", extensions, "')")
+    print("Check from here")
+    eval(parse(text = e))
   }
 
 
