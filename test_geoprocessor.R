@@ -18,3 +18,4 @@ rpygeo_geoprocessor(lib = a, fun = "Slope_3d", args = c(
 
 # arc gis pro tests
 # exp <- rpygeo_build_env("C:/Program Files/ArcGIS/Pro/bin/Python/Scripts/conda.exe")
+
