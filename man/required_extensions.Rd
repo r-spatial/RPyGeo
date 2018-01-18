@@ -26,7 +26,7 @@ This internal function is used by \code{rpygeo.geoprocessor}.
 \code{\link{rpygeo.geoprocessor}}
 }
 \author{
-Alexander Brenning
+Alexander Brenning, Fabian Polakowski
 }
 \keyword{database}
 \keyword{interface}
