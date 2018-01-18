@@ -18,7 +18,7 @@
 #'
 
 
-# TODO include all
+# TODO add note, that some extensions need to be added manually
 required_extensions <- function(expr) {
   # See ArcGIS help on the CheckOutExtension method:
   rpygeo_match_extensions <- c("sa", "3d", "stats", "na", "di", "ta")
