@@ -13,10 +13,15 @@
 #'
 #'
 
-# TODO add parameters such as overwrite or cellsize or extensions to build_env or to geoprocessor function?
+
+# TODO add workspace
+# TODO add parameters such as overwrite or cellsize or extensions
+# to build_env or to geoprocessor function? -> both
 # TODO add option to load ArcGIS Pro arcpy version
 
-rpygeo_build_env <- function(path = NULL, pro = FALSE) {
+rpygeo_build_env <- function(path = NULL,
+                             overwrite = TRUE,
+                             pro = FALSE) {
 
   # set path
   # TODO check if it is really a arcpy python
@@ -54,7 +59,23 @@ rpygeo_build_env <- function(path = NULL, pro = FALSE) {
 
   # init
   use_python(python = path, required = TRUE)
+  import("arcpy")
+
+  if (overwrite) {
+    py_run_string("arcpy.env.overwriteOutput = True")
+    print("check")
+  }
+
+  # edit 'overwrite' back to FALSE if it was TRUE for a previous function
+  if (!overwrite) {
+    py_run_string("arcpy.env.overwriteOutput = False")
+  }
+
   return(import("arcpy"))
+
+
+
+
 }
 
 
@@ -126,6 +147,10 @@ rpygeo_build_env <- function(path = NULL, pro = FALSE) {
 #' @export
 
 
+
+
+# TODO change all eval parse text to get-paste
+# TODO remove print statements
 rpygeo_geoprocessor <- function(
                                 lib,
                                 fun,
@@ -133,7 +158,7 @@ rpygeo_geoprocessor <- function(
                                 env = NULL,
                                 extensions = NULL,
                                 overwrite = FALSE,
-                                detect_require_extension) {
+                                detect_require_extension = TRUE) {
 
   # lib to string
   lib <- deparse(substitute(lib))
@@ -154,15 +179,12 @@ rpygeo_geoprocessor <- function(
     req_extension <- required_extensions(fun)
     if (!is.null(req_extension)) {
       e <- paste0(lib, "$CheckOutExtension('", req_extension, "')")
-
-      print(e)
       eval(parse(text = e))
     }
   }
 
   if (!is.null(extensions)) {
     e <- paste0(lib, "$CheckOutExtension('", extensions, "')")
-    print("Check from here")
     eval(parse(text = e))
   }
 
@@ -179,6 +201,8 @@ rpygeo_geoprocessor <- function(
 
   # run process with eval
   eval(parse(text = paste0(e)))
+
+
 
   return(NULL)
 }
