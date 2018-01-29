@@ -21,6 +21,7 @@
 
 rpygeo_build_env <- function(path = NULL,
                              overwrite = TRUE,
+                             extension = NULL,
                              pro = FALSE) {
 
   # set path
@@ -61,6 +62,9 @@ rpygeo_build_env <- function(path = NULL,
   use_python(python = path, required = TRUE)
   import("arcpy")
 
+
+
+  # handle overwrite
   if (overwrite) {
     py_run_string("arcpy.env.overwriteOutput = True")
     print("check")
@@ -69,6 +73,16 @@ rpygeo_build_env <- function(path = NULL,
   # edit 'overwrite' back to FALSE if it was TRUE for a previous function
   if (!overwrite) {
     py_run_string("arcpy.env.overwriteOutput = False")
+  }
+
+
+  # handle extension
+  if (!is.null(extension)) {
+    print("check out extension")
+    ext <- paste0("arcpy.CheckOutExtension('", extension, "')")
+
+    py_run_string(ext)
+
   }
 
   return(import("arcpy"))
