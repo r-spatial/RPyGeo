@@ -20,7 +20,9 @@ rpygeo_geoprocessor(lib = a, fun = "Slope_3d", args = c(
 # exp <- rpygeo_build_env("C:/Program Files/ArcGIS/Pro/bin/Python/Scripts/conda.exe")
 
 # test rpygeo_build_env
+a <- rpygeo_build_env(overwrite = T, extension = "3D")
+
+a$Slope_3d("C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif",
+           "C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw_r.tif")
 
 
-a <- rpygeo_build_env(overwrite = T)
-a$Slope_3d("C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif", "C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw_r.tif")
