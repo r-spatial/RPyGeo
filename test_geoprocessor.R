@@ -1,6 +1,6 @@
 a <- rpygeo_build_env()
 
-# a$CheckOutExtension("3D")
+a$CheckOutExtension("3D")
 # py_run_string("arcpy.env.overwriteOutput = True")
 
 rpygeo_geoprocessor(lib = a, fun = "Slope_3d", args = c(
@@ -19,3 +19,8 @@ rpygeo_geoprocessor(lib = a, fun = "Slope_3d", args = c(
 # arc gis pro tests
 # exp <- rpygeo_build_env("C:/Program Files/ArcGIS/Pro/bin/Python/Scripts/conda.exe")
 
+# test rpygeo_build_env
+
+
+a <- rpygeo_build_env(overwrite = T)
+a$Slope_3d("C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif", "C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw_r.tif")
