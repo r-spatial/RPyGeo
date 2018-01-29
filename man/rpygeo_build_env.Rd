@@ -4,7 +4,7 @@
 \alias{rpygeo_build_env}
 \title{Initialize Arcpy module in R}
 \usage{
-rpygeo_build_env(path = NULL, pro = FALSE)
+rpygeo_build_env(path = NULL, overwrite = TRUE, pro = FALSE)
 }
 \arguments{
 \item{path}{Root path to the Python version which contains "arcpy". If left empty, the function

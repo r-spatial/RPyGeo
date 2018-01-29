@@ -5,7 +5,7 @@
 \title{ArcGIS Geoprocessor Workhorse}
 \usage{
 rpygeo_geoprocessor(lib, fun, args = NULL, env = NULL, extensions = NULL,
-  overwrite = FALSE)
+  overwrite = FALSE, detect_require_extension = TRUE)
 }
 \arguments{
 \item{lib}{arcpy library name saved with \code{arcpy}}
