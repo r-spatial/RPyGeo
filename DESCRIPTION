@@ -10,8 +10,8 @@ Authors@R: c(
 Description: Provide access to (virtually any) ArcGIS Geoprocessing
         tool from within R by running Python geoprocessing scripts
         without writing Python code or touching ArcGIS.
-        Requires ArcGIS >=9.2, a suitable version of Python
-        (for ArcGIS 9.2: Python 2.4; for ArcGIS 10.0: 2.6), and Windows.
+        Requires ArcGIS >=10.0, a suitable version of Python
+        (for ArcGIS 10.0: 2.6; for ArcGIS >= 10.1 : 2.7), and Windows.
 License: GPL-3
 LazyData: TRUE
 Depends: 
@@ -19,6 +19,6 @@ Depends:
 Imports:
         shapefiles, 
         RSAGA
-SystemRequirements: Windows, Python (>= 2.4.0), ArcGIS (>= 9.2)
+SystemRequirements: Windows, Python (>= 2.6.0), ArcGIS (>= 10.0)
 RoxygenNote: 6.0.1
 Suggests: testthat
