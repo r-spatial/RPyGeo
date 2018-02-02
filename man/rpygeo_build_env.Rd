@@ -8,7 +8,8 @@ rpygeo_build_env(path = NULL, overwrite = TRUE, extension = NULL,
   pro = FALSE)
 }
 \arguments{
-\item{path}{Root path to the Python version which contains "arcpy". If left empty, the function
+\item{path}{Root path to the Python version which contains "arcpy". If left
+empty, the function
 looks for `python.exe` in the most likely location (C:\Python27\)}
 }
 \value{
