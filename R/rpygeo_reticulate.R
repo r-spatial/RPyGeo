@@ -4,7 +4,8 @@
 #'   of reticulate
 #'
 #'
-#' @param path Root path to the Python version which contains "arcpy". If left empty, the function
+#' @param path Root path to the Python version which contains "arcpy". If left
+#' empty, the function
 #' looks for `python.exe` in the most likely location (C:\Python27\)
 #'
 #' @return Returns arcpy module in R
