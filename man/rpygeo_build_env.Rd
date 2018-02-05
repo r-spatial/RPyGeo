@@ -4,7 +4,7 @@
 \alias{rpygeo_build_env}
 \title{Initialize Arcpy module in R}
 \usage{
-rpygeo_build_env(path = NULL, overwrite = TRUE, extension = NULL,
+rpygeo_build_env(path = NULL, overwrite = TRUE, extensions = NULL,
   pro = FALSE)
 }
 \arguments{
