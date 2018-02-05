@@ -22,7 +22,7 @@
 
 rpygeo_build_env <- function(path = NULL,
                              overwrite = TRUE,
-                             extension = NULL,
+                             extensions = NULL,
                              pro = FALSE) {
 
   # set path
@@ -63,33 +63,11 @@ rpygeo_build_env <- function(path = NULL,
   use_python(python = path, required = TRUE)
   import("arcpy")
 
+  # handle initial parameters
+  input_check(overwrite = overwrite, extensions = extensions)
 
-
-  # handle overwrite
-  if (overwrite) {
-    py_run_string("arcpy.env.overwriteOutput = True")
-    print("check")
-  }
-
-  # edit 'overwrite' back to FALSE if it was TRUE for a previous function
-  if (!overwrite) {
-    py_run_string("arcpy.env.overwriteOutput = False")
-  }
-
-
-  # handle extension
-  if (!is.null(extension)) {
-    print("check out extension")
-    ext <- paste0("arcpy.CheckOutExtension('", extension, "')")
-
-    py_run_string(ext)
-
-  }
 
   return(import("arcpy"))
-
-
-
 
 }
 
@@ -178,31 +156,18 @@ rpygeo_geoprocessor <- function(
   # lib to string
   lib <- deparse(substitute(lib))
 
-
-  if (overwrite) {
-    py_run_string("arcpy.env.overwriteOutput = True")
-  }
-
-  # edit 'overwrite' back to FALSE if it was TRUE for a previous function
-  if (!overwrite) {
-    py_run_string("arcpy.env.overwriteOutput = False")
-  }
+  # handle initial parameters
+  input_check(overwrite = overwrite, extensions = extensions)
 
 
   # checkout extension
-  if (is.null(extensions)) {
+  if (detect_require_extension) {
     req_extension <- required_extensions(fun)
     if (!is.null(req_extension)) {
       e <- paste0(lib, "$CheckOutExtension('", req_extension, "')")
       eval(parse(text = e))
     }
   }
-
-  if (!is.null(extensions)) {
-    e <- paste0(lib, "$CheckOutExtension('", extensions, "')")
-    eval(parse(text = e))
-  }
-
 
 
   # process
@@ -212,12 +177,8 @@ rpygeo_geoprocessor <- function(
 
   e <- paste0(lib, "$", fun, "(", args, ")")
 
-  print(e)
-
   # run process with eval
   eval(parse(text = paste0(e)))
-
-
 
   return(NULL)
 }
