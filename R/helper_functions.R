@@ -39,3 +39,33 @@ required_extensions <- function(expr) {
   }
   return(unique(ext))
 }
+
+
+input_check = function (overwrite, extensions) {
+
+  # handle overwrite
+  if (overwrite) {
+    py_run_string("arcpy.env.overwriteOutput = True")
+  }
+
+  # edit 'overwrite' back to FALSE if it was TRUE for a previous function
+  if (!overwrite) {
+    py_run_string("arcpy.env.overwriteOutput = False")
+  }
+
+  # handle extensions
+  # TODO create list
+  if (!is.null(extensions)) {
+
+    sapply(extensions, function(x) {
+
+      ext <- paste0("arcpy.CheckOutExtension('", x, "')")
+      py_run_string(ext)
+
+      })
+  }
+
+}
+
+
+
