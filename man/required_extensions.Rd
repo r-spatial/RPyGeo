@@ -12,18 +12,18 @@ expressions or function names.}
 }
 \value{
 Returns a character vector with the ArcGIS extension names
-(currently e.g. "Spatial", "3d", "geostats", "network", and/or
-"datainteroperability").
+  (currently e.g. "Spatial", "3d", "geostats", "network", and/or
+  "datainteroperability").
 }
 \description{
 Internal function that checks which ArcGIS extensions have to be enabled to
-evaluate a Python expression.
+  evaluate a Python expression.
 }
 \note{
-This internal function is used by \code{rpygeo.geoprocessor}.
+This internal function is used by \code{rpygeo_geoprocessor}.
 }
 \seealso{
-\code{\link{rpygeo.geoprocessor}}
+\code{\link{rpygeo_geoprocessor}}
 }
 \author{
 Alexander Brenning, Fabian Polakowski

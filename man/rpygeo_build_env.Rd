@@ -2,22 +2,53 @@
 % Please edit documentation in R/rpygeo_reticulate.R
 \name{rpygeo_build_env}
 \alias{rpygeo_build_env}
-\title{Initialize Arcpy module in R}
+\title{Initialize ArcPy module and environment in R}
 \usage{
 rpygeo_build_env(path = NULL, overwrite = TRUE, extensions = NULL,
   pro = FALSE)
 }
 \arguments{
-\item{path}{Root path to the Python version which contains "arcpy". If left
-empty, the function
-looks for `python.exe` in the most likely location (C:\Python27\)}
+\item{path}{Root path to the Python version which contains the Python version
+which is linked to the ArcPy site-package. If left empty, the function looks
+for `python.exe` in the most likely location
+(C:/Python27/)}
+
+\item{overwrite}{If set to `TRUE` (default) existing ArcGIS datasets can be
+overwritten.}
+
+\item{extensions}{Optional character vector listing ArcGIS extension that
+should be enabled.}
+
+\item{pro}{If set to `TRUE` \code{rpygeo_build_env} tries to find Python version
+to use in the default ArcGIS Pro location
+(C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)}
 }
 \value{
-Returns arcpy module in R
+Returns ArcPy module in R
 }
 \description{
-Initialises the Python "arcpy" site-package in R with the help
-  of reticulate
+Initialises the Python ArcPy site-package in R with the help
+  of reticulate. Also setting up a geoprocessing environment and define
+  parameters such as `overwrite` and `extensions` to add.
+}
+\examples{
+
+# load the ArcPy module related to ArcGIS Pro (and save it as an R
+# object called "arcpy_m") in R and also set the "overwrite" parameter
+# to false and add some extensions. Note that we do not have to set the path
+# because the Python version is located in the default location
+# (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)in this example.
+\dontrun{arcpy_m <- rpygeo_build_env(overwrite = TRUE,
+                                     extensions = c("3d", "Spatial", "na"),
+                                     pro = TRUE)}
+
+# load the ArcPy module when your Python version is located in a different
+# folder
+\dontrun{arc <- rpygeo_build_env(path = "C:/YourPath/YourSubPath/python.exe")}
+
+}
+\seealso{
+\code{\link{rpygeo_geoprocessor}}
 }
 \author{
 Fabian Polakowski

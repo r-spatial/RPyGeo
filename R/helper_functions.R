@@ -1,17 +1,16 @@
-#' Check required ArcGIS extensions
+#' @title Check required ArcGIS extensions
 #'
-#' Internal function that checks which ArcGIS extensions have to be enabled to
-#' evaluate a Python expression.
-#'
+#' @description  Internal function that checks which ArcGIS extensions have to be enabled to
+#'   evaluate a Python expression.
 #'
 #' @param expr A vector or list of character strings with Python geoprocessing
-#' expressions or function names.
+#'   expressions or function names.
 #' @return Returns a character vector with the ArcGIS extension names
-#' (currently e.g. "Spatial", "3d", "geostats", "network", and/or
-#' "datainteroperability").
-#' @note This internal function is used by \code{rpygeo.geoprocessor}.
+#'   (currently e.g. "Spatial", "3d", "geostats", "network", and/or
+#'   "datainteroperability").
+#' @note This internal function is used by \code{rpygeo_geoprocessor}.
 #' @author Alexander Brenning, Fabian Polakowski
-#' @seealso \code{\link{rpygeo.geoprocessor}}
+#' @seealso \code{\link{rpygeo_geoprocessor}}
 #' @keywords interface database
 #' @export required_extensions
 #'
@@ -40,6 +39,25 @@ required_extensions <- function(expr) {
   return(unique(ext))
 }
 
+
+
+
+#' @title  Set overwrite and extension parameters
+#'
+#' @description Internal helper function that sets the overwrite parameter for
+#'  the ArcPy session and can check out multiple extensions.
+#'
+#' @param overwrite If set to `TRUE` (default) existing ArcGIS datasets can be
+#'   overwritten.
+#' @param extensions Optional character vector listing ArcGIS extension that
+#'   should be enabled. This adds to any extensions that are eventually
+#'   detected by \code{rpygeo_required_extensions}.
+#' @note This internal function is used by \code{rpygeo_geoprocessor} and
+#'   by \code{rpygeo_build_env}.
+#' @author Fabian Polakowski, Alexander Brenning
+#' @export input_check
+#'
+#'
 
 input_check = function (overwrite, extensions) {
 

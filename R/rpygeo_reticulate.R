@@ -1,32 +1,50 @@
-#' @title  Initialize Arcpy module in R
+#' @title  Initialize ArcPy module and environment in R
 #'
-#' @description Initialises the Python "arcpy" site-package in R with the help
-#'   of reticulate
-#'
-#'
-#' @param path Root path to the Python version which contains "arcpy". If left
-#' empty, the function
-#' looks for `python.exe` in the most likely location (C:\Python27\)
-#'
-#' @return Returns arcpy module in R
+#' @description Initialises the Python ArcPy site-package in R with the help
+#'   of reticulate. Also setting up a geoprocessing environment and define
+#'   parameters such as `overwrite` and `extensions` to add.
+#' @param path Root path to the Python version which contains the Python version
+#'   which is linked to the ArcPy site-package. If left empty, the function looks
+#'   for `python.exe` in the most likely location
+#'   (C:/Python27/)
+#' @param overwrite If set to `TRUE` (default) existing ArcGIS datasets can be
+#'   overwritten.
+#' @param extensions Optional character vector listing ArcGIS extension that
+#'   should be enabled.
+#' @param pro If set to `TRUE` \code{rpygeo_build_env} tries to find Python version
+#'   to use in the default ArcGIS Pro location
+#'   (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)
+#' @return Returns ArcPy module in R
 #' @author Fabian Polakowski
-#' @export
+#' @seealso \code{\link{rpygeo_geoprocessor}}
+#' @examples
 #'
+#' # load the ArcPy module related to ArcGIS Pro (and save it as an R
+#' # object called "arcpy_m") in R and also set the "overwrite" parameter
+#' # to false and add some extensions. Note that we do not have to set the path
+#' # because the Python version is located in the default location
+#' # (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)in this example.
+#' \dontrun{arcpy_m <- rpygeo_build_env(overwrite = TRUE,
+#'                                      extensions = c("3d", "Spatial", "na"),
+#'                                      pro = TRUE)}
+#'
+#' # load the ArcPy module when your Python version is located in a different
+#' # folder
+#' \dontrun{arc <- rpygeo_build_env(path = "C:/YourPath/YourSubPath/python.exe")}
+#'
+#' @export
 #'
 
 
 # TODO add workspace
 # TODO add parameters such as overwrite or cellsize or extensions
-# to build_env or to geoprocessor function? -> both
-# TODO add option to load ArcGIS Pro arcpy version
-
 rpygeo_build_env <- function(path = NULL,
                              overwrite = TRUE,
                              extensions = NULL,
                              pro = FALSE) {
 
   # set path
-  # TODO check if it is really a arcpy python
+  # TODO check if it is really a ArcPy python
   if (is.null(path)) {
     if (pro) {
       dirs <- list.files(
@@ -74,69 +92,39 @@ rpygeo_build_env <- function(path = NULL,
 
 #' @title ArcGIS Geoprocessor Workhorse
 #'
-#' @description This function utilzes the arcpy site-package in R via the reticulate
-#' connection to perform a arcpy
-#' calculation in R. It returns error messages if an error appears.
+#' @description This function utilzes the ArcPy site-package in R via the reticulate
+#'   connection to perform ArcPy calculation in R. It returns error messages if
+#'   an error appears.
 #'
-#'
-#' If \code{fun} is a ready-to-use Python expression such as \code{}, then
-#' \code{add.gp} only determines whether the \code{"gp."} has to be added as a
-#' prefix to access the Python geoprocessor or not.
-#'
-#' In most cases however, \code{fun} will be a single ArcGIS geoprocessing
-#' script function such as \code{"Slope_sa"}, where \code{"_sa"} tells us that
-#' this function can be found in the Spatial Analyst extension of ArcGIS
-#' (\code{rpygeo.required.extensions} will check this for you if the
-#' \code{detected...} argument is \code{TRUE}) Now \code{args} will be a vector
-#' or list of arguments to \code{Slope_sa}, e.g. \code{c("dem","slope")} or
-#' \code{list("dem","slope","PERCENT_RISE",2)} (see ArcGIS help files for
-#' information on the arguments of \code{Slope_sa}).  These will result in
-#' Python expressions \code{gp.Slope_sa("dem", "slope")} and
-#' \code{gp.Slope_sa("dem", "slope", "PERCENT_RISE", 2)} if \code{add.gp==TRUE}
-#' and if we use the \code{quote.args} arguments \code{TRUE} and
-#' \code{c(T,T,T,F)}, respectively.
-#'
-#' Dataset names will always be relative to the path or geodatabase defined in
-#' the geoprocessing environment settings \code{env$workspace}.  Also, ArcGIS
-#' will be allowed to overwrite any existing output files
-#' (\code{env$overwriteoutput==1}) or not (\code{==0}).  See
-#' \code{\link{rpygeo.build.env}} for details.
-#'
-#'
-#' @param lib arcpy library name saved with \code{arcpy}
-#' @param fun This can be either a complete Python geoprocessing command (see
-#' examples), a single geoprocessing function name, or a vector of function or
-#' Python expressions to be evaluated by the Python geoprocessor.
+#' @param lib ArcPy R module name assigned using \code{rpygeo_build_env}
+#' @param fun Single geoprocessing function name to be evaluated by the Python
+#'   geoprocessor.
 #' @param args Vector or list of arguments to be passed to the function listed
-#' in \code{fun}. The argument \code{quote.args} determines whether these
-#' arguments will be decorated with quotation marks.
-#' @param env A list defining the RPyGeo working environment.  Defaults to the
-#' standard working environment \code{rpygeo.env}, which is created at
-#' start-up.  See \code{\link{rpygeo.build.env}} for details.
+#' in \code{fun}.
 #' @param extensions Optional character vector listing ArcGIS extension that
-#' should be enabled before using the geoprocessing \code{fun}ction. This adds
-#' to any extensions that are listed in the \code{env}ironment or eventually
-#' detected by \code{rpygeo.required.extensions}.
+#'   should be enabled. This adds to any extensions that are eventually
+#'   detected by \code{rpygeo_required_extensions}.
+#' @param overwrite If set to `TRUE` (default) existing ArcGIS datasets can be
+#'   overwritten.
+#' @param detect_required_extensions Logical (default: \code{TRUE}).
+#'   Determines whether \code{\link{required_extensions}} should try to find out
+#'   which ArcGIS extensions are required to evaluate the \code{fun}ction(s).
 #' @return The function returns \code{NULL} if is was successful, or otherwise
-#' a character vector with the ArcGIS error message.  In addition, the ArcGIS
-#' function will generate the output described in the ArcGIS help files etc.
-#' Depending on the \code{clean.up} argument, the Python code may still be
-#' available in the \code{py.file}, and error messages in \code{msg.file}.
-#' @note The Python script created by this geoprocessor is loaded with
-#' initialization code for setting up the ArcGIS workspace and enabling ArcGIS
-#' extensions.  This makes this function pretty inefficient, but you save a lot
-#' of time because you don't have to switch between three applications and two
-#' programming languages...
-#'
-#' ArcGIS is pretty flexible with respect to numeric arguments such as the z
-#' factor in \code{Slope_sa} being passed as character string.  As a
-#' consequence, \code{quote.args=TRUE} will normally work fine.
-#'
+#'   a ArcGIS error message.
 #'
 #' @author Alexander Brenning, Fabian Polakowski
-#' @seealso \code{\link{rpygeo.build.env}}
+#' @seealso \code{\link{rpygeo_build_env}}
 #' @examples
-#' #TODO add examples
+#'
+#' # Build a ArcGIS environment (assined to an R object called arcpy_m)
+#' # and set `overwrite` to \code{TRUE}.
+#' \dontrun{arcpy_m <- arcpy_build_env(overwrite = TRUE)}
+#'
+#' # Use the ArcGIS Slope alogrithm to calulate a slope from a Digital Elveation
+#' # Model
+#' \dontrun{rpygeo_geoprocessor(lib = a, fun = "Slope_3d",
+#'                              args = c("dem.tif", "output_slope.tif"))
+#'
 #' @export
 
 
@@ -148,10 +136,9 @@ rpygeo_geoprocessor <- function(
                                 lib,
                                 fun,
                                 args = NULL,
-                                env = NULL,
                                 extensions = NULL,
                                 overwrite = FALSE,
-                                detect_require_extension = TRUE) {
+                                detect_required_extension = TRUE) {
 
   # lib to string
   lib <- deparse(substitute(lib))
@@ -161,7 +148,7 @@ rpygeo_geoprocessor <- function(
 
 
   # checkout extension
-  if (detect_require_extension) {
+  if (detect_required_extension) {
     req_extension <- required_extensions(fun)
     if (!is.null(req_extension)) {
       e <- paste0(lib, "$CheckOutExtension('", req_extension, "')")
