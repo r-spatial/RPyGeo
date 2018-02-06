@@ -36,6 +36,18 @@ This function utilzes the ArcPy site-package in R via the reticulate
   connection to perform ArcPy calculation in R. It returns error messages if
   an error appears.
 }
+\examples{
+
+# Build a ArcGIS environment (assined to an R object called arcpy_m)
+# and set overwrite to TRUE.
+\dontrun{arcpy_m <- arcpy_build_env(overwrite = TRUE)}
+
+# Use the ArcGIS Slope alogrithm to calulate a slope from a Digital Elveation
+# Model
+\dontrun{rpygeo_geoprocessor(lib = a, fun = "Slope_3d",
+                             args = c("dem.tif", "output_slope.tif"))}
+
+}
 \seealso{
 \code{\link{rpygeo_build_env}}
 }

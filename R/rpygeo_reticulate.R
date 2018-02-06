@@ -23,8 +23,8 @@
 #' @examples
 #'
 #' # load the ArcPy module related to ArcGIS Pro (and save it as an R
-#' # object called "arcpy_m") in R and also set the "overwrite" parameter
-#' # to false and add some extensions. Note that we do not have to set the path
+#' # object called "arcpy_m") in R and also set the overwrite parameter
+#' # to FALSE and add some extensions. Note that we do not have to set the path
 #' # because the Python version is located in the default location
 #' # (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)in this example.
 #' \dontrun{arcpy_m <- rpygeo_build_env(overwrite = TRUE,
@@ -45,20 +45,21 @@ rpygeo_build_env <- function(path = NULL,
                              overwrite = TRUE,
                              extensions = NULL,
                              x64 = FALSE,
-                             pro = FALSE) {
-
+                             pro = FALSE,
+                             workspace = NULL) {
   # set path
   # TODO check if it is really a ArcPy python
   if (is.null(path)) {
-
     if (x64) {
       dirs1 <- list.files(
         path = "C:/Python27",
-        pattern = "64", recursive = FALSE, full.names = TRUE)
+        pattern = "64", recursive = FALSE, full.names = TRUE
+      )
 
       dirs <- list.files(
         path = dirs1,
-        pattern = "python.exe", recursive = TRUE, full.names = TRUE)
+        pattern = "python.exe", recursive = TRUE, full.names = TRUE
+      )
     }
 
 
@@ -102,9 +103,12 @@ rpygeo_build_env <- function(path = NULL,
   # handle initial parameters
   input_check(overwrite = overwrite, extensions = extensions)
 
+  # set workspace if set in function parameter
+  if (!is.null(workspace)) {
+    set_workspace(workspace)
+  }
 
   return(import("arcpy"))
-
 }
 
 
@@ -132,16 +136,17 @@ rpygeo_build_env <- function(path = NULL,
 #'
 #' @author Alexander Brenning, Fabian Polakowski
 #' @seealso \code{\link{rpygeo_build_env}}
+#'
 #' @examples
 #'
 #' # Build a ArcGIS environment (assined to an R object called arcpy_m)
-#' # and set `overwrite` to \code{TRUE}.
+#' # and set overwrite to TRUE.
 #' \dontrun{arcpy_m <- arcpy_build_env(overwrite = TRUE)}
 #'
 #' # Use the ArcGIS Slope alogrithm to calulate a slope from a Digital Elveation
 #' # Model
 #' \dontrun{rpygeo_geoprocessor(lib = a, fun = "Slope_3d",
-#'                              args = c("dem.tif", "output_slope.tif"))
+#'                              args = c("dem.tif", "output_slope.tif"))}
 #'
 #' @export
 
