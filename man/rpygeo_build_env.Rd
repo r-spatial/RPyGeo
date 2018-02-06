@@ -5,7 +5,7 @@
 \title{Initialize ArcPy module and environment in R}
 \usage{
 rpygeo_build_env(path = NULL, overwrite = TRUE, extensions = NULL,
-  pro = FALSE)
+  x64 = FALSE, pro = FALSE)
 }
 \arguments{
 \item{path}{Root path to the Python version which contains the Python version
@@ -18,6 +18,9 @@ overwritten.}
 
 \item{extensions}{Optional character vector listing ArcGIS extension that
 should be enabled.}
+
+\item{x64}{Logical (default: \code{TRUE}). Determines if path search should
+look for 64 bit Python ArcPy version in default folder (C:/Python27)}
 
 \item{pro}{If set to `TRUE` \code{rpygeo_build_env} tries to find Python version
 to use in the default ArcGIS Pro location

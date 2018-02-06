@@ -11,6 +11,9 @@
 #'   overwritten.
 #' @param extensions Optional character vector listing ArcGIS extension that
 #'   should be enabled.
+#' @param x64 Logical (default: \code{TRUE}). Determines if path search should
+#' look for 64 bit Python ArcPy version in default folder (C:/Python27)
+#'
 #' @param pro If set to `TRUE` \code{rpygeo_build_env} tries to find Python version
 #'   to use in the default ArcGIS Pro location
 #'   (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)
@@ -41,11 +44,24 @@
 rpygeo_build_env <- function(path = NULL,
                              overwrite = TRUE,
                              extensions = NULL,
+                             x64 = FALSE,
                              pro = FALSE) {
 
   # set path
   # TODO check if it is really a ArcPy python
   if (is.null(path)) {
+
+    if (x64) {
+      dirs1 <- list.files(
+        path = "C:/Python27",
+        pattern = "64", recursive = FALSE, full.names = TRUE)
+
+      dirs <- list.files(
+        path = dirs1,
+        pattern = "python.exe", recursive = TRUE, full.names = TRUE)
+    }
+
+
     if (pro) {
       dirs <- list.files(
         path = "C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3",
@@ -53,12 +69,13 @@ rpygeo_build_env <- function(path = NULL,
       )
     }
 
-    if (!pro) {
+    if (!pro && !x64) {
       dirs <- list.files(
         path = "C:/Python27", pattern = "python.exe", recursive = TRUE,
         full.names = TRUE
       )
     }
+
 
     if (length(dirs) == 1) {
       path <- dirs
@@ -72,6 +89,7 @@ rpygeo_build_env <- function(path = NULL,
       stop("No python function found in 'C:/Python27' - please define python path\n")
     }
   }
+
   if (!is.null(path)) {
     path == path
     # TODO check if path is correct
