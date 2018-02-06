@@ -5,7 +5,7 @@
 \title{ArcGIS Geoprocessor Workhorse}
 \usage{
 rpygeo_geoprocessor(lib, fun, args = NULL, extensions = NULL,
-  overwrite = FALSE, detect_required_extension = TRUE)
+  overwrite = FALSE, workspace = NULL, detect_required_extension = TRUE)
 }
 \arguments{
 \item{lib}{ArcPy R module name assigned using \code{rpygeo_build_env}}
@@ -22,6 +22,9 @@ detected by \code{rpygeo_required_extensions}.}
 
 \item{overwrite}{If set to `TRUE` (default) existing ArcGIS datasets can be
 overwritten.}
+
+\item{workspace}{Path of ArcGIS workspace in which to perform the
+geoprocessing.}
 
 \item{detect_required_extensions}{Logical (default: \code{TRUE}).
 Determines whether \code{\link{required_extensions}} should try to find out

@@ -13,10 +13,11 @@
 #'   should be enabled.
 #' @param x64 Logical (default: \code{TRUE}). Determines if path search should
 #' look for 64 bit Python ArcPy version in default folder (C:/Python27)
-#'
 #' @param pro If set to `TRUE` \code{rpygeo_build_env} tries to find Python version
 #'   to use in the default ArcGIS Pro location
 #'   (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)
+#' @param workspace Path of ArcGIS workspace in which to perform the
+#'    geoprocessing.
 #' @return Returns ArcPy module in R
 #' @author Fabian Polakowski
 #' @seealso \code{\link{rpygeo_geoprocessor}}
@@ -131,6 +132,8 @@ rpygeo_build_env <- function(path = NULL,
 #' @param detect_required_extensions Logical (default: \code{TRUE}).
 #'   Determines whether \code{\link{required_extensions}} should try to find out
 #'   which ArcGIS extensions are required to evaluate the \code{fun}ction(s).
+#' @param workspace Path of ArcGIS workspace in which to perform the
+#'    geoprocessing.
 #' @return The function returns \code{NULL} if is was successful, or otherwise
 #'   a ArcGIS error message.
 #'
@@ -161,6 +164,7 @@ rpygeo_geoprocessor <- function(
                                 args = NULL,
                                 extensions = NULL,
                                 overwrite = FALSE,
+                                workspace = NULL,
                                 detect_required_extension = TRUE) {
 
   # lib to string
@@ -168,6 +172,11 @@ rpygeo_geoprocessor <- function(
 
   # handle initial parameters
   input_check(overwrite = overwrite, extensions = extensions)
+
+  # set workspace if set in function parameter
+  if (!is.null(workspace)) {
+    set_workspace(workspace)
+  }
 
 
   # checkout extension

@@ -5,7 +5,7 @@
 \title{Initialize ArcPy module and environment in R}
 \usage{
 rpygeo_build_env(path = NULL, overwrite = TRUE, extensions = NULL,
-  x64 = FALSE, pro = FALSE)
+  x64 = FALSE, pro = FALSE, workspace = NULL)
 }
 \arguments{
 \item{path}{Root path to the Python version which contains the Python version
@@ -25,6 +25,9 @@ look for 64 bit Python ArcPy version in default folder (C:/Python27)}
 \item{pro}{If set to `TRUE` \code{rpygeo_build_env} tries to find Python version
 to use in the default ArcGIS Pro location
 (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)}
+
+\item{workspace}{Path of ArcGIS workspace in which to perform the
+geoprocessing.}
 }
 \value{
 Returns ArcPy module in R
@@ -37,8 +40,8 @@ Initialises the Python ArcPy site-package in R with the help
 \examples{
 
 # load the ArcPy module related to ArcGIS Pro (and save it as an R
-# object called "arcpy_m") in R and also set the "overwrite" parameter
-# to false and add some extensions. Note that we do not have to set the path
+# object called "arcpy_m") in R and also set the overwrite parameter
+# to FALSE and add some extensions. Note that we do not have to set the path
 # because the Python version is located in the default location
 # (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)in this example.
 \dontrun{arcpy_m <- rpygeo_build_env(overwrite = TRUE,
