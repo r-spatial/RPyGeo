@@ -72,7 +72,6 @@ input_check = function (overwrite, extensions) {
   }
 
   # handle extensions
-  # TODO create list
   if (!is.null(extensions)) {
 
     sapply(extensions, function(x) {
@@ -85,5 +84,20 @@ input_check = function (overwrite, extensions) {
 
 }
 
+
+#' @title  Set workspace
+#'
+#' @description set workspace for ArcPy environment
+#'
+#' @param path path to the workspace containing your data
+#' @author Fabian Polakowski
+#' @export
+#'
+#'
+set_workspace = function (path) {
+
+  e <- paste0("arcpy.env.workspace = '",path,"'" )
+  py_run_string(e)
+}
 
 

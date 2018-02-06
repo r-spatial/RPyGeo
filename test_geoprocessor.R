@@ -1,9 +1,22 @@
+
 a <- rpygeo_build_env()
+
+set_workspace("C:/Users/f/Google Drive/MA/thesis/R_analysis/data/")
+
+
+rpygeo_geoprocessor(lib = a, fun = "Slope_3d", args = c(
+  "raster_kw.tif",
+  "raster_kw_r.tif"
+), overwrite = TRUE, extensions = c("Spatial") , detect_required_extension = TRUE)
+
+
+
+
 
 rpygeo_geoprocessor(lib = a, fun = "Slope_3d", args = c(
   "C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif",
   "C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw_r.tif"
-), overwrite = TRUE, extensions = c("Spatial") , detect_require_extension = TRUE)
+), overwrite = TRUE, extensions = c("Spatial") , detect_required_extension = TRUE)
 
 
 
