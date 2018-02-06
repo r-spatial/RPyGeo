@@ -12,7 +12,6 @@
 #' @author Alexander Brenning, Fabian Polakowski
 #' @seealso \code{\link{rpygeo_geoprocessor}}
 #' @keywords interface database
-#' @export required_extensions
 #'
 #'
 
@@ -55,7 +54,6 @@ required_extensions <- function(expr) {
 #' @note This internal function is used by \code{rpygeo_geoprocessor} and
 #'   by \code{rpygeo_build_env}.
 #' @author Fabian Polakowski, Alexander Brenning
-#' @export input_check
 #'
 #'
 
@@ -91,7 +89,6 @@ input_check = function (overwrite, extensions) {
 #'
 #' @param path path to the workspace containing your data
 #' @author Fabian Polakowski
-#' @export
 #'
 #'
 set_workspace = function (path) {
