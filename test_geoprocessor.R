@@ -1,5 +1,6 @@
 
-a <- rpygeo_build_env(x64 = TRUE, workspace = "C:/Users/f/Google Drive/MA/thesis/R_analysis/data")
+a <- rpygeo_build_env(x64 = TRUE, workspace =
+                        "C:/Users/f/Google Drive/MA/thesis/R_analysis/data")
 
 
 
@@ -27,8 +28,9 @@ rpygeo_geoprocessor(lib = a, fun = "Slope_3d", args = c(
 
 
 
-# rpygeo_geoprocessor(a, "RasterToASCII_conversion", c("C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif",
-#                                                      "C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.asc"))
+# rpygeo_geoprocessor(a, "RasterToASCII_conversion",
+#c("C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.tif",
+#   "C:/Users/f/Google Drive/MA/thesis/R_analysis/data/raster_kw.asc"))
 #
 
 

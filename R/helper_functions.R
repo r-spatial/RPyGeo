@@ -20,7 +20,8 @@
 required_extensions <- function(expr) {
   # See ArcGIS help on the CheckOutExtension method:
   rpygeo_match_extensions <- c("sa", "3d", "stats", "na", "di", "ta")
-  names(rpygeo_match_extensions) <- c("Spatial", "3d", "geostats", "network", "datainteroperability", "Tracking")
+  names(rpygeo_match_extensions) <- c("Spatial", "3d", "geostats", "network",
+                                      "datainteroperability", "Tracking")
   ext <- c()
   for (s in expr) {
     sub_s <- strsplit(s, "(", fixed = TRUE)[[1]]
