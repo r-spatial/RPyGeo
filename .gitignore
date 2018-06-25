@@ -5,3 +5,4 @@
 *.py
 *.prj
 *log
+/testdata
