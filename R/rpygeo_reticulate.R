@@ -5,20 +5,27 @@
 #'   parameters such as `overwrite` and `extensions` to add.
 #' @param path Root path to the Python version which contains the Python version
 #'   which is linked to the ArcPy site-package. If left empty, the function looks
-#'   for `python.exe` in the most likely location
-#'   (C:/Python27/)
+#'   for `python.exe` in the most likely location (C:/Python27/). It is also
+#'   possible to provide a path to the \code{ArcGIS API for Python} here.
+#'   In order to do so you need to provide the path to the python anaconda library
+#'   were the arcgis package is installed. Additionally \code{arcgisAPI} must be
+#'   set to true.
 #' @param overwrite If set to `TRUE` (default) existing ArcGIS datasets can be
-#'   overwritten.
+#'   overwritten (does not work while using ArcGIS API for Python).
 #' @param extensions Optional character vector listing ArcGIS extension that
-#'   should be enabled.
-#' @param x64 Logical (default: \code{TRUE}). Determines if path search should
+#'   should be enabled (does not work while using ArcGIS API for Python)
+#' @param x64 Logical (default: \code{FALSE}). Determines if path search should
 #' look for 64 bit Python ArcPy version in default folder (C:/Python27)
-#' @param pro If set to `TRUE` \code{rpygeo_build_env} tries to find Python version
+#' @param pro Logical (default: \code{FALSE}). If set to `TRUE`
+#'   \code{rpygeo_build_env} tries to find Python version
 #'   to use in the default ArcGIS Pro location
 #'   (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)
+#' @param arcgisAPI Logical (default: \code{FALSE}). Must be set to `TRUE`
+#'   in order to use the ArcGIS API. This is the only option to work with
+#'   the \code{RPyGeo} Package under a linux operation system.
 #' @param workspace Path of ArcGIS workspace in which to perform the
-#'    geoprocessing.
-#' @return Returns ArcPy module in R
+#'    geoprocessing (does not work while using ArcGIS API for Python).
+#' @return Returns ArcPy or ArcGIS API module in R
 #' @author Fabian Polakowski
 #' @seealso \code{\link{rpygeo_geoprocessor}}
 #' @examples
@@ -39,17 +46,16 @@
 #' @export
 #'
 
-
-# TODO add workspace
+# TODO modify helper function for arcgis package
 # TODO add parameters such as overwrite or cellsize or extensions
 rpygeo_build_env <- function(path = NULL,
                              overwrite = TRUE,
                              extensions = NULL,
                              x64 = FALSE,
                              pro = FALSE,
+                             arcgisAPI = FALSE,
                              workspace = NULL) {
   # set path
-  # TODO check if it is really a ArcPy python
   if (is.null(path)) {
     if (x64) {
       dirs1 <- list.files(
@@ -99,17 +105,39 @@ rpygeo_build_env <- function(path = NULL,
 
   # init
   use_python(python = path, required = TRUE)
-  import("arcpy")
 
-  # handle initial parameters
-  input_check(overwrite = overwrite, extensions = extensions)
-
-  # set workspace if set in function parameter
-  if (!is.null(workspace)) {
-    set_workspace(workspace)
+  if (!arcgisAPI) {
+    import("arcpy")
+  }
+  if (arcgisAPI) {
+    import("arcgis")
   }
 
-  return(import("arcpy"))
+
+  # handle initial parameters
+  if (!arcgisAPI) {
+    input_check(overwrite = overwrite, extensions = extensions)
+  }
+
+  # set workspace if set in function parameter
+
+  if (!arcgisAPI) {
+
+    if (!is.null(workspace)) {
+      set_workspace(workspace)
+    }
+  }
+
+
+  # return Python ArcGIS library as R object
+  if (!arcgisAPI) {
+    return(import("arcpy"))
+  }
+
+  if (arcgisAPI) {
+    return(import("arcgis"))
+  }
+
 }
 
 

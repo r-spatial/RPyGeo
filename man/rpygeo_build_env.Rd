@@ -5,32 +5,40 @@
 \title{Initialize ArcPy module and environment in R}
 \usage{
 rpygeo_build_env(path = NULL, overwrite = TRUE, extensions = NULL,
-  x64 = FALSE, pro = FALSE, workspace = NULL)
+  x64 = FALSE, pro = FALSE, arcgisAPI = FALSE, workspace = NULL)
 }
 \arguments{
 \item{path}{Root path to the Python version which contains the Python version
 which is linked to the ArcPy site-package. If left empty, the function looks
-for `python.exe` in the most likely location
-(C:/Python27/)}
+for `python.exe` in the most likely location (C:/Python27/). It is also
+possible to provide a path to the \code{ArcGIS API for Python} here.
+In order to do so you need to provide the path to the python anaconda library
+were the arcgis package is installed. Additionally \code{arcgisAPI} must be
+set to true.}
 
 \item{overwrite}{If set to `TRUE` (default) existing ArcGIS datasets can be
-overwritten.}
+overwritten (does not work while using ArcGIS API for Python).}
 
 \item{extensions}{Optional character vector listing ArcGIS extension that
-should be enabled.}
+should be enabled (does not work while using ArcGIS API for Python)}
 
-\item{x64}{Logical (default: \code{TRUE}). Determines if path search should
+\item{x64}{Logical (default: \code{FALSE}). Determines if path search should
 look for 64 bit Python ArcPy version in default folder (C:/Python27)}
 
-\item{pro}{If set to `TRUE` \code{rpygeo_build_env} tries to find Python version
+\item{pro}{Logical (default: \code{FALSE}). If set to `TRUE`
+\code{rpygeo_build_env} tries to find Python version
 to use in the default ArcGIS Pro location
 (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)}
 
+\item{arcgisAPI}{Logical (default: \code{FALSE}). Must be set to `TRUE`
+in order to use the ArcGIS API. This is the only option to work with
+the \code{RPyGeo} Package under a linux operation system.}
+
 \item{workspace}{Path of ArcGIS workspace in which to perform the
-geoprocessing.}
+geoprocessing (does not work while using ArcGIS API for Python).}
 }
 \value{
-Returns ArcPy module in R
+Returns ArcPy or ArcGIS API module in R
 }
 \description{
 Initialises the Python ArcPy site-package in R with the help
