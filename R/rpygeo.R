@@ -1,5 +1,40 @@
-#' @title RPyGeo: Info
+#' @title RPyGeo: ArcGIS Geoprocessing in R via Python
 #'
-#' @description add description here
-#' @details details
+#' @description Provide access to (virtually any) ArcGIS geoprocessing tool from
+#'   within R by running Python
+#'   geoprocessing without writing Python code or touching ArcGIS.
+#' @details The package utilizes the ArcPy Python site-package or the ArcGIS API
+#'   in order to access ArcGIS functionality.
+#'   There are two core functions of this package. The function
+#'   \code{\link{rpygeo_build_env}} can be applied to generate an ArcPy or arcgis
+#'   object. The function \code{\link{rpygeo_geoprocessor}} can be used to carry out
+#'   ArcGIS functions inside of R.
+#'   The \code{rpygeo_geoprocessor} function is a simple wrapper to execute a
+#'   ArcGIS geoprocessing tool. However, all ArcGIS tools can also be addressed
+#'   via the object generated with \code{rypgeo_build_env}. The two approaches
+#'   to use the ArcGIS functions are shown in the example bellow.
+#'
+#' @examples
+#'
+#' # load the ArcPy module related to ArcGIS Pro (and save it as a R
+#' # object called "arcpy_m") in R and also set the overwrite parameter
+#' # to FALSE and add some extensions. Note that we do not have to set the path
+#' # because the Python version is located in the default location
+#' # (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)in this example.
+#' \dontrun{arcpy <- rpygeo_build_env(overwrite = TRUE,
+#'                                      extensions = c("3d", "Spatial", "na"),
+#'                                      pro = TRUE)}
+#' # We now have two possibilities to continue
+#' # 1. We can use our "arcpy" directly to access ArcPy functions:
+#' # suppose we want to calculate the slope of a Digtial Elevation Model.
+#' # It is possible to get the description of any ArcPy function as a R list:
+#' \dontrun{py_function_docs("arcpy$Slope_3d")}
+#' Now we can run our computation:
+#' \dontrun{arcpy$Slope_3d(arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif")}
+#' # 2. We can use the \code{\link{rpygeo_geoprocessor}} to run the operation:
+#' \dontrun{rpygeo_geoprocessor(lib = arcpy, fun = "Slope_3d",
+#'                              args = c("dem.tif", "slope.tif"))}
+#'
+#'
+#'
 "_PACKAGE"
