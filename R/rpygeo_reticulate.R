@@ -88,7 +88,7 @@ rpygeo_build_env <- function(path = NULL,
     }
 
     if (length(dirs) < 1) {
-      stop("No python function found in 'C:/Python27' - please define python path\n")
+      stop("No python version found in 'C:/Python27' - please define python path\n")
     }
   }
 
