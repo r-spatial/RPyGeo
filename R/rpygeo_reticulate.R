@@ -143,7 +143,7 @@ rpygeo_build_env <- function(path = NULL,
 
 #' @title ArcGIS Geoprocessor Workhorse
 #'
-#' @description This function utilzes the ArcPy site-package in R via the reticulate
+#' @description This function utilizes the ArcPy site-package in R via the reticulate
 #'   connection to perform ArcPy calculation in R. It returns error messages if
 #'   an error appears.
 #'
@@ -159,7 +159,7 @@ rpygeo_build_env <- function(path = NULL,
 #'   overwritten.
 #' @param detect_required_extensions Logical (default: \code{TRUE}).
 #'   Determines whether \code{\link{required_extensions}} should try to find out
-#'   which ArcGIS extensions are required to evaluate the \code{fun}ction(s).
+#'   which ArcGIS extensions are required to evaluate the \code{function(s)}.
 #' @param workspace Path of ArcGIS workspace in which to perform the
 #'    geoprocessing.
 #' @return The function returns \code{NULL} if is was successful, or otherwise
