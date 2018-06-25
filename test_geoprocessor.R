@@ -15,6 +15,9 @@ workspace = "C:/Users/f/Google Drive/MA/thesis/R_analysis/data")
 
 
 
+# get help for a function
+py_function_docs("a$Slope_3d")
+
 
 
 rpygeo_geoprocessor(lib = a, fun = "Slope_3d", args = c(
