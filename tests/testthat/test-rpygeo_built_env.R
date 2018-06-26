@@ -12,13 +12,3 @@ test_that("rypgeo_build_env's python versions contains arcpy", {
 
 
 
-
-
-test_that("", {
-
-  skip_on_cran()
-
-
-
-})
-

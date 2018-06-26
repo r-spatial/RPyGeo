@@ -16,7 +16,7 @@ workspace = "C:/Users/f/Google Drive/MA/thesis/R_analysis/data")
 
 
 # get help for a function
-py_function_docs("a$Slope_3d")
+py_function_docs("a$")
 
 
 

@@ -37,7 +37,7 @@ The package utilizes the ArcPy Python site-package or the ArcGIS API
 # suppose we want to calculate the slope of a Digtial Elevation Model.
 # It is possible to get the description of any ArcPy function as a R list:
 \dontrun{py_function_docs("arcpy$Slope_3d")}
-Now we can run our computation:
+# Now we can run our computation:
 \dontrun{arcpy$Slope_3d(arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif")}
 # 2. We can use the \\code{\\link{rpygeo_geoprocessor}} to run the operation:
 \dontrun{rpygeo_geoprocessor(lib = arcpy, fun = "Slope_3d",
