@@ -5,7 +5,7 @@ within R by running Python geoprocessing without writing Python code or touching
 
 
 This is the currently Work in Process version of the RPyGeo package. 
-In contrast to the old version this version uses [Reticulat](https://rstudio.github.io/reticulate/articles/introduction.html)
+In contrast to the old version this version uses [Reticulate](https://rstudio.github.io/reticulate/articles/introduction.html)
 in order to establish a connection to the ArcGIS geoprocessing methods. 
 The package utilizes the ArcPy Python site-package or the ArcGIS API in order to
 access ArcGIS functionality. There are two core functions of this package. The function
@@ -32,10 +32,10 @@ devtools::install_github("fapola/RPyGeo")
 ```
 ## Examples
 Load the ArcPy module related to ArcGIS Pro (and save it as a R
-object called "arcpy_m") in R and also set the overwrite parameter
-to FALSE and add some extensions. Note that we do not have to set the path
+object called "arcpy") in R and also set the overwrite parameter
+to `FALSE` and add some extensions. Note that we do not have to set the path
 because the Python version is located in the default location
-(C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)in this example.
+(C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/) in this example.
 
 ``` r
 arcpy <- rpygeo_build_env(overwrite = TRUE,
