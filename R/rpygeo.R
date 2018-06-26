@@ -25,7 +25,7 @@
 #'                                      extensions = c("3d", "Spatial", "na"),
 #'                                      pro = TRUE)}
 #' # We now have two possibilities to continue
-#' # 1. We can use our "arcpy" directly to access ArcPy functions:
+#' # 1. We can use our "arcpy" object directly to access ArcPy functions:
 #' # suppose we want to calculate the slope of a Digtial Elevation Model.
 #' # It is possible to get the description of any ArcPy function as a R list:
 #' \dontrun{py_function_docs("arcpy$Slope_3d")}
