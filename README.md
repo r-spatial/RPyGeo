@@ -81,7 +81,7 @@ We can run functions with:
 arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif")
 
 ```
-Caution, some functions are located in a sub-module. The same slope function e.g.
+Caution! Some functions are located in a sub-module. The same slope function e.g.
 comes with the "Spatial Analyst" extension. We can find this function by
 going into the sub-module `sa`.
 
