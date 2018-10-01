@@ -229,3 +229,33 @@ rpygeo_geoprocessor <- function(
 
   return(NULL)
 }
+
+#' @title Search for ArcPy functions
+#'
+#' @description Search for ArcPy functions with a character string or regular expression.
+#'
+#' @param search_term Search term. Regular expressions are possible.
+#' @param module ArcPy or ArcGIS API module created with \code{\link{rpygeo_build_env}}.
+#'
+#' @return List of matching ArcPy functions
+#'
+#' @author Marc Becker
+#' @seealso \code{\link{rpygeo_build_env}}
+#'
+#' @examples
+#' # Get  ArcPy or ArcGIS API module
+#' \dontrun{arc <- rpygeo_build_env(pro = TRUE)
+#' # Search for ArcPy functions, which contain the term 3d
+#' rpygeo_search("3d")}
+#' @export
+
+rpygeo_search <- function(search_term = NULL, module = NULL) {
+
+  # Get all ArcPy functions
+  functions <- py_list_attributes(module)
+
+  # Query available functions
+  res <- grep(search_term, functions, ignore.case = TRUE, value = TRUE)
+
+  return(res)
+}

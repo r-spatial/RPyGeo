@@ -2,3 +2,4 @@
 
 export(rpygeo_build_env)
 export(rpygeo_geoprocessor)
+export(rpygeo_search)
