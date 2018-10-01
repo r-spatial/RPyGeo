@@ -13,7 +13,7 @@
 #' @seealso \code{\link{rpygeo_geoprocessor}}
 #' @keywords interface database
 #'
-#'
+#' @export
 
 
 # TODO add note, that some extensions need to be added manually
@@ -56,7 +56,7 @@ required_extensions <- function(expr) {
 #'   by \code{rpygeo_build_env}.
 #' @author Fabian Polakowski, Alexander Brenning
 #'
-#'
+#' @export
 
 input_check = function (overwrite, extensions) {
 
@@ -91,7 +91,7 @@ input_check = function (overwrite, extensions) {
 #' @param path path to the workspace containing your data
 #' @author Fabian Polakowski
 #'
-#'
+#' @export
 set_workspace = function (path) {
 
   e <- paste0("arcpy.env.workspace = '",path,"'" )
