@@ -257,9 +257,8 @@ rpygeo_search <- function(search_term = NULL, module = NULL) {
   functions <- py_list_attributes(module)
 
   # Query available functions
-  res <- grep(search_term, functions, ignore.case = TRUE, value = TRUE)
-
-  return(res)
+  grep(search_term, functions, ignore.case = TRUE, value = TRUE) %>%
+    return()
 }
 
 #' @title Load output of ArcPy functions into R session
