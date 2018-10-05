@@ -241,10 +241,14 @@ rpygeo_geoprocessor <- function(
 #' @seealso \code{\link{rpygeo_build_env}}
 #'
 #' @examples
-#' # Get  ArcPy or ArcGIS API module
-#' \dontrun{arc <- rpygeo_build_env(pro = TRUE)
+#'
+#' \dontrun{
+#' # Load the ArcPy module and build environment
+#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/")
+#'
 #' # Search for ArcPy functions, which contain the term 3d
-#' rpygeo_search("3d")}
+#' rpygeo_search("3d")
+#' }
 #' @export
 
 rpygeo_search <- function(search_term = NULL, module = NULL) {

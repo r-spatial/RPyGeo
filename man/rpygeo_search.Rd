@@ -18,10 +18,14 @@ List of matching ArcPy functions
 Search for ArcPy functions with a character string or regular expression.
 }
 \examples{
-# Get  ArcPy or ArcGIS API module
-\dontrun{arc <- rpygeo_build_env(pro = TRUE)
+
+\dontrun{
+# Load the ArcPy module and build environment
+env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/")
+
 # Search for ArcPy functions, which contain the term 3d
-rpygeo_search("3d")}
+rpygeo_search("3d")
+}
 }
 \seealso{
 \code{\link{rpygeo_build_env}}
