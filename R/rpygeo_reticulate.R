@@ -122,7 +122,6 @@ rpygeo_build_env <- function(path = NULL,
   # set workspace if set in function parameter
 
   if (!arcgisAPI) {
-
     if (!is.null(workspace)) {
       set_workspace(workspace)
     }
@@ -137,7 +136,6 @@ rpygeo_build_env <- function(path = NULL,
   if (arcgisAPI) {
     return(import("arcgis"))
   }
-
 }
 
 
@@ -258,4 +256,58 @@ rpygeo_search <- function(search_term = NULL, module = NULL) {
   res <- grep(search_term, functions, ignore.case = TRUE, value = TRUE)
 
   return(res)
+}
+
+#' @title Load output of ArcPy functions into R session
+#'
+#' @description This function loads the output of an ArcPy function into the R session. Raster files are loaded as `raster` objects and vector files as `sf` objects. Currently .tif, .img and .shp files are supported. Usually this function is used with the pipe operator, hence the data parameter is not manually set.
+#'
+#' @param data Path to the ArcPy function output file
+#'
+#' @return `raster` or `sf` object
+#'
+#' @author Marc Becker
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # Load packages
+#' library(spData)
+#' library(dplyr)
+#'
+#' # Load the ArcPy module and build environment
+#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/")
+#'
+#' # Write raster to workspace directory
+#' writeRater(elev, "C:/elev.tif")
+#'
+#' # Create a slope raster and load it into the R Session
+#' env$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") %>%
+#'   rpygeo_load() -> slope
+#' }
+#' @export
+
+rpygeo_load <- function(data) {
+
+  # Get file path from environment object
+  data %>%
+    type.convert() %>%
+    as.character() -> path
+
+  # Get file extension
+  path %>%
+    file_ext() -> extension
+
+  # Check file extension
+  if (any(extension %in% c("tif", "img"))) {
+    # Raster
+    raster::raster(path) %>%
+      return()
+  } else if (any(extension %in% c("shp"))) {
+    # Vector
+    sf::st_read() %>%
+      return()
+  } else {
+    stop("Unsupported data type. rpygeo_load supports Tagged image file format (.tif), Erdas Imagine Images (.img) and Shapefiles (.shp)")
+  }
 }
