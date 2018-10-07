@@ -314,3 +314,56 @@ rpygeo_load <- function(data) {
     stop("Unsupported data type. rpygeo_load supports Tagged image file format (.tif), Erdas Imagine Images (.img) and Shapefiles (.shp)")
   }
 }
+
+#' @title Get help file for ArcPy function
+#'
+#' @description This function opens the help file for ArcPy function in viewer panel.
+#'
+#' @param arcpy_function ArcPy module with function
+#'
+#' @return Help file in viewer panel
+#'
+#' @author Marc Becker
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # Load the ArcPy module and build environment
+#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/")
+#'
+#' # Get help file
+#' rpygeo_help(env$Slope_3d)
+#' }
+#' @export
+
+rpygeo_help <- function(arcpy_function) {
+
+  # Get function documentation
+  substitute(arcpy_function) %>%
+    deparse() %>%
+    py_function_docs() -> doc
+
+  # Get parameters
+  str_match(arcpy_function$func_doc, "INPUTS:(?s).*") %>%
+    str_replace("INPUTS:\n", "") %>%
+    str_split("OUTPUTS:\n") -> parameters
+
+  # Create temp dir for viewer
+  temp_dir <- tempfile()
+  if(!dir.exists(temp_dir)) {
+    dir.create(temp_dir)
+  }
+
+  # Render help file
+  rmarkdown::render(paste0(find.package("RPyGeo"), "/template/help_template.Rmd"),
+                    output_file = "help.html",
+                    output_dir = temp_dir,
+                    params = list(
+                      name = doc$name,
+                      input = parameters[[1]][1],
+                      output = parameters[[1]][2],
+                      example = doc$signature
+                      ),
+                    quiet = TRUE) %>%
+    rstudioapi::viewer()
+}
