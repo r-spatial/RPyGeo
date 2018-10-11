@@ -83,7 +83,6 @@ input_check = function (overwrite, extensions) {
 
 }
 
-
 #' @title  Set workspace
 #'
 #' @description set workspace for ArcPy environment
@@ -98,4 +97,17 @@ set_workspace = function (path) {
   py_run_string(e)
 }
 
+#' @title  Set scratch workspace
+#'
+#' @description Set scratch workspace for ArcPy environment
+#'
+#' @param path path to the scratch workspace
+#'
+#' @author Fabian Polakowski and Marc Becker
+#'
+#' @export
+set_scratch_workspace = function (path) {
 
+  e <- paste0("arcpy.env.scratchWorkspace = '",path,"'" )
+  py_run_string(e)
+}

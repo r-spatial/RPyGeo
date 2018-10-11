@@ -5,7 +5,8 @@
 \title{Initialize ArcPy module and environment in R}
 \usage{
 rpygeo_build_env(path = NULL, overwrite = TRUE, extensions = NULL,
-  x64 = FALSE, pro = FALSE, arcgisAPI = FALSE, workspace = NULL)
+  x64 = FALSE, pro = FALSE, arcgisAPI = FALSE, workspace = NULL,
+  scratch_workspace = NULL)
 }
 \arguments{
 \item{path}{Root path to the Python version which contains the Python version
@@ -36,6 +37,10 @@ the \code{RPyGeo} Package under a linux operation system.}
 
 \item{workspace}{Path of ArcGIS workspace in which to perform the
 geoprocessing (does not work while using ArcGIS API for Python).}
+
+\item{scratch_workspace}{Path to ArcGIS scratch workspace in which to store
+temporary files (does not work while using ArcGIS API for Python). If
+\code{NULL} a folder named scratch is created inside the workspace folder.}
 }
 \value{
 Returns ArcPy or ArcGIS API module in R
