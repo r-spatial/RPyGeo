@@ -367,3 +367,55 @@ rpygeo_help <- function(arcpy_function) {
                     quiet = TRUE) %>%
     rstudioapi::viewer()
 }
+
+#' @title Save temporary file to workspace
+#'
+#' @description This function saves temporary raster files as permanent files to the workspace. The raster format is inferred from the file extension.
+#'
+#' @param data Path to the temporary file
+#'
+#' @param filename Filename with extension
+#'
+#' @return RasterLayer
+#'
+#' @details Some ArcPy functions have no parameter to specify an output file. Instead they return an object and a temporary file is saved to the workspace. This functions writes the temporary file as a permanent file to the workspace. For supported formats s. \link[raster]{writeFormats}.
+#'
+#' @author Marc Becker
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # Load packages
+#' library(spData)
+#' library(dplyr)
+#'
+#' # Load the ArcPy module and build environment
+#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+#'
+#' # Write raster to workspace directory
+#' writeRater(elev, "C:/workspace/elev.tif")
+#'
+#' # Calculate
+#' env$sa$Aspect(in_raster = "elev.tif") %>%
+#'   rpygeo_save("aspect.tif")
+#' }
+#'
+#' @export
+
+rpygeo_save <- function(data, filename) {
+
+  # Get file path from environment object
+  data %>%
+    type.convert() %>%
+    as.character() -> path
+
+  # Get overwrite setting
+  overwrite <- py_run_string("overwrite = arcpy.env.overwriteOutput")
+
+  # Get current workspace
+  workspace <- py_run_string("workspace = arcpy.env.workspace")
+
+  # Read raster and write to new file
+  raster(path) %>%
+    writeRaster(paste0(workspace$workspace, "/", filename), overwrite = overwrite$overwrite)
+}
