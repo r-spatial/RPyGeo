@@ -3,7 +3,6 @@ output: html_document
 params:
   name: Name
   input: Input
-  output: Output
   example: Example
 ---
 
@@ -18,16 +17,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, comment=NA, echo=FALSE}
 cat(params$input)
 ```
-
-### Output
-
-```{r, comment=NA, echo=FALSE}
-cat(params$output)
-```
-
 ### Example
 
 ```{r, comment=NA, echo=FALSE}
 cat(paste0("env$", params$example))
 ```
-

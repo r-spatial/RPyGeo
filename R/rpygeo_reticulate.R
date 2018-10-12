@@ -334,7 +334,7 @@ rpygeo_load <- function(data) {
 #'
 #' @param arcpy_function ArcPy module with function
 #'
-#' @return Help file in viewer panel
+#' @return NULL
 #'
 #' @author Marc Becker
 #'
@@ -357,9 +357,65 @@ rpygeo_help <- function(arcpy_function) {
     py_function_docs() -> doc
 
   # Get parameters
-  str_match(arcpy_function$func_doc, "INPUTS:(?s).*") %>%
-    str_replace("INPUTS:\n", "") %>%
-    str_split("OUTPUTS:\n") -> parameters
+  arcpy_function$func_doc %>%
+    str_match("(INPUTS:|Arguments:)") -> help_type
+
+  if(is.na(help_type[[1]])) {
+    # No parameters
+    parameters <- c("No input parameters", "No output parameters")
+    template <- "help_template_generic.Rmd"
+    template_parameter <- list(
+      name = doc$name,
+      description = arcpy_function$func_doc
+    )
+  } else if(help_type[[1]] == "INPUTS:") {
+    # Main module help file
+    arcpy_function$func_doc %>%
+      str_match("OUTPUTS:") -> output_type
+
+    if(is.na(output_type)) {
+      # No output
+      arcpy_function$func_doc %>%
+        str_match("(INPUTS:)([\\S\\s]*)") %>%
+        str_replace_all("\\n {6}", "\\\n") %>%
+        str_replace("^\\n", "") %>%
+        str_replace("\\s*$", "") -> res
+      template <- "help_template_no_output.Rmd"
+      template_parameter <- list(
+        name = doc$name,
+        input = res[[3]],
+        example = doc$signature
+      )
+    } else {
+      # Input and output
+      arcpy_function$func_doc %>%
+        str_match("(INPUTS:)([\\S\\s]*)(OUTPUTS:)([\\S\\s]*)") %>%
+        str_replace_all("\\n {6}", "\\\n") %>%
+        str_replace("^\\n", "") %>%
+        str_replace("\\s*$", "") -> res
+      template <- "help_template.Rmd"
+      template_parameter <- list(
+        name = doc$name,
+        input = res[[3]],
+        output = res[[5]],
+        example = doc$signature
+      )
+    }
+  } else if (help_type[[1]] == "Arguments:"){
+    # SA module help file
+    arcpy_function$func_doc %>%
+      str_match("(Arguments:)([\\S\\s]*)(Results:)([\\S\\s]*)") %>%
+      str_replace_all("\\n {4}", "\\\n") %>%
+      str_replace("^\\n", "") %>%
+      str_replace("\\s*$", "") -> res
+    template <- "help_template.Rmd"
+    template_parameter <- list(
+      name = doc$name,
+      input = res[[3]],
+      output = res[[5]],
+      example = doc$signature
+    )
+  }
 
   # Create temp dir for viewer
   temp_dir <- tempfile()
@@ -368,15 +424,10 @@ rpygeo_help <- function(arcpy_function) {
   }
 
   # Render help file
-  rmarkdown::render(paste0(find.package("RPyGeo"), "/template/help_template.Rmd"),
+  rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
                     output_file = "help.html",
                     output_dir = temp_dir,
-                    params = list(
-                      name = doc$name,
-                      input = parameters[[1]][1],
-                      output = parameters[[1]][2],
-                      example = doc$signature
-                      ),
+                    params = template_parameter,
                     quiet = TRUE) %>%
     rstudioapi::viewer()
 }

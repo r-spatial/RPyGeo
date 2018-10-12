@@ -1,0 +1,20 @@
+---
+output: html_document
+params:
+  name: Name
+  description: Description
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## `r params$name`
+
+### Description
+
+```{r, comment=NA, echo=FALSE}
+cat(params$description)
+```
+
+RPygeo could not phrase the ArcPy help file. Above is the raw help file.
