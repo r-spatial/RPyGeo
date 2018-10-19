@@ -40,7 +40,8 @@ geoprocessing (does not work while using ArcGIS API for Python).}
 
 \item{scratch_workspace}{Path to ArcGIS scratch workspace in which to store
 temporary files (does not work while using ArcGIS API for Python). If
-\code{NULL} a folder named scratch is created inside the workspace folder.}
+\code{NULL} a folder named scratch is created inside the workspace folder
+or on the same directory level as the workspace file geodatabase.}
 }
 \value{
 Returns ArcPy or ArcGIS API module in R

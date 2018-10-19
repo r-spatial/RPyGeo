@@ -27,7 +27,8 @@
 #'    geoprocessing (does not work while using ArcGIS API for Python).
 #' @param scratch_workspace Path to ArcGIS scratch workspace in which to store
 #'   temporary files (does not work while using ArcGIS API for Python). If
-#'   \code{NULL} a folder named scratch is created inside the workspace folder.
+#'   \code{NULL} a folder named scratch is created inside the workspace folder
+#'   or on the same directory level as the workspace file geodatabase.
 #' @return Returns ArcPy or ArcGIS API module in R
 #' @author Fabian Polakowski
 #' @seealso \code{\link{rpygeo_geoprocessor}}
@@ -136,8 +137,13 @@ rpygeo_build_env <- function(path = NULL,
     if (!is.null(workspace) & !is.null(scratch_workspace)) {
       set_scratch_workspace(scratch_workspace)
     } else if (!is.null(workspace) & is.null(scratch_workspace)) {
-      dir.create(paste0(workspace, "/scratch"), showWarnings = FALSE)
-      set_scratch_workspace(paste0(workspace, "/scratch"))
+      if(file_ext(basename(workspace)) == "gdb") {
+        dir.create(paste0(dirname(workspace), "/scratch"), showWarnings = FALSE)
+        set_scratch_workspace(paste0(dirname(workspace), "/scratch"))
+      } else {
+        dir.create(paste0(workspace, "/scratch"), showWarnings = FALSE)
+        set_scratch_workspace(paste0(workspace, "/scratch"))
+      }
     }
   }
 
