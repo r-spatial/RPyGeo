@@ -35,7 +35,7 @@ Supported datasets:
 
 Esri has not released an API for raster datasets in file geodatabases. \code{rpygeo_load} converts a raster dataset to a temporary ASCII raster first and then loads it into the R session. Be aware that this can take a long time for large raster datasets.
 
-This function can be used with the \code{\%>\%} operator from the \code{dplyr} package. The \code{\%>\%} operator forwards the \code{reticulate} object from the ArcPy function to \code{rpygeo_load} (s. Example 1). If used without the \code{\%>\%} operator an \code{reticulate} object can be specified for the \code{data} parameter (s. Example 2). It is also possible to use the filename ArcPy function output (s. Example 3).  For Arc/Info Binary Grids the data parameter is just the name of the directory, which contains the \code{adf} files.
+This function can be used with the \code{\%>\%} operator from the \code{dplyr} package. The \code{\%>\%} operator forwards the \code{reticulate} object from the ArcPy function to \code{rpygeo_load} (s. Example 1). If used without the \code{\%>\%} operator an \code{reticulate} object can be specified for the \code{data} parameter (s. Example 2). It is also possible to use the filename of the ArcPy function output (s. Example 3). For Arc/Info Binary Grids the \code{data} parameter is just the name of the directory, which contains the \code{adf} files.
 }
 \examples{
 
