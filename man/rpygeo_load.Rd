@@ -7,30 +7,61 @@
 rpygeo_load(data)
 }
 \arguments{
-\item{data}{Path to the ArcPy function output file}
+\item{data}{\code{reticulate} object or filename of the ArcPy function output}
 }
 \value{
-`raster` or `sf` object
+\code{raster} or \code{sf} object
 }
 \description{
-This function loads the output of an ArcPy function into the R session. Raster files are loaded as `raster` objects and vector files as `sf` objects. Currently .tif, .img and .shp files are supported. Usually this function is used with the pipe operator, hence the data parameter is not manually set.
+This function loads the output of an ArcPy function into the R session. Raster files are loaded as \code{raster} objects and vector files as \code{sf} objects.
+}
+\details{
+Currently files and datasets stored in file geodatabases are supported.
+
+Supported file formats:
+\itemize{
+  \item Tagged Image File Format (.tif)
+  \item Erdas Imagine Images (.img)
+  \item Esri Arc/Info Binary Grid (.adf)
+  \item Esri ASCII Raster (.asc)
+  \item Esri Shapefiles (.shp)
+  }
+
+Supported datasets:
+\itemize{
+  \item Feature Class
+  \item Raster Dataset
+}
+
+Esri has not released an API for raster datasets in file geodatabases. \code{rpygeo_load} converts a raster dataset to a temporary ASCII raster first and then loads it into the R session. Be aware that this can take a long time for large raster datasets.
+
+This function can be used with the \code{\%>\%} operator from the \code{dplyr} package. The \code{\%>\%} operator forwards the \code{reticulate} object from the ArcPy function to \code{rpygeo_load} (s. Example 1). If used without the \code{\%>\%} operator an \code{reticulate} object can be specified for the \code{data} parameter (s. Example 2). It is also possible to use the filename ArcPy function output (s. Example 3).  For Arc/Info Binary Grids the data parameter is just the name of the directory, which contains the \code{adf} files.
 }
 \examples{
 
 \dontrun{
 # Load packages
+library(RPyGeo)
 library(spData)
 library(dplyr)
 
 # Load the ArcPy module and build environment
-env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/")
+env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace")
 
 # Write raster to workspace directory
-writeRater(elev, "C:/elev.tif")
+writeRater(elev, "C:/workspace/elev.tif")
 
-# Create a slope raster and load it into the R Session
+# Create a slope raster and load it into the R session (Example 1)
 env$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") \%>\%
   rpygeo_load() -> slope
+
+# Create a aspect raster and load it into the R session (Example 2)
+ras_aspect <- env$sa$Aspect(in_raster = "elev.tif")
+rpygeo_load(ras_aspect)
+
+# Convert elevation raster to polygon shapefile and load it into R session (Example 3)
+env$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
+rpygeo_load("C:/workspace/elev.shp")
 }
 }
 \author{

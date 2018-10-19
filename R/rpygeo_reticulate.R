@@ -276,11 +276,32 @@ rpygeo_search <- function(search_term = NULL, module = NULL) {
 
 #' @title Load output of ArcPy functions into R session
 #'
-#' @description This function loads the output of an ArcPy function into the R session. Raster files are loaded as `raster` objects and vector files as `sf` objects. Currently .tif, .img and .shp files are supported. Usually this function is used with the pipe operator, hence the data parameter is not manually set.
+#' @description This function loads the output of an ArcPy function into the R session. Raster files are loaded as \code{raster} objects and vector files as \code{sf} objects.
 #'
-#' @param data Path to the ArcPy function output file
+#' @param data \code{reticulate} object or filename of the ArcPy function output
 #'
-#' @return `raster` or `sf` object
+#' @return \code{raster} or \code{sf} object
+#'
+#' @details Currently files and datasets stored in file geodatabases are supported.
+#'
+#' Supported file formats:
+#' \itemize{
+#'   \item Tagged Image File Format (.tif)
+#'   \item Erdas Imagine Images (.img)
+#'   \item Esri Arc/Info Binary Grid (.adf)
+#'   \item Esri ASCII Raster (.asc)
+#'   \item Esri Shapefiles (.shp)
+#'   }
+#'
+#' Supported datasets:
+#' \itemize{
+#'   \item Feature Class
+#'   \item Raster Dataset
+#' }
+#'
+#' Esri has not released an API for raster datasets in file geodatabases. \code{rpygeo_load} converts a raster dataset to a temporary ASCII raster first and then loads it into the R session. Be aware that this can take a long time for large raster datasets.
+#'
+#' This function can be used with the \code{\%>\%} operator from the \code{dplyr} package. The \code{\%>\%} operator forwards the \code{reticulate} object from the ArcPy function to \code{rpygeo_load} (s. Example 1). If used without the \code{\%>\%} operator an \code{reticulate} object can be specified for the \code{data} parameter (s. Example 2). It is also possible to use the filename of the ArcPy function output (s. Example 3). For Arc/Info Binary Grids the \code{data} parameter is just the name of the directory, which contains the \code{adf} files.
 #'
 #' @author Marc Becker
 #'
@@ -288,43 +309,79 @@ rpygeo_search <- function(search_term = NULL, module = NULL) {
 #'
 #' \dontrun{
 #' # Load packages
+#' library(RPyGeo)
 #' library(spData)
 #' library(dplyr)
 #'
 #' # Load the ArcPy module and build environment
-#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/")
+#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace")
 #'
 #' # Write raster to workspace directory
-#' writeRater(elev, "C:/elev.tif")
+#' writeRater(elev, "C:/workspace/elev.tif")
 #'
-#' # Create a slope raster and load it into the R Session
+#' # Create a slope raster and load it into the R session (Example 1)
 #' env$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") %>%
 #'   rpygeo_load() -> slope
+#'
+#' # Create a aspect raster and load it into the R session (Example 2)
+#' ras_aspect <- env$sa$Aspect(in_raster = "elev.tif")
+#' rpygeo_load(ras_aspect)
+#'
+#' # Convert elevation raster to polygon shapefile and load it into R session (Example 3)
+#' env$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
+#' rpygeo_load("C:/workspace/elev.shp")
 #' }
 #' @export
 
 rpygeo_load <- function(data) {
 
-  # Get file path from environment object
+  # Get path from reticulate object
   data %>%
     type.convert() %>%
     as.character() -> path
 
-  # Get file extension
-  path %>%
-    file_ext() -> extension
+  # Get info
+  info <- py_run_string(paste0("info = arcpy.Describe('", path,"')"))
 
-  # Check file extension
-  if (any(extension %in% c("tif", "img"))) {
-    # Raster
-    raster::raster(path) %>%
-      return()
-  } else if (any(extension %in% c("shp"))) {
-    # Vector
-    sf::st_read() %>%
-      return()
+  # File or dataset in file geodatabase
+  if(file_ext(basename(info$info$path)) == "gdb") {
+    # File geodatabase
+    if(info$info$dataType == "FeatureClass") {
+      # Vector
+      st_read(dsn = info$info$path, layer = info$info$baseName) %>%
+        return()
+    } else if(info$info$dataType == "RasterDataset") {
+      # Raster
+      # Create temporary file with less than 8 characters
+      tempdir() %>%
+        paste0("/r", paste0(floor(runif(7, min=0, max=9)), collapse = ""), ".asc") ->  temp_file
+
+      # Export raster from geodatabase to temporary directory
+      py_run_string(paste0("arcpy.RasterToASCII_conversion('", info$info$baseName,"', '", temp_file,"')"))
+
+      raster(temp_file) %>%
+        return()
+    } else {
+      stop("Unsupported dataset. rpygeo_load supports Feature Class and Raster Dataset.")
+    }
   } else {
-    stop("Unsupported data type. rpygeo_load supports Tagged image file format (.tif), Erdas Imagine Images (.img) and Shapefiles (.shp)")
+    # File
+    # Check file extension
+    if (any(info$info$extension %in% c("tif", "img", "asc"))) {
+      # Raster
+      raster(paste0(info$info$path, "/" ,info$info$file)) %>%
+        return()
+    } else if (any(info$info$extension %in% c("shp"))) {
+      # Vector
+      st_read(paste0(info$info$path, "/" ,info$info$file)) %>%
+        return()
+    } else if(info$info$extension == "" & file.exists(paste0(info$info$path, "/" ,info$info$file, "/hdr.adf"))) {
+      # Arc/Info Binary Grid
+      raster(paste0(info$info$path, "/" ,info$info$file)) %>%
+        return()
+    } else {
+      stop("Unsupported data type. rpygeo_load supports Tagged Image File Format (.tif), Erdas Imagine Images (.img), Arc/Info Binary Grid (.adf), Esri ASCII Raster (.asc) and Shapefiles (.shp)")
+    }
   }
 }
 
