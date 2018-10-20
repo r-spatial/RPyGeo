@@ -495,17 +495,24 @@ rpygeo_help <- function(arcpy_function) {
     rstudioapi::viewer()
 }
 
-#' @title Save temporary file to workspace
+#' @title Save temporary raster to workspace
 #'
-#' @description This function saves temporary raster files as permanent files to the workspace. The raster format is inferred from the file extension.
+#' @description This function saves temporary a raster as permanent raster to the workspace.
 #'
-#' @param data Path to the temporary file
+#' @param data \code{reticulate} object or full path of the ArcPy function output
 #'
-#' @param filename Filename with extension
+#' @param filename Filename with extension or without extension if the workspace is file geodatabase
 #'
-#' @return RasterLayer
+#' @details Some ArcPy functions have no parameter to specify an output raster. Instead they return a raster object and a temporary raster is saved to the scratch workspace. This functions writes the temporary raster as a permanent raster to the workspace.
 #'
-#' @details Some ArcPy functions have no parameter to specify an output file. Instead they return an object and a temporary file is saved to the workspace. This functions writes the temporary file as a permanent file to the workspace. For supported formats s. \link[raster]{writeFormats}.
+#' How the file is written depends on the workspace and scratch workspace environment settings.
+#'
+#' \itemize{
+#'   \item Workspace and scratch workspace are directories: Raster is loaded with the \code{raster} package and is written to workspace directory. The file format is inferred from the file extension in the \code{filename} parameter.
+#'   \item Workspace and scratch workspace are file geodatabases: Raster is copied to workspace file geodatabase. No file extension necessary for the \code{filename} parameter.
+#'   \item Workspace is file geodatabase and scratch workspace is directory: Raster is copied to workspace file geodatabase. No file extension necessary for the \code{filename} parameter.
+#'   \item Workspace is directory and scratch workspace is file geodatabase: Raster is exported to workspace directory. The \code{filename} parameter is ignored due to restrictions in \code{arcpy.RasterToOtherFormat_conversion} function. If the automatically generated filename already exists, a number is appended to the end of the filename.
+#' }
 #'
 #' @author Marc Becker
 #'
@@ -513,6 +520,7 @@ rpygeo_help <- function(arcpy_function) {
 #'
 #' \dontrun{
 #' # Load packages
+#' library(RPyGeo)
 #' library(spData)
 #' library(dplyr)
 #'
@@ -522,7 +530,7 @@ rpygeo_help <- function(arcpy_function) {
 #' # Write raster to workspace directory
 #' writeRater(elev, "C:/workspace/elev.tif")
 #'
-#' # Calculate
+#' # Calculate temporary aspect file and save to workspace
 #' env$sa$Aspect(in_raster = "elev.tif") %>%
 #'   rpygeo_save("aspect.tif")
 #' }
@@ -542,7 +550,27 @@ rpygeo_save <- function(data, filename) {
   # Get current workspace
   workspace <- py_run_string("workspace = arcpy.env.workspace")
 
-  # Read raster and write to new file
-  raster(path) %>%
-    writeRaster(paste0(workspace$workspace, "/", filename), overwrite = overwrite$overwrite)
+  # Get info
+  info <- py_run_string(paste0("info = arcpy.Describe('", path,"')"))
+
+  if(info$info$dataType != "RasterDataset") {
+    stop("Only raster files or raster datasets in file geodatabases are supported.")
+  }
+
+  # File or dataset in file geodatabase
+  if(file_ext(basename(info$info$path)) == "gdb" & file_ext(basename(workspace$workspace)) == "gdb") {
+    # Workspace and scratch workspace are file geodatabase
+    # Copy from scratch file geodatabase to workspace file geodatabase
+    py_run_string(paste0("arcpy.Copy_management('", info$info$catalogpath,"', '", workspace$workspace,"/",filename,"')"))
+  } else if (file_ext(basename(workspace$workspace)) == "gdb") {
+    # Workspace is file geodatabase and scratch workspace is directory
+    py_run_string(paste0("arcpy.Copy_management('", info$info$catalogpath,"', '", workspace$workspace,"/",filename,"')"))
+  } else if (file_ext(basename(info$info$path)) == "gdb") {
+    # Workspace is directory and scratch workspace is file geodatabase
+    py_run_string(paste0("arcpy.RasterToOtherFormat_conversion('", info$info$catalogpath,"', '", workspace$workspace,"')"))
+  } else {
+    # Workspace and scratch workspace are directories
+    raster(info$info$catalogpath) %>%
+      writeRaster(paste0(workspace$workspace, "/", filename), overwrite = overwrite$overwrite)
+    }
 }
