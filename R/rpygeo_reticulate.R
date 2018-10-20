@@ -393,11 +393,9 @@ rpygeo_load <- function(data) {
 
 #' @title Get help file for ArcPy function
 #'
-#' @description This function opens the help file for ArcPy function in viewer panel.
+#' @description This function opens the help file for ArcPy function in viewer panel or if not available in the browser.
 #'
 #' @param arcpy_function ArcPy module with function
-#'
-#' @return NULL
 #'
 #' @author Marc Becker
 #'
@@ -405,9 +403,9 @@ rpygeo_load <- function(data) {
 #'
 #' \dontrun{
 #' # Load the ArcPy module and build environment
-#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/")
+#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 #'
-#' # Get help file
+#' # Open help file
 #' rpygeo_help(env$Slope_3d)
 #' }
 #' @export
@@ -465,7 +463,7 @@ rpygeo_help <- function(arcpy_function) {
       )
     }
   } else if (help_type[[1]] == "Arguments:"){
-    # SA module help file
+    # Spatial Analylist help file
     arcpy_function$func_doc %>%
       str_match("(Arguments:)([\\S\\s]*)(Results:)([\\S\\s]*)") %>%
       str_replace_all("\\n {4}", "\\\n") %>%
@@ -480,19 +478,25 @@ rpygeo_help <- function(arcpy_function) {
     )
   }
 
-  # Create temp dir for viewer
+  # Create temporary directory for viewer
   temp_dir <- tempfile()
   if(!dir.exists(temp_dir)) {
     dir.create(temp_dir)
   }
 
   # Render help file
-  rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
+  help_file <- rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
                     output_file = "help.html",
                     output_dir = temp_dir,
                     params = template_parameter,
-                    quiet = TRUE) %>%
-    rstudioapi::viewer()
+                    quiet = TRUE)
+
+  # Check if viewer is available
+  if (!is.null(getOption("viewer"))){
+    rstudioapi::viewer(help_file)
+  } else {
+    browseURL(help_file)
+  }
 }
 
 #' @title Save temporary raster to workspace
