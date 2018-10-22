@@ -14,8 +14,7 @@ Provide access to (virtually any) ArcGIS geoprocessing tool from
 The package utilizes the ArcPy Python site-package or the ArcGIS API
   in order to access ArcGIS functionality. The function
   \code{\link{rpygeo_build_env}} can be applied to generate an ArcPy or arcgis
-  object. The function \code{\link{rpygeo_geoprocessor}} can be used to carry out
-  ArcGIS functions inside of R.
+  object.
 }
 \examples{
 
