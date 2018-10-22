@@ -178,11 +178,12 @@ rpygeo_build_env <- function(path = NULL,
 #' rpygeo_search("3d")
 #' }
 #' @export
+#' @importFrom magrittr "%>%"
 
 rpygeo_search <- function(search_term = NULL, module = NULL) {
 
   # Get all ArcPy functions
-  functions <- py_list_attributes(module)
+  functions <- reticulate::py_list_attributes(module)
 
   # Query available functions
   grep(search_term, functions, ignore.case = TRUE, value = TRUE) %>%
@@ -247,6 +248,7 @@ rpygeo_search <- function(search_term = NULL, module = NULL) {
 #' rpygeo_load("C:/workspace/elev.shp")
 #' }
 #' @export
+#' @importFrom magrittr "%>%"
 
 rpygeo_load <- function(data) {
 
@@ -269,7 +271,7 @@ rpygeo_load <- function(data) {
       # Raster
       # Create temporary file with less than 8 characters
       tempdir() %>%
-        paste0("/r", paste0(floor(runif(7, min=0, max=9)), collapse = ""), ".asc") ->  temp_file
+        paste0("/r", paste0(floor(stats::runif(7, min=0, max=9)), collapse = ""), ".asc") ->  temp_file
 
       # Export raster from geodatabase to temporary directory
       reticulate::py_run_string(paste0("arcpy.RasterToASCII_conversion('", info$info$baseName,"', '", temp_file,"')"))
@@ -318,6 +320,7 @@ rpygeo_load <- function(data) {
 #' rpygeo_help(env$Slope_3d)
 #' }
 #' @export
+#' @importFrom magrittr "%>%"
 
 rpygeo_help <- function(arcpy_function) {
 
@@ -449,6 +452,7 @@ rpygeo_help <- function(arcpy_function) {
 #' }
 #'
 #' @export
+#' @importFrom magrittr "%>%"
 
 rpygeo_save <- function(data, filename) {
 

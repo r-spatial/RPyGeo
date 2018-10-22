@@ -16,8 +16,6 @@ URL: https://github.com/fapola/RPyGeo
 BugReports: https://github.com/fapola/RPyGeo/issues
 License: GPL-3
 LazyData: TRUE
-Depends:
-        dplyr
 Imports:
         reticulate (>= 1.2),
         sf,
@@ -25,7 +23,9 @@ Imports:
         tools,
         stringr,
         utils,
-        rmarkdown
+        rmarkdown,
+        magrittr,
+        stats
 SystemRequirements: Python (>= 2.6.0), ArcGIS (>= 10.0)
 RoxygenNote: 6.0.1
 Suggests: testthat,
