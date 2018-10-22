@@ -46,22 +46,22 @@ library(spData)
 library(dplyr)
 
 # Load the ArcPy module and build environment
-env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace")
+arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace")
 
 # Write raster to workspace directory
 writeRater(elev, "C:/workspace/elev.tif")
 
 # Create a slope raster and load it into the R session (Example 1)
-env$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") \%>\%
+arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") \%>\%
   rpygeo_load() -> slope
 
 # Create a aspect raster and load it into the R session (Example 2)
-ras_aspect <- env$sa$Aspect(in_raster = "elev.tif")
+ras_aspect <- arcpy$sa$Aspect(in_raster = "elev.tif")
 rpygeo_load(ras_aspect)
 
 # Convert elevation raster to polygon shapefile and load it into R session (Example 3)
-env$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
-rpygeo_load("C:/workspace/elev.shp")
+arcpy$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
+rpygeo_load("elev.shp")
 }
 }
 \author{

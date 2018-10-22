@@ -1,50 +1,61 @@
-#' @title  Initialize ArcPy module and environment in R
+#' @title  Initialize ArcPy site-package in R
 #'
-#' @description Initialises the Python ArcPy site-package in R with the help
-#'   of reticulate. Also setting up a geoprocessing environment and define
-#'   parameters such as `overwrite` and `extensions` to add.
-#' @param path Root path to the Python version which contains the Python version
-#'   which is linked to the ArcPy site-package. If left empty, the function looks
-#'   for `python.exe` in the most likely location (C:/Python27/). It is also
+#' @description Initialises the Python ArcPy site-package in R via the
+#'  \code{reticulate} package. Addtionally environment settings and extensions
+#'  are configured.
+#'
+#' @param path Full path to folder containing Python version which is linked to
+#'   the ArcPy site-package. If left empty, the function looks
+#'   for \code{python.exe} in the most likely location (\code{C:/Python27/}). It is also
 #'   possible to provide a path to the \code{ArcGIS API for Python} here.
 #'   In order to do so you need to provide the path to the python anaconda library
-#'   were the arcgis package is installed. Additionally \code{arcgisAPI} must be
-#'   set to true.
-#' @param overwrite If set to `TRUE` (default) existing ArcGIS datasets can be
+#'   were the \code{arcgis} package is installed. Additionally \code{arcgisAPI}
+#'   must be set to true.
+#'
+#' @param overwrite If \code{TRUE} (default), existing ArcGIS datasets can be
 #'   overwritten (does not work while using ArcGIS API for Python).
+#'
 #' @param extensions Optional character vector listing ArcGIS extension that
 #'   should be enabled (does not work while using ArcGIS API for Python)
+#'
 #' @param x64 Logical (default: \code{FALSE}). Determines if path search should
-#' look for 64 bit Python ArcPy version in default folder (C:/Python27)
-#' @param pro Logical (default: \code{FALSE}). If set to `TRUE`
+#' look for 64 bit Python ArcPy version in default folder (\code{C:/Python27})
+#'
+#' @param pro Logical (default: \code{FALSE}). If set to \code{TRUE}`
 #'   \code{rpygeo_build_env} tries to find Python version
 #'   to use in the default ArcGIS Pro location
-#'   (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)
-#' @param arcgisAPI Logical (default: \code{FALSE}). Must be set to `TRUE`
+#'   (\code{C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/})
+#'
+#' @param arcgisAPI Logical (default: \code{FALSE}). Must be set to \code{TRUE}
 #'   in order to use the ArcGIS API. This is the only option to work with
 #'   the \code{RPyGeo} Package under a linux operation system.
+#'
 #' @param workspace Path of ArcGIS workspace in which to perform the
 #'    geoprocessing (does not work while using ArcGIS API for Python).
+#'
 #' @param scratch_workspace Path to ArcGIS scratch workspace in which to store
 #'   temporary files (does not work while using ArcGIS API for Python). If
 #'   \code{NULL} a folder named scratch is created inside the workspace folder
 #'   or on the same directory level as the workspace file geodatabase.
-#' @return Returns ArcPy or ArcGIS API module in R
-#' @author Fabian Polakowski
+#'
+#' @return Returns ArcPy or ArcGIS modules in R
+#'
+#' @author Fabian Polakowski und Marc Becker
+#'
 #' @examples
 #'
-#' # load the ArcPy module related to ArcGIS Pro (and save it as an R
-#' # object called "arcpy_m") in R and also set the overwrite parameter
-#' # to FALSE and add some extensions. Note that we do not have to set the path
-#' # because the Python version is located in the default location
-#' # (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)in this example.
-#' \dontrun{arcpy_m <- rpygeo_build_env(overwrite = TRUE,
-#'                                      extensions = c("3d", "Spatial", "na"),
-#'                                      pro = TRUE)}
+#' \dontrun{
+#' # Load ArcPy side-package of ArcGIS Pro with 3D and Spatial Analysis extension.
+#' # and set environment setting 'overwrite' to TRUE.
+#' # Note that no path parameter is necessary because Python is located in the
+#' # default location.
+#' arcpy <- rpygeo_build_env(overwrite = TRUE,
+#'                           extensions = c("3d", "Spatial"),
+#'                           pro = TRUE)}
 #'
 #' # load the ArcPy module when your Python version is located in a different
 #' # folder
-#' \dontrun{arc <- rpygeo_build_env(path = "C:/YourPath/YourSubPath/python.exe")}
+#  arcpy <- rpygeo_build_env(path = "C:/YourPath/YourSubPath/python.exe")
 #'
 #' @export
 #'
@@ -161,9 +172,9 @@ rpygeo_build_env <- function(path = NULL,
 #' @description Search for ArcPy functions with a character string or regular expression.
 #'
 #' @param search_term Search term. Regular expressions are possible.
-#' @param module ArcPy or ArcGIS API module created with \code{\link{rpygeo_build_env}}.
+#' @param module ArcPy or ArcGIS API modules created with \code{\link{rpygeo_build_env}}.
 #'
-#' @return List of matching ArcPy functions
+#' @return Character vector of matching ArcPy functions
 #'
 #' @author Marc Becker
 #' @seealso \code{\link{rpygeo_build_env}}
@@ -172,10 +183,10 @@ rpygeo_build_env <- function(path = NULL,
 #'
 #' \dontrun{
 #' # Load the ArcPy module and build environment
-#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/")
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 #'
 #' # Search for ArcPy functions, which contain the term 3d
-#' rpygeo_search("3d")
+#' rpygeo_search("3d", arcpy)
 #' }
 #' @export
 #' @importFrom magrittr "%>%"
@@ -230,22 +241,22 @@ rpygeo_search <- function(search_term = NULL, module = NULL) {
 #' library(dplyr)
 #'
 #' # Load the ArcPy module and build environment
-#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace")
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace")
 #'
 #' # Write raster to workspace directory
 #' writeRater(elev, "C:/workspace/elev.tif")
 #'
 #' # Create a slope raster and load it into the R session (Example 1)
-#' env$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") %>%
+#' arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") %>%
 #'   rpygeo_load() -> slope
 #'
 #' # Create a aspect raster and load it into the R session (Example 2)
-#' ras_aspect <- env$sa$Aspect(in_raster = "elev.tif")
+#' ras_aspect <- arcpy$sa$Aspect(in_raster = "elev.tif")
 #' rpygeo_load(ras_aspect)
 #'
 #' # Convert elevation raster to polygon shapefile and load it into R session (Example 3)
-#' env$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
-#' rpygeo_load("C:/workspace/elev.shp")
+#' arcpy$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
+#' rpygeo_load("elev.shp")
 #' }
 #' @export
 #' @importFrom magrittr "%>%"
@@ -306,7 +317,7 @@ rpygeo_load <- function(data) {
 #'
 #' @description This function opens the help file for ArcPy function in viewer panel or if not available in the browser.
 #'
-#' @param arcpy_function ArcPy module with function
+#' @param arcpy_function ArcPy module with function or class
 #'
 #' @author Marc Becker
 #'
@@ -314,10 +325,10 @@ rpygeo_load <- function(data) {
 #'
 #' \dontrun{
 #' # Load the ArcPy module and build environment
-#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 #'
 #' # Open help file
-#' rpygeo_help(env$Slope_3d)
+#' rpygeo_help(arcpy$Slope_3d)
 #' }
 #' @export
 #' @importFrom magrittr "%>%"
@@ -441,13 +452,13 @@ rpygeo_help <- function(arcpy_function) {
 #' library(dplyr)
 #'
 #' # Load the ArcPy module and build environment
-#' env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 #'
 #' # Write raster to workspace directory
 #' writeRater(elev, "C:/workspace/elev.tif")
 #'
 #' # Calculate temporary aspect file and save to workspace
-#' env$sa$Aspect(in_raster = "elev.tif") %>%
+#' arcpy$sa$Aspect(in_raster = "elev.tif") %>%
 #'   rpygeo_save("aspect.tif")
 #' }
 #'

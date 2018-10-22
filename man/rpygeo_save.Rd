@@ -35,13 +35,13 @@ library(spData)
 library(dplyr)
 
 # Load the ArcPy module and build environment
-env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 
 # Write raster to workspace directory
 writeRater(elev, "C:/workspace/elev.tif")
 
 # Calculate temporary aspect file and save to workspace
-env$sa$Aspect(in_raster = "elev.tif") \%>\%
+arcpy$sa$Aspect(in_raster = "elev.tif") \%>\%
   rpygeo_save("aspect.tif")
 }
 

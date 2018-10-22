@@ -9,10 +9,10 @@ rpygeo_search(search_term = NULL, module = NULL)
 \arguments{
 \item{search_term}{Search term. Regular expressions are possible.}
 
-\item{module}{ArcPy or ArcGIS API module created with \code{\link{rpygeo_build_env}}.}
+\item{module}{ArcPy or ArcGIS API modules created with \code{\link{rpygeo_build_env}}.}
 }
 \value{
-List of matching ArcPy functions
+Character vector of matching ArcPy functions
 }
 \description{
 Search for ArcPy functions with a character string or regular expression.
@@ -21,10 +21,10 @@ Search for ArcPy functions with a character string or regular expression.
 
 \dontrun{
 # Load the ArcPy module and build environment
-env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/")
+arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 
 # Search for ArcPy functions, which contain the term 3d
-rpygeo_search("3d")
+rpygeo_search("3d", arcpy)
 }
 }
 \seealso{

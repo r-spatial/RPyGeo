@@ -7,7 +7,7 @@
 rpygeo_help(arcpy_function)
 }
 \arguments{
-\item{arcpy_function}{ArcPy module with function}
+\item{arcpy_function}{ArcPy module with function or class}
 }
 \description{
 This function opens the help file for ArcPy function in viewer panel or if not available in the browser.
@@ -16,10 +16,10 @@ This function opens the help file for ArcPy function in viewer panel or if not a
 
 \dontrun{
 # Load the ArcPy module and build environment
-env <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 
 # Open help file
-rpygeo_help(env$Slope_3d)
+rpygeo_help(arcpy$Slope_3d)
 }
 }
 \author{
