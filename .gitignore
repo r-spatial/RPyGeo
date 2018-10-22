@@ -6,3 +6,4 @@
 *.prj
 *log
 /testdata
+inst/doc
