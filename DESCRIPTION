@@ -5,7 +5,8 @@ Version: 1.0.0
 Date: 2018-03-07
 Authors@R: c(
     person("Alexander", "Brenning", , "alexander.brenning@uni-jena.de", c("aut", "cre")),
-    person("Fabian", "Polakowski", , "fabian.polakowski@gmail.com", role = "aut")
+    person("Fabian", "Polakowski", , "fabian.polakowski@gmail.com", role = "aut"),
+    person("Marc", "Becker", ,"marc.becker@uni-jena.de", role = "aut")
     )
 Description: Provide access to (virtually any) ArcGIS Geoprocessing
         tool from within R by running Python geoprocessing scripts
