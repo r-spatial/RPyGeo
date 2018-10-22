@@ -264,7 +264,7 @@ rpygeo_load <- function(data) {
     # File geodatabase
     if(info$info$dataType == "FeatureClass") {
       # Vector
-      sf::st_read(dsn = info$info$path, layer = info$info$baseName) %>%
+      sf::st_read(dsn = info$info$path, layer = info$info$baseName, quiet=TRUE) %>%
         return()
     } else if(info$info$dataType == "RasterDataset") {
       # Raster
@@ -289,7 +289,7 @@ rpygeo_load <- function(data) {
         return()
     } else if (any(info$info$extension %in% c("shp"))) {
       # Vector
-      sf::st_read(paste0(info$info$path, "/" ,info$info$file)) %>%
+      sf::st_read(paste0(info$info$path, "/" ,info$info$file), quiet=TRUE) %>%
         return()
     } else if(info$info$extension == "" & file.exists(paste0(info$info$path, "/" ,info$info$file, "/hdr.adf"))) {
       # Arc/Info Binary Grid
