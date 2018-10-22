@@ -30,5 +30,6 @@ SystemRequirements: Python (>= 2.6.0), ArcGIS (>= 10.0)
 RoxygenNote: 6.0.1
 Suggests: testthat,
     knitr,
-    spData
+    spData,
+    rstudioapi
 VignetteBuilder: knitr
