@@ -17,13 +17,18 @@ BugReports: https://github.com/fapola/RPyGeo/issues
 License: GPL-3
 LazyData: TRUE
 Depends:
-        reticulate (>= 1.2)
+        dplyr
 Imports:
-        shapefiles, 
-        RSAGA
+        reticulate (>= 1.2),
+        sf,
+        raster,
+        tools,
+        stringr,
+        utils,
+        rmarkdown
 SystemRequirements: Python (>= 2.6.0), ArcGIS (>= 10.0)
 RoxygenNote: 6.0.1
 Suggests: testthat,
     knitr,
-    rmarkdown
+    spData
 VignetteBuilder: knitr

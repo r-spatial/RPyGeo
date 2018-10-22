@@ -18,12 +18,12 @@ input_check = function (overwrite, extensions) {
 
   # handle overwrite
   if (overwrite) {
-    py_run_string("arcpy.env.overwriteOutput = True")
+    reticulate::py_run_string("arcpy.env.overwriteOutput = True")
   }
 
   # edit 'overwrite' back to FALSE if it was TRUE for a previous function
   if (!overwrite) {
-    py_run_string("arcpy.env.overwriteOutput = False")
+    reticulate::py_run_string("arcpy.env.overwriteOutput = False")
   }
 
   # handle extensions
@@ -32,7 +32,7 @@ input_check = function (overwrite, extensions) {
     sapply(extensions, function(x) {
 
       ext <- paste0("arcpy.CheckOutExtension('", x, "')")
-      py_run_string(ext)
+      reticulate::py_run_string(ext)
 
       })
   }
@@ -50,7 +50,7 @@ input_check = function (overwrite, extensions) {
 set_workspace = function (path) {
 
   e <- paste0("arcpy.env.workspace = '",path,"'" )
-  py_run_string(e)
+  reticulate::py_run_string(e)
 }
 
 #' @title  Set scratch workspace
@@ -65,5 +65,5 @@ set_workspace = function (path) {
 set_scratch_workspace = function (path) {
 
   e <- paste0("arcpy.env.scratchWorkspace = '",path,"'" )
-  py_run_string(e)
+  reticulate::py_run_string(e)
 }
