@@ -67,9 +67,6 @@ Initialises the Python ArcPy site-package in R with the help
 \dontrun{arc <- rpygeo_build_env(path = "C:/YourPath/YourSubPath/python.exe")}
 
 }
-\seealso{
-\code{\link{rpygeo_geoprocessor}}
-}
 \author{
 Fabian Polakowski
 }

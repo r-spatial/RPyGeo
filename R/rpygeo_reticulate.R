@@ -31,7 +31,6 @@
 #'   or on the same directory level as the workspace file geodatabase.
 #' @return Returns ArcPy or ArcGIS API module in R
 #' @author Fabian Polakowski
-#' @seealso \code{\link{rpygeo_geoprocessor}}
 #' @examples
 #'
 #' # load the ArcPy module related to ArcGIS Pro (and save it as an R
