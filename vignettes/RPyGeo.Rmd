@@ -18,13 +18,19 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-RPyGeo is a package providing access to ArcGIS geoprocessing tools in R. It archives this by building an interface between R and the ArcPy Python side-package via the reticulate package. 
-
-RPyGeo is not just a wrapper package for ArcPy. It aims to create an environment, in which the user can perform ArcGIS and R functions on the same dataset in a contiguous workflow. It should not be necessary to touch Python or ArcGIS. 
+**RPyGeo** establishes an interface to the geoprocessing tools of ArcMap in R.
+Since ArcMap only provides a Python API for a low-level access of its geoalgorithms, **RPyGeo** establishes a tunnel to Python via the **reticulate** package.
+<!-- what do you want to say with the next three sentences? -->
+RPyGeo is not just a wrapper package for ArcPy.
+It aims to create an environment, in which the user can perform ArcGIS and R functions on the same dataset in a contiguous workflow. 
+It should not be necessary to touch Python or ArcGIS. 
 
 ## ArcPy
 
-ArcPy is a Python side-package that provides the user with Python access to almost any geoprocessing tools in ArcGIS. ArcPy is organized into modules, which are Python files with functions and classes. The ArcPy main module has several hundred functions and classes. It is supported by various modules like the `data access` module or extensions like the `spatial analysis` extension, which increase the number of functions and classes further. 
+<!-- again not really sure what you want to say with the subsequent paragraph, maybe we should talk in person-->
+ArcPy is a Python side-package that provides the user with Python access to almost any geoprocessing tools in ArcGIS <!-- source! -->. 
+ArcPy is organized into modules, which are Python files with functions and classes. The ArcPy main module has several hundred functions and classes. 
+It is supported by various modules like the `data access` module or extensions like the `spatial analysis` extension, which increase the number of functions and classes further. 
 
 The ArcPy functions are essentially wrapper for the ArcGIS geoprocessing tools and other scripting tasks.  
 The ArcPy classes are blueprints for any kind of object in ArcPy. For example, `Point` and `Raster` are classes to describe geographic data. ArcPy classes are also used to set geoprocessing environment settings (e.g. `workspace` or `extent`).
@@ -33,7 +39,8 @@ In order to use RPyGeo you need to install ArcMap or ArcGIS Pro. ArcPy is includ
 
 ## Tutorial
 
-In this tutorial we use geographic data from the `spData` package and streamline the workflow with the `%>%` operator from the `magrittr` package. The `elev` and `nz` dataset are used to demonstrate raster and vector file operations.  
+In this tutorial we use geographic data from the **spData** package and streamline the workflow with the `%>%` operator from the **magrittr** package.
+The `elev` and `nz` dataset are used to demonstrate raster and vector file operations.  
 
 ```{r, eval = FALSE}
 writeRaster(elev, "C:/workspace/elev.tif")
