@@ -28,7 +28,7 @@ To perform mathematical calculations with raster objects, four new operators are
 
 **Search and help**
 
-ArcPy help files are now directly displayed in the RStudio viewer panel or the default browser with the `rpygeo_help` function. The `rpygeo_search` functions searches for ArcPy functions based on plain text or regular expression.
+ArcPy help files are now directly displayed in the RStudio viewer panel or the default browser with the `rpygeo_help` function. The `rpygeo_search` function searches for ArcPy functions based on plain text or regular expressions.
 
 
 **Code completion**
