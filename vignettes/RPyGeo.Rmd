@@ -61,25 +61,27 @@ st_write(nz, file.path(tempdir(), "nz.shp"))
 
 ### Load ArcPy module and build environment
 
-Before one can call ArcMap functions from within R, one has to initialize a Python session using the Python binary shipped with ArcMap.
-Otherwise, you won't be able to attach the arcpy Python site package. 
-You can also set environment settings such as `overwrite`, `extension` and `workspace`. 
-<!-- we have to rewrite this since there might be multiple Python versions installed under Windows. You are referring to the Python binary shipped with ArcMap-->
-It is not necessary to set the `path` parameter if Python is installed in the default location.
-
-The workspace can be a directory or file geodatabase.
-If you work with large raster files we advise you to use a directory, because it takes a long time to load raster datasets from a file geodatabase into the R session.
-
+ArcPy will only work with the Python binary that comes with the ArcGIS installation.
+`rpygeo_build_env()` will initialize a Python session using the correct Python binary and also attaches the `arcpy` library.
+If this Python binary is not installed in the default location (`C:/Python27` in the case of ArcMap and `C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3` in the case of ArcGIS Pro), one can set it explicitly with the `path` parameter. 
 
 ```{r, eval = FALSE}
-arcpy <- rpygeo_build_env(workspace = "C:/workspace/",
-                        overwrite = TRUE,
-                        extensions = "Spatial")
+arcpy <- rpygeo_build_env(workspace = tempdir(),
+                          overwrite = TRUE,
+                          extensions = "Spatial")
 ```
 
-In this example we imported the ArcPy into the R session. It is assigned to the variable `env`. All data is read and written in the `C:/workspace/` directory and files can be overwritten. Moreover, the spatial analysis extension is activated. 
+`rpygeo_build_env()` lets the user also specify and enable further common settings.
+For instance, setting `overwrite` to `TRUE` lets the user overwrite an already existing spatial object with the output created by an ArcPy geoalgorithm.
+`Extensions` enable the various available extensions whose availability is dependent on the purchased ArcGIS license.
+Here, we have enabled the Spatial Analysis extension.
+The `workspace` parameter defines the default directory in which to look for spatial objects and also where to save the outputs of geoprocessing functions. 
+Note that the workspace can be a directory or a ESRI file geodatabase.^[If you work with large raster files we would recommend to use a directory, because it takes a long time to load raster datasets from a file geodatabase into an R session.]
 
-A scratch workspace is automatically created inside the workspace. ArcPy stores temporary files in this directory. You can change the scratch directory with the parameter `scratch_workspace`.
+<!-- Never heard of the scratch workspace, what is it? -->
+A scratch workspace is automatically created inside the workspace. 
+ArcPy stores temporary files in this directory.
+You can change the scratch directory with the parameter `scratch_workspace`.
 
 ### Use ArcPy functions
 
