@@ -2,7 +2,7 @@
 
 ## General
 
-RPyGeo 1.0.0 is now available on CRAN. It is a major update with a completely new codebase. The new interface between ArcGIS and R is now based on the reticulate package. The reticulate package accesses the ArcPy Python side-package and provides all ArcPy functions and classes in the R session.
+- The R-ArcMap interface was completely rewritten, and is now based on the **reticulate** package. The reticulate package accesses the arcpy Python side-package and provides all arcpy functions and classes in the R session.
 
 ## Features
 
