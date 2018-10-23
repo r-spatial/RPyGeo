@@ -51,14 +51,12 @@ library("raster")
 <!-- well, this is an "artificial" dem, why don't you just use data(dem, package = "RQGIS")-->
 We will use the `elev` and `nz` datasets from the **spData** package to demonstrate both raster and vector operations.
 To make these datasets available for the subsequent ArcMap geoprocessing, we have to export them.
-Therefore, we save `nz` and `elev` to a directory named workspace.
+Therefore, we save `nz` and `elev` to a temporary directory.
 
 ```{r, eval = FALSE}
 data(elev, nz, package = "spData")
-dir_name = "C:/workspace"
-dir.create(dir_name)
-writeRaster(elev, file.path(dir_name, "elev.tif"), format = "GTiff")
-st_write(nz, file.path(dir_name, "nz.shp"))
+writeRaster(elev, file.path(tempdir(), "elev.tif"), format = "GTiff")
+st_write(nz, file.path(tempdir(), "nz.shp"))
 ```
 
 ### Load ArcPy module and build environment
