@@ -63,9 +63,14 @@ st_write(nz, file.path(dir_name, "nz.shp"))
 
 ### Load ArcPy module and build environment
 
-First you have to initialize the ArcPy Python site package in R. You can also set environment settings such as `overwrite`, `extension` and `workspace`. It is not necessary to set the `path` parameter if Python is installed in the default location.
+Before one can call ArcMap functions from within R, one has to initialize a Python session with the Python binary shipped with ArcMap.
+Otherwise, you won't be able to attach the arcpy Python site package. 
+You can also set environment settings such as `overwrite`, `extension` and `workspace`. 
+<!-- we have to rewrite this since there might be multiple Python versions installed under Windows. You are referring to the Python binary shipped with ArcMap-->
+It is not necessary to set the `path` parameter if Python is installed in the default location.
 
-The workspace can be a directory or file geodatabase. If you work with large raster files we advise you to use a directory, because it takes a long time to load raster datasets from a file geodatabase into the R session.
+The workspace can be a directory or file geodatabase.
+If you work with large raster files we advise you to use a directory, because it takes a long time to load raster datasets from a file geodatabase into the R session.
 
 
 ```{r, eval = FALSE}
