@@ -2,17 +2,15 @@ Package: RPyGeo
 Type: Package
 Title: ArcGIS Geoprocessing in R via Python
 Version: 1.0.0
-Date: 2018-03-07
+Date: 2018-10-23
 Authors@R: c(
     person("Alexander", "Brenning", , "alexander.brenning@uni-jena.de", c("aut", "cre")),
     person("Fabian", "Polakowski", , "fabian.polakowski@gmail.com", role = "aut"),
     person("Marc", "Becker", ,"marc.becker@uni-jena.de", role = "aut")
     )
-Description: Provide access to (virtually any) ArcGIS Geoprocessing
-        tool from within R by running Python geoprocessing scripts
-        without writing Python code or touching ArcGIS.
-        Requires ArcGIS >=10.0, a suitable version of Python
-        (for ArcGIS 10.0: 2.6; for ArcGIS >= 10.1 : 2.7).
+Description: Provides access to ArcGIS geoprocessing tools by building an 
+             interface between R and the ArcPy Python side-package via the 
+             reticulate package. 
 URL: https://github.com/fapola/RPyGeo
 BugReports: https://github.com/fapola/RPyGeo/issues
 License: GPL-3
@@ -29,7 +27,8 @@ Imports:
         stats
 SystemRequirements: Python (>= 2.6.0), ArcGIS (>= 10.0)
 RoxygenNote: 6.0.1
-Suggests: testthat,
+Suggests: 
+    testthat,
     knitr,
     spData,
     rstudioapi
