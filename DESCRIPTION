@@ -9,14 +9,15 @@ Authors@R: c(
     person("Marc", "Becker", ,"marc.becker@uni-jena.de", role = "aut")
     )
 Description: Provides access to ArcGIS geoprocessing tools by building an 
-             interface between R and the ArcPy Python side-package via the 
+             interface between R and the arcpy Python side-package via the 
              reticulate package. 
 URL: https://github.com/fapola/RPyGeo
 BugReports: https://github.com/fapola/RPyGeo/issues
 License: GPL-3
 LazyData: TRUE
+Depends:
+        reticulate (>= 1.2)
 Imports:
-        reticulate (>= 1.2),
         sf,
         raster,
         tools,
@@ -31,5 +32,5 @@ Suggests:
     testthat,
     knitr,
     spData,
-    rstudioapi
+    rstudioapiP
 VignetteBuilder: knitr
