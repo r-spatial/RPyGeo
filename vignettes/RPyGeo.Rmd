@@ -1,7 +1,7 @@
 ---
-title: "RPyGep"
+title: "RPyGeo"
 author: "Marc Becker and Fabian Polakowski"
-date: "05.10.2018"
+date: "23.10.2018"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -33,7 +33,7 @@ In order to use RPyGeo you need to install ArcMap or ArcGIS Pro. ArcPy is includ
 
 ## Tutorial
 
-In this tutorial we use geographic data from the `spData` package and streamline the workflow with the `%>%` operator from the `dpylr` package. The `elev` and `nz` dataset are used to demonstrate raster and vector file operations.  
+In this tutorial we use geographic data from the `spData` package and streamline the workflow with the `%>%` operator from the `magrittr` package. The `elev` and `nz` dataset are used to demonstrate raster and vector file operations.  
 
 ```{r, eval = FALSE}
 writeRaster(elev, "C:/workspace/elev.tif")
@@ -153,6 +153,6 @@ ras %rpygeo_+% 2 %>%
 
 In this example we created a raster object from the elevation raster. Then we added 2 to each pixel value. For map algebra the `rpygeo_save` function is very handy, because the output of map algebra is always a temporary file. 
 
-### Conclusion
+## Conclusion
 
 We hope this tutorial helped you to get familiar with RPyGeo. ArcGIS offers many functions and classes and therefore it is not possible to test them all in RPyGeo. If you find any bugs please report them at <https://github.com/fapola/RPyGeo/>.
