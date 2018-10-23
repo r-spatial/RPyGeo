@@ -18,7 +18,7 @@ RPyGeo is not just a wrapper package for ArcPy. It aims to create an environment
 You can get the latest RPyGeo version with dependencies from Github:
 
 ```{r, eval = FALSE}
-devtools::install_github("r-spatial/RSAGA", dependencies = TRUE, force = TRUE)
+devtools::install_github("fapola/RPyGeo", dependencies = TRUE, force = TRUE)
 ```
 
 In order to use RPyGeo you need to install ArcMap or ArcGIS Pro. ArcPy is included in a full ArcGIS installation. 
