@@ -61,7 +61,7 @@ st_write(nz, file.path(tempdir(), "nz.shp"))
 
 ### Load ArcPy module and build environment
 
-Before one can call ArcMap functions from within R, one has to initialize a Python session with the Python binary shipped with ArcMap.
+Before one can call ArcMap functions from within R, one has to initialize a Python session using the Python binary shipped with ArcMap.
 Otherwise, you won't be able to attach the arcpy Python site package. 
 You can also set environment settings such as `overwrite`, `extension` and `workspace`. 
 <!-- we have to rewrite this since there might be multiple Python versions installed under Windows. You are referring to the Python binary shipped with ArcMap-->
