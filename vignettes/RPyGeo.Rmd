@@ -39,7 +39,7 @@ In order to use RPyGeo you need to install ArcMap or ArcGIS Pro. ArcPy is includ
 
 ## Tutorial
 
-In this tutorial we use geographic data from the **spData** package and streamline the workflow with the `%>%` operator from the **magrittr** package.
+In this tutorial we use geographic data from the **spData** package.
 The `elev` and `nz` dataset are used to demonstrate raster and vector file operations.  
 
 ```{r, eval = FALSE}
