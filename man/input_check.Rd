@@ -23,5 +23,6 @@ This internal function is used by \code{rpygeo_geoprocessor} and
   by \code{rpygeo_build_env}.
 }
 \author{
-Fabian Polakowski, Alexander Brenning
+Fabian Polakowski and Alexander Brenning
 }
+\keyword{internal}

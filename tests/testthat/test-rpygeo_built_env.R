@@ -1,4 +1,5 @@
 context("rpygeo_geoprocessor")
+library(reticulate)
 
 test_that("rypgeo_build_env's python versions contains arcpy", {
 

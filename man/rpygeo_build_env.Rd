@@ -2,68 +2,70 @@
 % Please edit documentation in R/rpygeo_reticulate.R
 \name{rpygeo_build_env}
 \alias{rpygeo_build_env}
-\title{Initialize ArcPy module and environment in R}
+\title{Initialize ArcPy site-package in R}
 \usage{
 rpygeo_build_env(path = NULL, overwrite = TRUE, extensions = NULL,
-  x64 = FALSE, pro = FALSE, arcgisAPI = FALSE, workspace = NULL)
+  x64 = FALSE, pro = FALSE, arcgisAPI = FALSE, workspace = NULL,
+  scratch_workspace = NULL)
 }
 \arguments{
-\item{path}{Root path to the Python version which contains the Python version
-which is linked to the ArcPy site-package. If left empty, the function looks
-for `python.exe` in the most likely location (C:/Python27/). It is also
+\item{path}{Full path to folder containing Python version which is linked to
+the ArcPy site-package. If left empty, the function looks
+for \code{python.exe} in the most likely location (\code{C:/Python27/}). It is also
 possible to provide a path to the \code{ArcGIS API for Python} here.
 In order to do so you need to provide the path to the python anaconda library
-were the arcgis package is installed. Additionally \code{arcgisAPI} must be
-set to true.}
+were the \code{arcgis} package is installed. Additionally \code{arcgisAPI}
+must be set to true.}
 
-\item{overwrite}{If set to `TRUE` (default) existing ArcGIS datasets can be
+\item{overwrite}{If \code{TRUE} (default), existing ArcGIS datasets can be
 overwritten (does not work while using ArcGIS API for Python).}
 
 \item{extensions}{Optional character vector listing ArcGIS extension that
 should be enabled (does not work while using ArcGIS API for Python)}
 
 \item{x64}{Logical (default: \code{FALSE}). Determines if path search should
-look for 64 bit Python ArcPy version in default folder (C:/Python27)}
+look for 64 bit Python ArcPy version in default folder (\code{C:/Python27})}
 
-\item{pro}{Logical (default: \code{FALSE}). If set to `TRUE`
+\item{pro}{Logical (default: \code{FALSE}). If set to \code{TRUE}`
 \code{rpygeo_build_env} tries to find Python version
 to use in the default ArcGIS Pro location
-(C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)}
+(\code{C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/})}
 
-\item{arcgisAPI}{Logical (default: \code{FALSE}). Must be set to `TRUE`
+\item{arcgisAPI}{Logical (default: \code{FALSE}). Must be set to \code{TRUE}
 in order to use the ArcGIS API. This is the only option to work with
 the \code{RPyGeo} Package under a linux operation system.}
 
 \item{workspace}{Path of ArcGIS workspace in which to perform the
 geoprocessing (does not work while using ArcGIS API for Python).}
+
+\item{scratch_workspace}{Path to ArcGIS scratch workspace in which to store
+temporary files (does not work while using ArcGIS API for Python). If
+\code{NULL} a folder named scratch is created inside the workspace folder
+or on the same directory level as the workspace file geodatabase.}
 }
 \value{
-Returns ArcPy or ArcGIS API module in R
+Returns ArcPy or ArcGIS modules in R
 }
 \description{
-Initialises the Python ArcPy site-package in R with the help
-  of reticulate. Also setting up a geoprocessing environment and define
-  parameters such as `overwrite` and `extensions` to add.
+Initialises the Python ArcPy site-package in R via the
+ \code{reticulate} package. Addtionally environment settings and extensions
+ are configured.
 }
 \examples{
 
-# load the ArcPy module related to ArcGIS Pro (and save it as an R
-# object called "arcpy_m") in R and also set the overwrite parameter
-# to FALSE and add some extensions. Note that we do not have to set the path
-# because the Python version is located in the default location
-# (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)in this example.
-\dontrun{arcpy_m <- rpygeo_build_env(overwrite = TRUE,
-                                     extensions = c("3d", "Spatial", "na"),
-                                     pro = TRUE)}
+\dontrun{
+# Load ArcPy side-package of ArcGIS Pro with 3D and Spatial Analysis extension.
+# and set environment setting 'overwrite' to TRUE.
+# Note that no path parameter is necessary because Python is located in the
+# default location.
+arcpy <- rpygeo_build_env(overwrite = TRUE,
+                          extensions = c("3d", "Spatial"),
+                          pro = TRUE)}
 
 # load the ArcPy module when your Python version is located in a different
 # folder
-\dontrun{arc <- rpygeo_build_env(path = "C:/YourPath/YourSubPath/python.exe")}
 
 }
-\seealso{
-\code{\link{rpygeo_geoprocessor}}
-}
 \author{
-Fabian Polakowski
+Fabian Polakowski und Marc Becker
 }

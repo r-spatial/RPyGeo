@@ -1,0 +1,24 @@
+---
+output: html_document
+params:
+  name: Name
+  input: Input
+  example: Example
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## `r params$name`
+
+### Input
+
+```{r, comment=NA, echo=FALSE}
+cat(params$input)
+```
+### Example
+
+```{r, comment=NA, echo=FALSE}
+cat(paste0("env$", params$example))
+```

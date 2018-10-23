@@ -1,47 +1,61 @@
-#' @title  Initialize ArcPy module and environment in R
+#' @title  Initialize ArcPy site-package in R
 #'
-#' @description Initialises the Python ArcPy site-package in R with the help
-#'   of reticulate. Also setting up a geoprocessing environment and define
-#'   parameters such as `overwrite` and `extensions` to add.
-#' @param path Root path to the Python version which contains the Python version
-#'   which is linked to the ArcPy site-package. If left empty, the function looks
-#'   for `python.exe` in the most likely location (C:/Python27/). It is also
+#' @description Initialises the Python ArcPy site-package in R via the
+#'  \code{reticulate} package. Addtionally environment settings and extensions
+#'  are configured.
+#'
+#' @param path Full path to folder containing Python version which is linked to
+#'   the ArcPy site-package. If left empty, the function looks
+#'   for \code{python.exe} in the most likely location (\code{C:/Python27/}). It is also
 #'   possible to provide a path to the \code{ArcGIS API for Python} here.
 #'   In order to do so you need to provide the path to the python anaconda library
-#'   were the arcgis package is installed. Additionally \code{arcgisAPI} must be
-#'   set to true.
-#' @param overwrite If set to `TRUE` (default) existing ArcGIS datasets can be
+#'   were the \code{arcgis} package is installed. Additionally \code{arcgisAPI}
+#'   must be set to true.
+#'
+#' @param overwrite If \code{TRUE} (default), existing ArcGIS datasets can be
 #'   overwritten (does not work while using ArcGIS API for Python).
+#'
 #' @param extensions Optional character vector listing ArcGIS extension that
 #'   should be enabled (does not work while using ArcGIS API for Python)
+#'
 #' @param x64 Logical (default: \code{FALSE}). Determines if path search should
-#' look for 64 bit Python ArcPy version in default folder (C:/Python27)
-#' @param pro Logical (default: \code{FALSE}). If set to `TRUE`
+#' look for 64 bit Python ArcPy version in default folder (\code{C:/Python27})
+#'
+#' @param pro Logical (default: \code{FALSE}). If set to \code{TRUE}`
 #'   \code{rpygeo_build_env} tries to find Python version
 #'   to use in the default ArcGIS Pro location
-#'   (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)
-#' @param arcgisAPI Logical (default: \code{FALSE}). Must be set to `TRUE`
+#'   (\code{C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/})
+#'
+#' @param arcgisAPI Logical (default: \code{FALSE}). Must be set to \code{TRUE}
 #'   in order to use the ArcGIS API. This is the only option to work with
 #'   the \code{RPyGeo} Package under a linux operation system.
+#'
 #' @param workspace Path of ArcGIS workspace in which to perform the
 #'    geoprocessing (does not work while using ArcGIS API for Python).
-#' @return Returns ArcPy or ArcGIS API module in R
-#' @author Fabian Polakowski
-#' @seealso \code{\link{rpygeo_geoprocessor}}
+#'
+#' @param scratch_workspace Path to ArcGIS scratch workspace in which to store
+#'   temporary files (does not work while using ArcGIS API for Python). If
+#'   \code{NULL} a folder named scratch is created inside the workspace folder
+#'   or on the same directory level as the workspace file geodatabase.
+#'
+#' @return Returns ArcPy or ArcGIS modules in R
+#'
+#' @author Fabian Polakowski und Marc Becker
+#'
 #' @examples
 #'
-#' # load the ArcPy module related to ArcGIS Pro (and save it as an R
-#' # object called "arcpy_m") in R and also set the overwrite parameter
-#' # to FALSE and add some extensions. Note that we do not have to set the path
-#' # because the Python version is located in the default location
-#' # (C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3/)in this example.
-#' \dontrun{arcpy_m <- rpygeo_build_env(overwrite = TRUE,
-#'                                      extensions = c("3d", "Spatial", "na"),
-#'                                      pro = TRUE)}
+#' \dontrun{
+#' # Load ArcPy side-package of ArcGIS Pro with 3D and Spatial Analysis extension.
+#' # and set environment setting 'overwrite' to TRUE.
+#' # Note that no path parameter is necessary because Python is located in the
+#' # default location.
+#' arcpy <- rpygeo_build_env(overwrite = TRUE,
+#'                           extensions = c("3d", "Spatial"),
+#'                           pro = TRUE)}
 #'
 #' # load the ArcPy module when your Python version is located in a different
 #' # folder
-#' \dontrun{arc <- rpygeo_build_env(path = "C:/YourPath/YourSubPath/python.exe")}
+#  arcpy <- rpygeo_build_env(path = "C:/YourPath/YourSubPath/python.exe")
 #'
 #' @export
 #'
@@ -54,7 +68,8 @@ rpygeo_build_env <- function(path = NULL,
                              x64 = FALSE,
                              pro = FALSE,
                              arcgisAPI = FALSE,
-                             workspace = NULL) {
+                             workspace = NULL,
+                             scratch_workspace = NULL) {
   # set path
   if (is.null(path)) {
     if (x64) {
@@ -104,13 +119,13 @@ rpygeo_build_env <- function(path = NULL,
   }
 
   # init
-  use_python(python = path, required = TRUE)
+  reticulate::use_python(python = path, required = TRUE)
 
   if (!arcgisAPI) {
-    import("arcpy")
+    reticulate::import("arcpy")
   }
   if (arcgisAPI) {
-    import("arcgis")
+    reticulate::import("arcgis")
   }
 
 
@@ -122,110 +137,377 @@ rpygeo_build_env <- function(path = NULL,
   # set workspace if set in function parameter
 
   if (!arcgisAPI) {
-
     if (!is.null(workspace)) {
       set_workspace(workspace)
     }
   }
 
+  # set scratch workspace
+  if (!arcgisAPI) {
+    if (!is.null(workspace) & !is.null(scratch_workspace)) {
+      set_scratch_workspace(scratch_workspace)
+    } else if (!is.null(workspace) & is.null(scratch_workspace)) {
+      if(tools::file_ext(basename(workspace)) == "gdb") {
+        dir.create(paste0(dirname(workspace), "/scratch"), showWarnings = FALSE)
+        set_scratch_workspace(paste0(dirname(workspace), "/scratch"))
+      } else {
+        dir.create(paste0(workspace, "/scratch"), showWarnings = FALSE)
+        set_scratch_workspace(paste0(workspace, "/scratch"))
+      }
+    }
+  }
 
   # return Python ArcGIS library as R object
   if (!arcgisAPI) {
-    return(import("arcpy"))
+    return(reticulate::import("arcpy"))
   }
 
   if (arcgisAPI) {
-    return(import("arcgis"))
+    return(reticulate::import("arcgis"))
   }
-
 }
 
-
-#' @title ArcGIS Geoprocessor Workhorse
+#' @title Search for ArcPy functions
 #'
-#' @description This function utilizes the ArcPy site-package in R via the reticulate
-#'   connection to perform ArcPy calculation in R. It returns error messages if
-#'   an error appears.
+#' @description Search for ArcPy functions with a character string or regular expression.
 #'
-#' @param lib ArcPy R module name assigned using \code{rpygeo_build_env}
-#' @param fun Single geoprocessing function name to be evaluated by the Python
-#'   geoprocessor.
-#' @param args Vector or list of arguments to be passed to the function listed
-#' in \code{fun}.
-#' @param extensions Optional character vector listing ArcGIS extension that
-#'   should be enabled. This adds to any extensions that are eventually
-#'   detected by \code{rpygeo_required_extensions}.
-#' @param overwrite If set to `TRUE` (default) existing ArcGIS datasets can be
-#'   overwritten.
-#' @param detect_required_extensions Logical (default: \code{TRUE}).
-#'   Determines whether \code{\link{required_extensions}} should try to find out
-#'   which ArcGIS extensions are required to evaluate the \code{function(s)}.
-#' @param workspace Path of ArcGIS workspace in which to perform the
-#'    geoprocessing.
-#' @return The function returns \code{NULL} if is was successful, or otherwise
-#'   a ArcGIS error message.
+#' @param search_term Search term. Regular expressions are possible.
 #'
-#' @author Alexander Brenning, Fabian Polakowski
+#' @param module ArcPy or ArcGIS API modules created with \code{\link{rpygeo_build_env}}.
+#'
+#' @return Character vector of matching ArcPy functions
+#'
+#' @author Marc Becker
+#'
 #' @seealso \code{\link{rpygeo_build_env}}
 #'
 #' @examples
 #'
-#' # Build a ArcGIS environment (assined to an R object called arcpy_m)
-#' # and set overwrite to TRUE.
-#' \dontrun{arcpy_m <- arcpy_build_env(overwrite = TRUE)}
+#' \dontrun{
+#' # Load the ArcPy module and build environment
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 #'
-#' # Use the ArcGIS Slope alogrithm to calulate a slope from a Digital Elveation
-#' # Model
-#' \dontrun{rpygeo_geoprocessor(lib = a, fun = "Slope_3d",
-#'                              args = c("dem.tif", "output_slope.tif"))}
+#' # Search for ArcPy functions, which contain the term 3d
+#' rpygeo_search("3d", arcpy)
+#' }
 #'
 #' @export
+#'
+#' @importFrom magrittr "%>%"
 
+rpygeo_search <- function(search_term = NULL, module = NULL) {
 
+  # Get all ArcPy functions
+  functions <- reticulate::py_list_attributes(module)
 
+  # Query available functions
+  grep(search_term, functions, ignore.case = TRUE, value = TRUE) %>%
+    return()
+}
 
-# TODO change all eval parse text to get-paste
-# TODO remove print statements
-rpygeo_geoprocessor <- function(
-                                lib,
-                                fun,
-                                args = NULL,
-                                extensions = NULL,
-                                overwrite = FALSE,
-                                workspace = NULL,
-                                detect_required_extension = TRUE) {
+#' @title Load output of ArcPy functions into R session
+#'
+#' @description This function loads the output of an ArcPy function into the R session. Raster files are loaded as \code{raster} objects and vector files as \code{sf} objects.
+#'
+#' @param data \code{reticulate} object or filename of the ArcPy function output
+#'
+#' @return \code{raster} or \code{sf} object
+#'
+#' @details Currently files and datasets stored in file geodatabases are supported.
+#'
+#' Supported file formats:
+#' \itemize{
+#'   \item Tagged Image File Format (.tif)
+#'   \item Erdas Imagine Images (.img)
+#'   \item Esri Arc/Info Binary Grid (.adf)
+#'   \item Esri ASCII Raster (.asc)
+#'   \item Esri Shapefiles (.shp)
+#'   }
+#'
+#' Supported datasets:
+#' \itemize{
+#'   \item Feature Class
+#'   \item Raster Dataset
+#' }
+#'
+#' Esri has not released an API for raster datasets in file geodatabases. \code{rpygeo_load} converts a raster dataset to a temporary ASCII raster first and then loads it into the R session. Be aware that this can take a long time for large raster datasets.
+#'
+#' This function can be used with the \code{\%>\%} operator from the \code{dplyr} package. The \code{\%>\%} operator forwards the \code{reticulate} object from the ArcPy function to \code{rpygeo_load} (s. Example 1). If used without the \code{\%>\%} operator an \code{reticulate} object can be specified for the \code{data} parameter (s. Example 2). It is also possible to use the filename of the ArcPy function output (s. Example 3). For Arc/Info Binary Grids the \code{data} parameter is just the name of the directory, which contains the \code{adf} files.
+#'
+#' @author Marc Becker
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # Load packages
+#' library(RPyGeo)
+#' library(spData)
+#' library(dplyr)
+#'
+#' # Load the ArcPy module and build environment
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace")
+#'
+#' # Write raster to workspace directory
+#' writeRater(elev, "C:/workspace/elev.tif")
+#'
+#' # Create a slope raster and load it into the R session (Example 1)
+#' arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") %>%
+#'   rpygeo_load() -> slope
+#'
+#' # Create a aspect raster and load it into the R session (Example 2)
+#' ras_aspect <- arcpy$sa$Aspect(in_raster = "elev.tif")
+#' rpygeo_load(ras_aspect)
+#'
+#' # Convert elevation raster to polygon shapefile and load it into R session (Example 3)
+#' arcpy$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
+#' rpygeo_load("elev.shp")
+#' }
+#'
+#' @export
+#'
+#' @importFrom magrittr "%>%"
 
-  # lib to string
-  lib <- deparse(substitute(lib))
+rpygeo_load <- function(data) {
 
-  # handle initial parameters
-  input_check(overwrite = overwrite, extensions = extensions)
+  # Get path from reticulate object
+  data %>%
+    utils::type.convert() %>%
+    as.character() -> path
 
-  # set workspace if set in function parameter
-  if (!is.null(workspace)) {
-    set_workspace(workspace)
-  }
+  # Get info
+  info <- reticulate::py_run_string(paste0("info = arcpy.Describe('", path,"')"))
 
+  # File or dataset in file geodatabase
+  if(tools::file_ext(basename(info$info$path)) == "gdb") {
+    # File geodatabase
+    if(info$info$dataType == "FeatureClass") {
+      # Vector
+      sf::st_read(dsn = info$info$path, layer = info$info$baseName, quiet=TRUE) %>%
+        return()
+    } else if(info$info$dataType == "RasterDataset") {
+      # Raster
+      # Create temporary file with less than 8 characters
+      tempdir() %>%
+        paste0("/r", paste0(floor(stats::runif(7, min=0, max=9)), collapse = ""), ".asc") ->  temp_file
 
-  # checkout extension
-  if (detect_required_extension) {
-    req_extension <- required_extensions(fun)
-    if (!is.null(req_extension)) {
-      e <- paste0(lib, "$CheckOutExtension('", req_extension, "')")
-      eval(parse(text = e))
+      # Export raster from geodatabase to temporary directory
+      reticulate::py_run_string(paste0("arcpy.RasterToASCII_conversion('", info$info$baseName,"', '", temp_file,"')"))
+
+      raster::raster(temp_file) %>%
+        return()
+    } else {
+      stop("Unsupported dataset. rpygeo_load supports Feature Class and Raster Dataset.")
+    }
+  } else {
+    # File
+    # Check file extension
+    if (any(info$info$extension %in% c("tif", "img", "asc"))) {
+      # Raster
+      raster::raster(paste0(info$info$path, "/" ,info$info$file)) %>%
+        return()
+    } else if (any(info$info$extension %in% c("shp"))) {
+      # Vector
+      sf::st_read(paste0(info$info$path, "/" ,info$info$file), quiet=TRUE) %>%
+        return()
+    } else if(info$info$extension == "" & file.exists(paste0(info$info$path, "/" ,info$info$file, "/hdr.adf"))) {
+      # Arc/Info Binary Grid
+      raster::raster(paste0(info$info$path, "/" ,info$info$file)) %>%
+        return()
+    } else {
+      stop("Unsupported data type. rpygeo_load supports Tagged Image File Format (.tif), Erdas Imagine Images (.img), Arc/Info Binary Grid (.adf), Esri ASCII Raster (.asc) and Shapefiles (.shp)")
     }
   }
+}
 
+#' @title Get help file for ArcPy function
+#'
+#' @description This function opens the help file for ArcPy function in viewer panel or if not available in the browser.
+#'
+#' @param arcpy_function ArcPy module with function or class
+#'
+#' @author Marc Becker
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # Load the ArcPy module and build environment
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+#'
+#' # Open help file
+#' rpygeo_help(arcpy$Slope_3d)
+#' }
+#'
+#' @export
+#'
+#' @importFrom magrittr "%>%"
 
-  # process
-  # paste togehter string to evalutate
-  args <- paste0("'", args, "'", collapse = ",")
+rpygeo_help <- function(arcpy_function) {
 
+  # Get function documentation
+  substitute(arcpy_function) %>%
+    deparse() %>%
+    reticulate::py_function_docs() -> doc
 
-  e <- paste0(lib, "$", fun, "(", args, ")")
+  # Get parameters
+  arcpy_function$func_doc %>%
+    stringr::str_match("(INPUTS:|Arguments:)") -> help_type
 
-  # run process with eval
-  eval(parse(text = paste0(e)))
+  if(is.na(help_type[[1]])) {
+    # No parameters
+    parameters <- c("No input parameters", "No output parameters")
+    template <- "help_template_generic.Rmd"
+    template_parameter <- list(
+      name = doc$name,
+      description = arcpy_function$func_doc
+    )
+  } else if(help_type[[1]] == "INPUTS:") {
+    # Main module help file
+    arcpy_function$func_doc %>%
+      stringr::str_match("OUTPUTS:") -> output_type
 
-  return(NULL)
+    if(is.na(output_type)) {
+      # No output
+      arcpy_function$func_doc %>%
+        stringr::str_match("(INPUTS:)([\\S\\s]*)") %>%
+        stringr::str_replace_all("\\n {6}", "\\\n") %>%
+        stringr::str_replace("^\\n", "") %>%
+        stringr::str_replace("\\s*$", "") -> res
+      template <- "help_template_no_output.Rmd"
+      template_parameter <- list(
+        name = doc$name,
+        input = res[[3]],
+        example = doc$signature
+      )
+    } else {
+      # Input and output
+      arcpy_function$func_doc %>%
+        stringr::str_match("(INPUTS:)([\\S\\s]*)(OUTPUTS:)([\\S\\s]*)") %>%
+        stringr::str_replace_all("\\n {6}", "\\\n") %>%
+        stringr::str_replace("^\\n", "") %>%
+        stringr::str_replace("\\s*$", "") -> res
+      template <- "help_template.Rmd"
+      template_parameter <- list(
+        name = doc$name,
+        input = res[[3]],
+        output = res[[5]],
+        example = doc$signature
+      )
+    }
+  } else if (help_type[[1]] == "Arguments:"){
+    # Spatial Analylist help file
+    arcpy_function$func_doc %>%
+      stringr::str_match("(Arguments:)([\\S\\s]*)(Results:)([\\S\\s]*)") %>%
+      stringr::str_replace_all("\\n {4}", "\\\n") %>%
+      stringr::str_replace("^\\n", "") %>%
+      stringr::str_replace("\\s*$", "") -> res
+    template <- "help_template.Rmd"
+    template_parameter <- list(
+      name = doc$name,
+      input = res[[3]],
+      output = res[[5]],
+      example = doc$signature
+    )
+  }
+
+  # Create temporary directory for viewer
+  temp_dir <- tempfile()
+  if(!dir.exists(temp_dir)) {
+    dir.create(temp_dir)
+  }
+
+  # Render help file
+  help_file <- rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
+                    output_file = "help.html",
+                    output_dir = temp_dir,
+                    params = template_parameter,
+                    quiet = TRUE)
+
+  # Check if viewer is available
+  if (!is.null(getOption("viewer"))){
+    rstudioapi::viewer(help_file)
+  } else {
+    utils::browseURL(help_file)
+  }
+}
+
+#' @title Save temporary raster to workspace
+#'
+#' @description This function saves temporary a raster as permanent raster to the workspace.
+#'
+#' @param data \code{reticulate} object or full path of the ArcPy function output
+#'
+#' @param filename Filename with extension or without extension if the workspace is file geodatabase
+#'
+#' @details Some ArcPy functions have no parameter to specify an output raster. Instead they return a raster object and a temporary raster is saved to the scratch workspace. This functions writes the temporary raster as a permanent raster to the workspace.
+#'
+#' How the file is written depends on the workspace and scratch workspace environment settings.
+#'
+#' \itemize{
+#'   \item Workspace and scratch workspace are directories: Raster is loaded with the \code{raster} package and is written to workspace directory. The file format is inferred from the file extension in the \code{filename} parameter.
+#'   \item Workspace and scratch workspace are file geodatabases: Raster is copied to workspace file geodatabase. No file extension necessary for the \code{filename} parameter.
+#'   \item Workspace is file geodatabase and scratch workspace is directory: Raster is copied to workspace file geodatabase. No file extension necessary for the \code{filename} parameter.
+#'   \item Workspace is directory and scratch workspace is file geodatabase: Raster is exported to workspace directory. The \code{filename} parameter is ignored due to restrictions in \code{arcpy.RasterToOtherFormat_conversion} function. If the automatically generated filename already exists, a number is appended to the end of the filename.
+#' }
+#'
+#' @author Marc Becker
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # Load packages
+#' library(RPyGeo)
+#' library(spData)
+#' library(dplyr)
+#'
+#' # Load the ArcPy module and build environment
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+#'
+#' # Write raster to workspace directory
+#' writeRater(elev, "C:/workspace/elev.tif")
+#'
+#' # Calculate temporary aspect file and save to workspace
+#' arcpy$sa$Aspect(in_raster = "elev.tif") %>%
+#'   rpygeo_save("aspect.tif")
+#' }
+#'
+#' @export
+#'
+#' @importFrom magrittr "%>%"
+
+rpygeo_save <- function(data, filename) {
+
+  # Get file path from environment object
+  data %>%
+    utils::type.convert() %>%
+    as.character() -> path
+
+  # Get overwrite setting
+  overwrite <- reticulate::py_run_string("overwrite = arcpy.env.overwriteOutput")
+
+  # Get current workspace
+  workspace <- reticulate::py_run_string("workspace = arcpy.env.workspace")
+
+  # Get info
+  info <- reticulate::py_run_string(paste0("info = arcpy.Describe('", path,"')"))
+
+  if(info$info$dataType != "RasterDataset") {
+    stop("Only raster files or raster datasets in file geodatabases are supported.")
+  }
+
+  # File or dataset in file geodatabase
+  if(tools::file_ext(basename(info$info$path)) == "gdb" & tools::file_ext(basename(workspace$workspace)) == "gdb") {
+    # Workspace and scratch workspace are file geodatabase
+    # Copy from scratch file geodatabase to workspace file geodatabase
+    reticulate::py_run_string(paste0("arcpy.Copy_management('", info$info$catalogpath,"', '", workspace$workspace,"/",filename,"')"))
+  } else if (tools::file_ext(basename(workspace$workspace)) == "gdb") {
+    # Workspace is file geodatabase and scratch workspace is directory
+    reticulate::py_run_string(paste0("arcpy.Copy_management('", info$info$catalogpath,"', '", workspace$workspace,"/",filename,"')"))
+  } else if (tools::file_ext(basename(info$info$path)) == "gdb") {
+    # Workspace is directory and scratch workspace is file geodatabase
+    reticulate::py_run_string(paste0("arcpy.RasterToOtherFormat_conversion('", info$info$catalogpath,"', '", workspace$workspace,"')"))
+  } else {
+    # Workspace and scratch workspace are directories
+    raster::raster(info$info$catalogpath) %>%
+      raster::writeRaster(paste0(workspace$workspace, "/", filename), overwrite = overwrite$overwrite)
+    }
 }
