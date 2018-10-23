@@ -40,7 +40,7 @@
 #'
 #' @return Returns ArcPy or ArcGIS modules in R
 #'
-#' @author Fabian Polakowski und Marc Becker
+#' @author Fabian Polakowski, Marc Becker
 #'
 #' @examples
 #'
