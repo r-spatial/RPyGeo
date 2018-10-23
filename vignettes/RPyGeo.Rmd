@@ -39,21 +39,27 @@ In order to use RPyGeo you need to install ArcMap or ArcGIS Pro. ArcPy is includ
 
 ## Tutorial
 
-In this tutorial we use geographic data from the **spData** package.
+This tutorial requires the following packages to be installed and attached:
+
+```{r}
+library("RpyGeo")
+library("spData")
+library("sf")
+library("raster")
+```
+
 <!-- well, this is an "artificial" dem, why don't you just use data(dem, package = "RQGIS")-->
-The `elev` and `nz` dataset are used to demonstrate raster and vector file operations.  
+We will use the `elev` and `nz` datasets from the **spData** package to demonstrate both raster and vector operations.
+To make these datasets available for the subsequent ArcMap geoprocessing, we have to export them.
+Therefore, we save `nz` and `elev` to a directory named workspace.
 
 ```{r, eval = FALSE}
 data(elev, nz, package = "spData")
 dir_name = "C:/workspace"
 dir.create(dir_name)
 writeRaster(elev, file.path(dir_name, "elev.tif"), format = "GTiff")
-st_write(nz, "C:/workspace/nz.shp")
+st_write(nz, file.path(dir_name, "nz.shp"))
 ```
-
-In a first step, we have to export the spatial data we would like to use in the subsequent ArcMap geoprocessing. 
-Therefore, we save `nz` and `elev` to a directory named workspace.
-
 
 ### Load ArcPy module and build environment
 
