@@ -7,7 +7,7 @@
 set_scratch_workspace(path)
 }
 \arguments{
-\item{path}{path to the scratch workspace}
+\item{path}{Path to the scratch workspace}
 }
 \description{
 Set scratch workspace for ArcPy environment
@@ -15,3 +15,4 @@ Set scratch workspace for ArcPy environment
 \author{
 Fabian Polakowski and Marc Becker
 }
+\keyword{internal}

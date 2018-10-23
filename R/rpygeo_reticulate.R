@@ -172,11 +172,13 @@ rpygeo_build_env <- function(path = NULL,
 #' @description Search for ArcPy functions with a character string or regular expression.
 #'
 #' @param search_term Search term. Regular expressions are possible.
+#'
 #' @param module ArcPy or ArcGIS API modules created with \code{\link{rpygeo_build_env}}.
 #'
 #' @return Character vector of matching ArcPy functions
 #'
 #' @author Marc Becker
+#'
 #' @seealso \code{\link{rpygeo_build_env}}
 #'
 #' @examples
@@ -188,7 +190,9 @@ rpygeo_build_env <- function(path = NULL,
 #' # Search for ArcPy functions, which contain the term 3d
 #' rpygeo_search("3d", arcpy)
 #' }
+#'
 #' @export
+#'
 #' @importFrom magrittr "%>%"
 
 rpygeo_search <- function(search_term = NULL, module = NULL) {
@@ -258,7 +262,9 @@ rpygeo_search <- function(search_term = NULL, module = NULL) {
 #' arcpy$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
 #' rpygeo_load("elev.shp")
 #' }
+#'
 #' @export
+#'
 #' @importFrom magrittr "%>%"
 
 rpygeo_load <- function(data) {
@@ -330,7 +336,9 @@ rpygeo_load <- function(data) {
 #' # Open help file
 #' rpygeo_help(arcpy$Slope_3d)
 #' }
+#'
 #' @export
+#'
 #' @importFrom magrittr "%>%"
 
 rpygeo_help <- function(arcpy_function) {
@@ -463,6 +471,7 @@ rpygeo_help <- function(arcpy_function) {
 #' }
 #'
 #' @export
+#'
 #' @importFrom magrittr "%>%"
 
 rpygeo_save <- function(data, filename) {

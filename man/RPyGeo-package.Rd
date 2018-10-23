@@ -47,6 +47,7 @@ Useful links:
 Authors:
 \itemize{
   \item Fabian Polakowski \email{fabian.polakowski@gmail.com}
+  \item Marc Becker \email{marc.becker@uni-jena.de}
 }
 
 }

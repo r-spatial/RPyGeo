@@ -63,6 +63,7 @@ rpygeo_load(ras_aspect)
 arcpy$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
 rpygeo_load("elev.shp")
 }
+
 }
 \author{
 Marc Becker

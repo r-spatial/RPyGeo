@@ -21,6 +21,7 @@ arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 # Open help file
 rpygeo_help(arcpy$Slope_3d)
 }
+
 }
 \author{
 Marc Becker

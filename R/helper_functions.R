@@ -5,12 +5,17 @@
 #'
 #' @param overwrite If set to `TRUE` (default) existing ArcGIS datasets can be
 #'   overwritten.
+#'
 #' @param extensions Optional character vector listing ArcGIS extension that
 #'   should be enabled. This adds to any extensions that are eventually
 #'   detected by \code{rpygeo_required_extensions}.
+#'
 #' @note This internal function is used by \code{rpygeo_geoprocessor} and
 #'   by \code{rpygeo_build_env}.
-#' @author Fabian Polakowski, Alexander Brenning
+#'
+#' @author Fabian Polakowski and Alexander Brenning
+#'
+#' @keywords internal
 #'
 #' @export
 
@@ -41,12 +46,16 @@ input_check = function (overwrite, extensions) {
 
 #' @title  Set workspace
 #'
-#' @description set workspace for ArcPy environment
+#' @description Set workspace for ArcPy environment
 #'
-#' @param path path to the workspace containing your data
+#' @param path Path to the workspace containing your data
+#'
 #' @author Fabian Polakowski
 #'
+#' @keywords internal
+#'
 #' @export
+
 set_workspace = function (path) {
 
   e <- paste0("arcpy.env.workspace = '",path,"'" )
@@ -57,11 +66,14 @@ set_workspace = function (path) {
 #'
 #' @description Set scratch workspace for ArcPy environment
 #'
-#' @param path path to the scratch workspace
+#' @param path Path to the scratch workspace
 #'
 #' @author Fabian Polakowski and Marc Becker
 #'
+#' @keywords internal
+#'
 #' @export
+
 set_scratch_workspace = function (path) {
 
   e <- paste0("arcpy.env.scratchWorkspace = '",path,"'" )

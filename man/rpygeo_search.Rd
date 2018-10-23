@@ -26,6 +26,7 @@ arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
 # Search for ArcPy functions, which contain the term 3d
 rpygeo_search("3d", arcpy)
 }
+
 }
 \seealso{
 \code{\link{rpygeo_build_env}}

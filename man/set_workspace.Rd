@@ -7,11 +7,12 @@
 set_workspace(path)
 }
 \arguments{
-\item{path}{path to the workspace containing your data}
+\item{path}{Path to the workspace containing your data}
 }
 \description{
-set workspace for ArcPy environment
+Set workspace for ArcPy environment
 }
 \author{
 Fabian Polakowski
 }
+\keyword{internal}
