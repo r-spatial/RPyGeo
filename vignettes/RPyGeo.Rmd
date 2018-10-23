@@ -43,6 +43,7 @@ In this tutorial we use geographic data from the **spData** package.
 The `elev` and `nz` dataset are used to demonstrate raster and vector file operations.  
 
 ```{r, eval = FALSE}
+data(elev, nz, package = "spData")
 writeRaster(elev, "C:/workspace/elev.tif")
 st_write(nz, "C:/workspace/nz.shp")
 ```
