@@ -51,9 +51,9 @@ library("magrittr")
 ```
 
 <!-- well, this is an "artificial" dem, why don't you just use data(dem, package = "RQGIS")-->
-We will use the `elev` and `nz` datasets from the **spData** package to demonstrate both raster and vector operations.
-To make these datasets available for the subsequent ArcMap geoprocessing, we have to export them.
-Therefore, we save `nz` and `elev` to a temporary directory.
+To demonstrate both raster and vector operations we will use the raster object `elev` and the vector object `nz` from the **spData** package.
+To make these datasets available for the subsequent ArcMap geoprocessing, we have to save them on disk.
+Therefore, we export `nz` and `elev` to a temporary directory.
 
 ```{r, eval = FALSE}
 data(elev, nz, package = "spData")
@@ -61,11 +61,12 @@ writeRaster(elev, file.path(tempdir(), "elev.tif"), format = "GTiff")
 st_write(nz, file.path(tempdir(), "nz.shp"))
 ```
 
-### Load ArcPy module and build environment
+### Establishing the ArcPy Python interface
 
+Powered by **reticulate**, `rpygeo_build_env()` will establish an R interface to Python.
 ArcPy will only work with the Python binary that comes with the ArcGIS installation.
-`rpygeo_build_env()` will initialize a Python session using the correct Python binary and also attaches the `arcpy` library.
-If this Python binary is not installed in the default location (`C:/Python27` in the case of ArcMap and `C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3` in the case of ArcGIS Pro), one can set it explicitly with the `path` parameter. 
+If this Python binary is not installed in the default location (`C:/Python27` in the case of ArcMap and `C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3` in the case of ArcGIS Pro), one can set it explicitly with the `path` parameter of `rpygeo_build_env()`. 
+Secondly, `rpygeo_build_env()` loads the `arcpy` library.
 
 ```{r, eval = FALSE}
 arcpy <- rpygeo_build_env(workspace = tempdir(),
@@ -73,17 +74,15 @@ arcpy <- rpygeo_build_env(workspace = tempdir(),
                           extensions = "Spatial")
 ```
 
-`rpygeo_build_env()` lets the user also specify and enable further common settings.
-For instance, setting `overwrite` to `TRUE` lets the user overwrite an already existing spatial object with the output created by an ArcPy geoalgorithm.
-Parameter `extensions` allows the activation of extensions whose availability is dependent on the purchased ArcGIS license.
-Here, we have enabled the Spatial Analysis extension.
-The `workspace` parameter defines the default directory in which to look for spatial objects and also where to save the outputs of geoprocessing functions. 
+`rpygeo_build_env()` lets the user also specify further common ArcGIS environment settings.
+For instance, setting `overwrite` to `TRUE` lets the user overwrite already existing spatial objects later on with outputs created by ArcPy geoalgorithms.
+The `extensions` parameter allows also the activation of extensions.^[The availability of extensions is dependent on the purchased ArcGIS license.]
+In the code chunk above, we have enabled the Spatial Analysis extension.
+The `workspace` parameter defines the default directory where to save the outputs of geoprocessing functions and in which to look for spatial objects. 
 Note that the workspace can be a directory or an ESRI file geodatabase.^[If you work with large raster files we would recommend to use a directory, because it takes a long time to load raster datasets from a file geodatabase into an R session.]
-
-<!-- Never heard of the scratch workspace, what is it? -->
-A scratch workspace is automatically created inside the workspace. 
-ArcPy stores temporary files in this directory.
-You can change the scratch directory with the parameter `scratch_workspace`.
+A scratch workspace folder is automatically created inside the workspace. 
+The scratch workspace usually contains the output files of functions that do not explicitly provide an output parameter as is the case for most spatial analyst raster algorithms.
+To change the default scratch workspace location, use parameter `scratch_workspace`.
 
 ### Find out about ArcPy functionality
 
