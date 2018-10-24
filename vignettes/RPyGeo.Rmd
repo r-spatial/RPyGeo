@@ -33,7 +33,8 @@ ArcPy is organized into modules, which are Python files with functions and class
 It is supported by various modules like the `data access` module or extensions like the `spatial analysis` extension, which increase the number of functions and classes further. 
 
 The ArcPy functions are essentially wrapper for the ArcGIS geoprocessing tools and other scripting tasks.  
-The ArcPy classes are blueprints for any kind of object in ArcPy. For example, `Point` and `Raster` are classes to describe geographic data. ArcPy classes are also used to set geoprocessing environment settings (e.g. `workspace` or `extent`).
+The ArcPy classes are blueprints for any kind of object in ArcPy. 
+For example, `Point` and `Raster` are classes to describe geographic data. ArcPy classes are also used to set geoprocessing environment settings (e.g., `workspace` or `extent`).
 
 In order to use RPyGeo you need to install ArcMap or ArcGIS Pro. ArcPy is included in a full ArcGIS installation. 
 
@@ -183,7 +184,8 @@ ras %rpygeo_+% 2 %>%
   rpygeo_save("elev_2.tif")
 ```
 
-In this example we created a raster object from the elevation raster. Then we added 2 to each pixel value. For map algebra the `rpygeo_save` function is very handy, because the output of map algebra is always a temporary file. 
+In this example we created a raster object from the elevation raster. 
+Then we added 2 to each pixel value. For map algebra the `rpygeo_save` function is very handy, because the output of map algebra is always a temporary file. 
 
 ## Conclusions
 
