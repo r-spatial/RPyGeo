@@ -46,6 +46,7 @@ library("RpyGeo")
 library("spData")
 library("sf")
 library("raster")
+library("magrittr")
 ```
 
 <!-- well, this is an "artificial" dem, why don't you just use data(dem, package = "RQGIS")-->
