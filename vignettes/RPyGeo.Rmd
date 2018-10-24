@@ -35,7 +35,9 @@ It is supported by various modules like the `data access` module or extensions l
 We do recommend to get familiar with ArcPy through the official [help pages](https://pro.arcgis.com/en/pro-app/arcpy/main/arcgis-pro-arcpy-reference.htm). 
 There also several books available on ArcGIS and ArcPy such as 
 @zandbergen_python_2013 and [@pimpler_programming_2015].
-<!--
+<!-- JM: not really sure what you would like to say here or if this might be even too much detail
+
+
 The ArcPy functions are essentially wrapper for the ArcGIS geoprocessing tools and other scripting tasks.  
 The ArcPy classes are blueprints for any kind of object in ArcPy. 
 For example, `Point` and `Raster` are classes to describe geographic data. ArcPy classes are also used to set geoprocessing environment settings (e.g., `workspace` or `extent`).
