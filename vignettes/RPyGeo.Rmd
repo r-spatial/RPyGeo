@@ -30,7 +30,7 @@ Combining this with the statistical and data science power of R opens the way to
 
 To use **RpyGeo** properly at least a basic understanding of ArcPy is necessary.
 ArcPy is a Python side-package that allows geographic data analysis through ArcGIS from the Python command line.
-ArcPy is organized into modules, which are Python files with functions and classes. The ArcPy main module has several hundred functions and classes. 
+ArcPy is organized into modules which are Python files with functions and classes. The ArcPy main module `arcpy` (`arcgis`)has several hundred functions and classes. 
 It is supported by various modules like the `data access` module or extensions like the `spatial analysis` extension, which increase the number of functions and classes further. 
 We do recommend to get familiar with ArcPy through the official [help pages](https://pro.arcgis.com/en/pro-app/arcpy/main/arcgis-pro-arcpy-reference.htm). 
 There also several books available on ArcGIS and ArcPy such as 
