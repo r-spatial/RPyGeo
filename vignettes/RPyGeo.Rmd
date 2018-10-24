@@ -93,17 +93,18 @@ To change the default scratch workspace location, use parameter `scratch_workspa
 
 ### Find out about ArcPy functionality
 
-If you do not know the name of the ArcPy function or class, the `rpygeo_search` function can be used. 
+<!-- Marc, can we reference the arcpy function list/help page here. What happens if the search_term = "" -> does this return all available functions? -->
+`rpygeo_search()` is a helper function to find out about the commandline name of all ArcGIS geoalgorithms at our disposal.
+`rpygeo_search` returns all available algorithms that contain the search term (`search_term`) in their name. 
 The search term can be plain text or a regular expression.
 
 ```{r, eval=FALSE}
 rpygeo_search(search_term = "3d", module = arcpy)
 ```
 
-In this example all functions of the ArcPy main module, that contain the term `3d` in their name are returned. 
-
-If we want to search in another module we have to change the `module` parameter.
-
+The query above will return all functions of the ArcPy main module with a name that contains the expression `3d`. 
+If we want to search another module we have to change the `module` parameter.
+To search for functions that contain the word `Classify` in their names and that are available via the spatial analyst extension, we write:
 
 ```{r, eval=FALSE}
 rpygeo_search(search_term = "Classify", module = arcpy$sa)
