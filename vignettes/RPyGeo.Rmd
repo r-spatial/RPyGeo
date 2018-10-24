@@ -119,18 +119,19 @@ rpygeo_help(arcpy$Slope_3d)
 The help file is displayed in the viewer pane of RStudio.
 If you use RPyGeo in another IDE, the help file is displayed in the default browser.
 
-### Use ArcPy functions
+### Geoprocessing with ArcPy
 
 ArcPy functions can be accessed via the `$` operator.
-You can take advantage of the code completion feature of RStudio.
-After typing the `$` operator all functions of the ArcPy module are listed. Parameters are also autocompleted. 
+You can take advantage of the tab completion feature of RStudio.
+After typing the `$` operator all functions of the ArcPy module are listed (which represents an interactive alternative to `rpygeo_search()`).
+For example, to compute the slope from the digital elevation model we have exported, we can type:
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif")
 ```
 
-We created a slope raster file from the elevation raster file. 
-Note that `slope.tif` is written to the workspace directory and is not automatically loaded into the R session.
+This created a file named `slope.tif` in the workspace directory, which in our case is the temporary folder (see above in `rpygeo_build_env()`).
+To do that, run `rpygeo_load("slope.tif")` (see also furhter below). <!-- Marc, is that correct? -->
 
 We can use the pipe operator `%>%` to chain ArcPy function together. 
 
@@ -141,31 +142,35 @@ arcpy$Dissolve_management(in_features = "nz.shp",
   arcpy$PolygonToLine_management("nz_border.shp")
 ```
 
-In this example the `nz.shp` shapefile is dissolved on the `Island` field and then the polygons are converted to polylines.
+In this example the `nz.shp` shapefile is dissolved based on the `Island` field.
+Subsequently, the polygons are converted to polylines.
+
+<!-- Figure is missing a caption and a reference in the text. -->
 
 ![NZ Workflow.](nz.png){width=100%}
 
 ### Modules and extensions
 
-RPyGeo imports all functions and classes of the available ArcPy modules and extensions. 
-You can access all geoprocessing tools found in the standard toolboxes with a single `$` operator. 
-To access the functions and classes of another module, you have to use a second `$` operator to specify the module.
+To use the functions of a specific extension, you have to first access the corresponding extension via the `$` operator, and then have to use a second `$`  to get access to its functions.
+For example, to compute the slope from a digital elevation model with the help of the Spatial Analyst extenstion, we run:
 
 ```{r, eval=FALSE}
 arcpy$sa$Slope(in_raster = "elev.tif")
 ```
 
-The `Slope` function of the Spatial Analysis extension is located under `sa`. 
+Note that there is no output parameter, hence the result of the processing will be saved to the scratch workspace location (see again `rpygeo_build_env()`).
 
 ### Load output file into R Session
 
-The output of an ArcPy function can be directly loaded into the R session with the `rpygeo_load` function.
+The output of an ArcPy function can be directly loaded into the R session with the `rpygeo_load()` function.
 
+<!-- well, I would never write that... a right-handed assignment operator-->
 ```{r, eval=FALSE}
-arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") %>%
-  rpygeo_load() -> slope
+slope <- arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") %>%
+  rpygeo_load()
 ```
 
+<!-- Marc: and is the same possible with arcpy$sa$Slope? -->
 The slope raster is loaded as a `raster` object into the R session.
 
 ###  Save files
