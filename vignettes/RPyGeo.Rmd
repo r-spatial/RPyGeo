@@ -59,7 +59,7 @@ library("magrittr")
 
 <!-- well, this is an "artificial" dem, why don't you just use data(dem, package = "RQGIS")-->
 To demonstrate both raster and vector operations we will use the raster object `elev` and the vector object `nz` from the **spData** package.
-To make these datasets available for the subsequent ArcMap geoprocessing, we have to save them on disk.
+To make these datasets available for the subsequent ArcMap geoprocessing, we have to save them on disk first.
 Therefore, we export `nz` and `elev` to a temporary directory.
 
 ```{r, eval = FALSE}
@@ -68,7 +68,7 @@ writeRaster(elev, file.path(tempdir(), "elev.tif"), format = "GTiff")
 st_write(nz, file.path(tempdir(), "nz.shp"))
 ```
 
-### Establishing the ArcPy Python interface
+### Establishing the ArcPy Python interface in R
 
 Powered by **reticulate**, `rpygeo_build_env()` will establish an R interface to Python.
 ArcPy will only work with the Python binary that comes with the ArcGIS installation.
