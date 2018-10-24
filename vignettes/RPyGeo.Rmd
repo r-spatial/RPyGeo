@@ -7,6 +7,9 @@ vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: refs.bib
+biblio-style: apalike
+link-citations: true
 ---
 
 ```{r setup, include = FALSE}
@@ -20,7 +23,7 @@ knitr::opts_chunk$set(
 
 **RPyGeo** establishes an interface to the geoprocessing tools of ArcMap from within R.
 Since ArcMap only provides a Python API for a low-level access of its geoalgorithms, **RPyGeo** establishes a tunnel to Python via the **reticulate** package.
-This extends R's spatial capabilities by the geoalgorithms (many of which are unavailable in R) and the geoprocessing power of a Desktop GIS (usually written in a compiled programming language).
+This extends R's spatial capabilities [@bivand_applied_2013; @hijmans_raster_2017; @pebesma_simple_2018] by the geoalgorithms (many of which are unavailable in R) and the geoprocessing power of a Desktop GIS (usually written in a compiled programming language).
 Combining this with the statistical and data science power of R opens the way to advanced console-base statistical geoprocessing [@muenchow_rqgis_2017]. 
 
 ## ArcPy
@@ -30,6 +33,8 @@ ArcPy is a Python side-package that allows geographic data analysis through ArcG
 ArcPy is organized into modules, which are Python files with functions and classes. The ArcPy main module has several hundred functions and classes. 
 It is supported by various modules like the `data access` module or extensions like the `spatial analysis` extension, which increase the number of functions and classes further. 
 We do recommend to get familiar with ArcPy through the official [help pages](https://pro.arcgis.com/en/pro-app/arcpy/main/arcgis-pro-arcpy-reference.htm). 
+There also several books available on ArcGIS and ArcPy such as 
+@zandbergen_python_2013 and [@pimpler_programming_2015].
 <!--
 The ArcPy functions are essentially wrapper for the ArcGIS geoprocessing tools and other scripting tasks.  
 The ArcPy classes are blueprints for any kind of object in ArcPy. 
@@ -42,7 +47,7 @@ In order to use **RPyGeo** you need a working ArcMap or ArcGIS Pro installation 
 
 This tutorial requires the following packages to be installed and attached:
 
-```{r}
+```{r, eval=FALSE}
 library("RpyGeo")
 library("spData")
 library("sf")
@@ -190,3 +195,5 @@ Then we added 2 to each pixel value. For map algebra the `rpygeo_save` function 
 
 Please note that we could not tested each ArcPy function.
 Therefore, if you encounter any bugs please report them in our [github repository](https://github.com/fapola/RPyGeo/) under issues or help us fix them them via a pull request.
+
+# References
