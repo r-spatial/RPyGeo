@@ -84,53 +84,10 @@ A scratch workspace is automatically created inside the workspace.
 ArcPy stores temporary files in this directory.
 You can change the scratch directory with the parameter `scratch_workspace`.
 
-### Use ArcPy functions
+### Find out about ArcPy functionality
 
-ArcPy functions can be accessed via the `$` operator. You can take advantage of the code completion feature of RStudio. After typing the `$` operator all functions of the ArcPy module are listed. Parameters are also autocompleted. 
-
-```{r, eval = FALSE}
-env$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif")
-```
-
-We created a slope raster file from the elevation raster file. Note that `slope.tif` is written to the workspace directory and is not automatically loaded into the R session.
-
-We can use the pipe operator `%>%` to chain ArcPy function together. 
-
-```{r, eval = FALSE}
-arcpy$Dissolve_management(in_features = "nz.shp", 
-                        out_feature_class = "nz_island.shp", 
-                        dissolve_field = "Island") %>%
-  arcpy$PolygonToLine_management("nz_border.shp")
-```
-
-In this example the `nz.shp` shapefile is dissolved on the `Island` field and then the polygons are converted to polylines.
-
-![NZ Workflow.](nz.png){width=100%}
-
-### Modules and extensions
-
-RPyGeo imports all functions and classes of the available ArcPy modules and extensions. You can access all geoprocessing tools found in the standard toolboxes with a single `$` operator. To access the functions and classes of another module, you have to use a second `$` operator to specify the module.
-
-```{r, eval=FALSE}
-arcpy$sa$Slope(in_raster = "elev.tif")
-```
-
-The `Slope` function of the Spatial Analysis extension is located under `sa`. 
-
-### Help files
-
-Help files for each ArcPy function can be accessed with the function `rpygeo_help`.
-
-```{r, eval=FALSE}
-rpygeo_help(arcpy$Slope_3d)
-```
-
-The help file is displayed in the viewer pane of RStudio. If you use RPyGeo in another IDE, the help file is displayed in the default browser.
-
-
-### Search for ArcPy function
-
-If you do not know the name of the ArcPy function or class, the `rpygeo_search` function can be used. The search term can be plain text or a regular expression.
+If you do not know the name of the ArcPy function or class, the `rpygeo_search` function can be used. 
+The search term can be plain text or a regular expression.
 
 ```{r, eval=FALSE}
 rpygeo_search(search_term = "3d", module = arcpy)
@@ -145,6 +102,53 @@ If we want to search in another module we have to change the `module` parameter.
 rpygeo_search(search_term = "Classify", module = arcpy$sa)
 ```
 
+Help files for each ArcPy function can be accessed with the function `rpygeo_help`.
+
+```{r, eval=FALSE}
+rpygeo_help(arcpy$Slope_3d)
+```
+
+The help file is displayed in the viewer pane of RStudio.
+If you use RPyGeo in another IDE, the help file is displayed in the default browser.
+
+### Use ArcPy functions
+
+ArcPy functions can be accessed via the `$` operator.
+You can take advantage of the code completion feature of RStudio.
+After typing the `$` operator all functions of the ArcPy module are listed. Parameters are also autocompleted. 
+
+```{r, eval = FALSE}
+arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif")
+```
+
+We created a slope raster file from the elevation raster file. 
+Note that `slope.tif` is written to the workspace directory and is not automatically loaded into the R session.
+
+We can use the pipe operator `%>%` to chain ArcPy function together. 
+
+```{r, eval = FALSE}
+arcpy$Dissolve_management(in_features = "nz.shp", 
+                          out_feature_class = "nz_island.shp", 
+                          dissolve_field = "Island") %>% 
+  arcpy$PolygonToLine_management("nz_border.shp")
+```
+
+In this example the `nz.shp` shapefile is dissolved on the `Island` field and then the polygons are converted to polylines.
+
+![NZ Workflow.](nz.png){width=100%}
+
+### Modules and extensions
+
+RPyGeo imports all functions and classes of the available ArcPy modules and extensions. 
+You can access all geoprocessing tools found in the standard toolboxes with a single `$` operator. 
+To access the functions and classes of another module, you have to use a second `$` operator to specify the module.
+
+```{r, eval=FALSE}
+arcpy$sa$Slope(in_raster = "elev.tif")
+```
+
+The `Slope` function of the Spatial Analysis extension is located under `sa`. 
+
 ### Load output file into R Session
 
 The output of an ArcPy function can be directly loaded into the R session with the `rpygeo_load` function.
@@ -158,7 +162,9 @@ The slope raster is loaded as a `raster` object into the R session.
 
 ###  Save files
 
-Some functions have no parameter to specify an output file. Instead they return an object and a temporary file is saved to the workspace. For example, the `sa$Aspect` function returns a `Raster` object and writes a temporary Arc/Info Binary Grid file to the workspace. 
+Some functions have no parameter to specify an output file. 
+Instead they return an object and a temporary file is saved to the workspace.
+For example, the `sa$Aspect` function returns a `Raster` object and writes a temporary Arc/Info Binary Grid file to the workspace. 
 
 ```{r, eval=FALSE}
 arcpy$sa$Aspect(in_raster("elev.tif")) %>%
@@ -167,7 +173,8 @@ arcpy$sa$Aspect(in_raster("elev.tif")) %>%
 
 ### Map algebra
 
-Map algebra expressions can be used in RPyGeo with special operators. The four basic calculus functions are implemented as `%rpygeo_+%`, `%rpygeo_-%`, `%rpygeo_*%`, `%rpygeo_/%`. 
+Map algebra expressions can be used in RPyGeo with special operators. 
+The four basic calculus functions are implemented as `%rpygeo_+%`, `%rpygeo_-%`, `%rpygeo_*%`, `%rpygeo_/%`. 
 
 ```{r, eval=FALSE}
 ras <- arcpy$sa$Raster("elev.tif") 
@@ -178,6 +185,7 @@ ras %rpygeo_+% 2 %>%
 
 In this example we created a raster object from the elevation raster. Then we added 2 to each pixel value. For map algebra the `rpygeo_save` function is very handy, because the output of map algebra is always a temporary file. 
 
-## Conclusion
+## Conclusions
 
-We hope this tutorial helped you to get familiar with RPyGeo. ArcGIS offers many functions and classes and therefore it is not possible to test them all in RPyGeo. If you find any bugs please report them at <https://github.com/fapola/RPyGeo/>.
+Please note that we could not tested each ArcPy function.
+Therefore, if you encounter any bugs please report them in our [github repository](https://github.com/fapola/RPyGeo/) under issues or help us fix them them via a pull request.
