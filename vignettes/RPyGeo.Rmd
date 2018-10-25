@@ -21,9 +21,9 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-**RPyGeo** establishes an interface to the geoprocessing tools of ArcMap from within R.
-Since ArcMap only provides a Python API for a low-level access of its geoalgorithms, **RPyGeo** establishes a tunnel to Python via the **reticulate** package.
-This extends R's spatial capabilities [@bivand_applied_2013; @hijmans_raster_2017; @pebesma_simple_2018] by the geoalgorithms (many of which are unavailable in R) and the geoprocessing power of a Desktop GIS (usually written in a compiled programming language).
+**RPyGeo** establishes an interface to the geoprocessing tools of ArcGIS from within R.
+Since ArcGIS only provides a Python API for a low-level access of its C++ based geoalgorithms, **RPyGeo** establishes a tunnel to Python via the **reticulate** package.
+This extends R's spatial capabilities [@bivand_applied_2013; @hijmans_raster_2017; @pebesma_simple_2018] by the geoalgorithms and the geoprocessing power of ArcGIS.
 Combining this with the statistical and data science power of R opens the way to advanced console-base statistical geoprocessing [@muenchow_rqgis_2017]. 
 
 ## ArcPy
