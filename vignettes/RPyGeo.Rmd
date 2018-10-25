@@ -111,7 +111,7 @@ To search for functions that contain the word `Classify` in their names and that
 rpygeo_search(search_term = "Classify", module = arcpy$sa)
 ```
 
-`rpggeo_help()` helps to get familiar with the function parameters of a specific ArcGIS geoalgorithm.
+`rpygeo_help()` helps to get familiar with the function parameters of a specific ArcGIS geoalgorithm.
 
 ```{r, eval=FALSE}
 rpygeo_help(arcpy$Slope_3d)
