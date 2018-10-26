@@ -46,21 +46,18 @@ For example, `Point` and `Raster` are classes to describe geographic data. ArcPy
 # Tutorial
 
 In order to use **RPyGeo** you need a working ArcMap or ArcGIS Pro installation on your computer. 
-
-This tutorial requires the following packages to be installed and attached:
+In addition, this tutorial requires the following packages to be installed and attached.
 
 ```{r, eval=FALSE}
 library("RpyGeo")
-library("spData")
 library("sf")
 library("raster")
 library("magrittr")
 ```
 
-<!-- well, this is an "artificial" dem, why don't you just use data(dem, package = "RQGIS")-->
-To demonstrate both raster and vector operations we will use the raster object `dem` and the vector object `nz` from the packages **RQGIS** and **spData**.
+**spData** and **RQGIS** must also be installed since we will use the raster object `dem` and the vector object `nz` from these packages to demonstrate both raster and vector operations.
 To make these datasets available for the subsequent ArcMap geoprocessing, we have to save them on disk first.
-Therefore, we export `nz` and `elev` to a temporary directory.
+Therefore, we export `nz` and `dem` to a temporary directory.
 
 ```{r, eval = FALSE}
 data(dem, package = "RQGIS")
@@ -73,7 +70,7 @@ st_write(nz, file.path(tempdir(), "nz.shp"))
 
 Powered by **reticulate**, `rpygeo_build_env()` will establish an R interface to Python.
 ArcPy will only work with the Python binary that comes with the ArcGIS installation.
-If this Python binary is not installed in the default location (`C:/Python27` in the case of ArcMap and `C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3` in the case of ArcGIS Pro), one can set it explicitly with the `path` parameter of `rpygeo_build_env()`. 
+If this Python binary is not installed in the default location (`C:/Python27` in the case of ArcMap and `C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3` in the case of ArcGIS Pro), one has to set it explicitly with the `path` parameter of `rpygeo_build_env()`. 
 Secondly, `rpygeo_build_env()` loads the `arcpy` library.
 
 ```{r, eval = FALSE}
@@ -96,7 +93,7 @@ To change the default scratch workspace location, use parameter `scratch_workspa
 
 <!-- Marc, can we reference the arcpy function list/help page here. What happens if the search_term = "" -> does this return all available functions? -->
 `rpygeo_search()` is a helper function to find out about the commandline name of all ArcGIS geoalgorithms at our disposal.
-`rpygeo_search` returns all available algorithms that contain the term specified in `search_term` in their name. 
+`rpygeo_search()` returns all available algorithms that contain the term specified in `search_term` in their name. 
 The search term can be plain text or a regular expression.
 For example, to find all functions of the ArcPy main module that contain `3d` in their name, we can type: 
 
@@ -119,6 +116,7 @@ rpygeo_search(search_term = "Classify", module = arcpy$sa)
 #> "ClassifyRaster" "MLClassify"     "Reclassify" 
 ```
 
+If `search_term` remains unspecified all available functions of the corresponding module will be returned.
 
 `rpygeo_help()` helps to get familiar with the function parameters of a specific ArcGIS geoalgorithm.
 
@@ -132,9 +130,8 @@ If you use RPyGeo in another IDE, the help file is displayed in the default brow
 ## Geoprocessing with ArcPy
 
 ArcPy functions can be accessed via the `$` operator.
-You can take advantage of the tab completion feature of RStudio.
-After typing the `$` operator all functions of the ArcPy module are listed (which represents an interactive alternative to `rpygeo_search()`).
-Code completion (pressing Shift) will also list the available function parameters for a specific function, e.g. for `arcpy$Slope_3d()`.
+Taking advantage of the (tab) code completion feature of RStudio, all functions of the ArcPy module are listed after typing the `$` operator (which represents an interactive alternative to `rpygeo_search()`).
+(Tab) code completion will also list the available function parameters for a specific function, e.g. for `arcpy$Slope_3d()`.
 We will use `arcpy$Slope_3d()` to compute the slope from the digital elevation model (DEM) we have exported at the beginning of this tutorial:
 
 ```{r, eval=FALSE}
@@ -176,8 +173,8 @@ knitr::include_graphics("nz.png")
 
 ## Modules and extensions
 
-To use the functions of a specific extension, one has to enable the extension first (see `rpygeo_build_env()`. 
-To access an extension we can make use of the `$` operator.
+To use the functions of a specific extension, one has to enable the extension first (see `rpygeo_build_env()`). 
+To access an extension we can also make use of the `$` operator.
 Then, a second `$` provides access to the functions of the extension.
 For example, to compute the slope from a DEM with the help of the Spatial Analyst extension, we can run:
 
