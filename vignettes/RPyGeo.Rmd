@@ -49,7 +49,7 @@ In order to use **RPyGeo** you need a working ArcMap or ArcGIS Pro installation 
 In addition, this tutorial requires the following packages to be installed and attached.
 
 ```{r, eval=FALSE}
-library("RpyGeo")
+library("RPyGeo")
 library("sf")
 library("raster")
 library("magrittr")
