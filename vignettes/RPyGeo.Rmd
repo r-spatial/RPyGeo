@@ -1,8 +1,10 @@
 ---
 title: "RPyGeo"
-author: "Marc Becker and Fabian Polakowski"
+author: "Marc Becker, Jannes Muenchow, Fabian Polakowski"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+    bookdown::html_document2:
+      base_format: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,16 +21,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Introduction
+# Introduction
 
 **RPyGeo** establishes an interface to the geoprocessing tools of ArcGIS from within R.
 Since ArcGIS only provides a Python API for a low-level access of its C++ based geoalgorithms, **RPyGeo** establishes a tunnel to Python via the **reticulate** package.
 This extends R's spatial capabilities [@bivand_applied_2013; @hijmans_raster_2017; @pebesma_simple_2018] by the geoalgorithms and the geoprocessing power of ArcGIS.
 Combining this with the statistical and data science power of R opens the way to advanced console-base statistical geoprocessing [@muenchow_rqgis_2017]. 
 
-## ArcPy
-
-To use **RpyGeo** properly, at least a basic understanding of ArcPy is necessary.
+To use **RpyGeo** properly, at least a basic understanding of **ArcPy** is necessary.
 ArcPy is a Python side-package that allows geographic data analysis through ArcGIS from the Python command line.
 ArcPy is organized into modules which are Python files with functions and classes. The ArcPy main module `arcpy` (and `arcgis`, respectively depending on the used ArcGIS version <!-- Marc, pls check if this is right -->) provides (geographic) classes and several hundred functions.
 Further modules (e.g., `data access`) and extensions (e.g., `spatial analysis`) further extend the ArcPy main module.
@@ -43,7 +43,7 @@ The ArcPy classes are blueprints for any kind of object in ArcPy.
 For example, `Point` and `Raster` are classes to describe geographic data. ArcPy classes are also used to set geoprocessing environment settings (e.g., `workspace` or `extent`).
 -->
 
-## Tutorial
+# Tutorial
 
 In order to use **RPyGeo** you need a working ArcMap or ArcGIS Pro installation on your computer. 
 
@@ -58,17 +58,18 @@ library("magrittr")
 ```
 
 <!-- well, this is an "artificial" dem, why don't you just use data(dem, package = "RQGIS")-->
-To demonstrate both raster and vector operations we will use the raster object `elev` and the vector object `nz` from the **spData** package.
+To demonstrate both raster and vector operations we will use the raster object `dem` and the vector object `nz` from the packages **RQGIS** and **spData**.
 To make these datasets available for the subsequent ArcMap geoprocessing, we have to save them on disk first.
 Therefore, we export `nz` and `elev` to a temporary directory.
 
 ```{r, eval = FALSE}
-data(elev, nz, package = "spData")
-writeRaster(elev, file.path(tempdir(), "elev.tif"), format = "GTiff")
+data(dem, package = "RQGIS")
+data(nz, package = "spData")
+writeRaster(dem, file.path(tempdir(), "dem.tiff"), format = "GTiff")
 st_write(nz, file.path(tempdir(), "nz.shp"))
 ```
 
-### Establishing the ArcPy Python interface in R
+## Establishing the ArcPy Python interface in R
 
 Powered by **reticulate**, `rpygeo_build_env()` will establish an R interface to Python.
 ArcPy will only work with the Python binary that comes with the ArcGIS installation.
@@ -91,7 +92,7 @@ A scratch workspace folder is automatically created inside the workspace.
 The scratch workspace usually contains the output files of functions that do not explicitly provide an output parameter as is the case for most spatial analyst raster algorithms.
 To change the default scratch workspace location, use parameter `scratch_workspace`.
 
-### Find out about ArcPy functionality
+## Find out about ArcPy functionality
 
 <!-- Marc, can we reference the arcpy function list/help page here. What happens if the search_term = "" -> does this return all available functions? -->
 `rpygeo_search()` is a helper function to find out about the commandline name of all ArcGIS geoalgorithms at our disposal.
@@ -99,9 +100,15 @@ To change the default scratch workspace location, use parameter `scratch_workspa
 The search term can be plain text or a regular expression.
 For example, to find all functions of the ArcPy main module that contain `3d` in their name, we can type: 
 
-
 ```{r, eval=FALSE}
-rpygeo_search(search_term = "3d", module = arcpy)
+rpygeo_search(search_term = "3d", module = arcpy) %>%
+  head
+#> [1] "ASCII3DToFeatureClass_3d"        
+#> [2] "AddFeatureClassToTerrain_3d"     
+#> [3] "AddSurfaceInformation_3d"        
+#> [4] "AddTerrainPyramidLevel_3d"       
+#> [5] "AddZInformation_3d"              
+#> [6] "Adjust3DZ_management"  
 ```
 
 If we want to search another module we have to set `module` parameter accordingly.
@@ -109,7 +116,9 @@ To search for functions that contain the word `Classify` in their names and that
 
 ```{r, eval=FALSE}
 rpygeo_search(search_term = "Classify", module = arcpy$sa)
+#> "ClassifyRaster" "MLClassify"     "Reclassify" 
 ```
+
 
 `rpygeo_help()` helps to get familiar with the function parameters of a specific ArcGIS geoalgorithm.
 
@@ -120,45 +129,52 @@ rpygeo_help(arcpy$Slope_3d)
 The help file is displayed in the viewer pane of RStudio.
 If you use RPyGeo in another IDE, the help file is displayed in the default browser.
 
-### Geoprocessing with ArcPy
+## Geoprocessing with ArcPy
 
 ArcPy functions can be accessed via the `$` operator.
 You can take advantage of the tab completion feature of RStudio.
 After typing the `$` operator all functions of the ArcPy module are listed (which represents an interactive alternative to `rpygeo_search()`).
-For example, to compute the slope from the digital elevation model (DEM) we have exported at the beginning of this tutorial, type:
+Code completion (pressing Shift) will also list the available function parameters for a specific function, e.g. for `arcpy$Slope_3d()`.
+We will use `arcpy$Slope_3d()` to compute the slope from the digital elevation model (DEM) we have exported at the beginning of this tutorial:
 
 ```{r, eval=FALSE}
-arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif")
+arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif")
+#>C:\Users\janne\AppData\Local\Temp\RtmpyWYrL1\slope.tif
 ```
 
 Executing the function creates a file named `slope.tif` in the workspace directory, which in our case is the temporary folder (see above in `rpygeo_build_env()`).
 To import the output of the ArcGIS processing into R, run:
 
-<!-- Marc, is that correct? -->
 ```{r, eval=FALSE}
 slope <- rpygeo_load("slope.tif")
+plot(slope)
 ```
 
-This imports the ArcGIS slope processing output into R as a raster object named `slope`.
-<!-- Marc: and is this also possible? arcpy$sa$Slope %>% rpygeo_load() -->
+```{r slope, echo=FALSE, fig.cap="Slope computed with `Slope_3d()`"}
+knitr::include_graphics("slope.png")
+```
+
+This imports and plots the ArcGIS slope processing output into R as a raster object named `slope` (Figure \@ref(fig:slope)).
 
 The pipe operator `%>%` can be used to chain ArcPy function together. 
 
 ```{r, eval = FALSE}
 arcpy$Dissolve_management(in_features = "nz.shp", 
                           out_feature_class = "nz_island.shp", 
-                          dissolve_field = "Island") %>% a
+                          dissolve_field = "Island") %>%
   arcpy$PolygonToLine_management("nz_border.shp")
+#>C:\Users\janne\AppData\Local\Temp\RtmpqGHdyf\nz_border.shp
 ```
 
 In this example the `nz.shp` shapefile is dissolved based on the `Island` field.
-Subsequently, the polygons are converted to polylines.
+Subsequently, the polygons are converted into polylines (see Figure \@ref(fig:nz)).
 
-<!-- Figure is missing a caption and a reference in the text. -->
 
-![NZ Workflow.](nz.png){width=100%}
+```{r nz, echo=FALSE, fig.cap="Regions of `nz` (left), `nz` polygons dissolved by island (middle), `nz` polygons converted to lines (right).", out.width="75%"}
+knitr::include_graphics("nz.png")
+```
 
-### Modules and extensions
+## Modules and extensions
 
 To use the functions of a specific extension, one has to enable the extension first (see `rpygeo_build_env()`. 
 To access an extension we can make use of the `$` operator.
@@ -166,34 +182,39 @@ Then, a second `$` provides access to the functions of the extension.
 For example, to compute the slope from a DEM with the help of the Spatial Analyst extension, we can run:
 
 ```{r, eval=FALSE}
-arcpy$sa$Slope(in_raster = "elev.tif")
+arcpy$sa$Slope(in_raster = "dem.tif")
+#>C:\Users\janne\AppData\Local\Temp\RtmpqGHdyf/scratch\Slope_dem1.tif
 ```
 
 Note that there is no output parameter, hence the result of the processing will be saved as an Arc/Info Binary Grid file to the scratch workspace location (see again `rpygeo_build_env()`).
 To save the output to another location, we can make use of `rpygeo_save()`.
+Here, we save the output of the slope processing to the workspace we have defined in the beginning with `rpygeo_build_env()` which was a temporary directory created with `tempdir()`:
 
 ```{r, eval=FALSE}
-arcpy$sa$Slope(in_raster = "elev.tif") %>%
+arcpy$sa$Slope(in_raster = "dem.tif") %>%
   rpygeo_save("slope.tif")
 ```
 
-### Map algebra
+## Map algebra
 
-Map algebra expressions can be used in RPyGeo with special operators. 
+Map algebra expressions can be used in **RPyGeo** with special operators. 
 The four basic calculus functions are implemented as `%rpygeo_+%`, `%rpygeo_-%`, `%rpygeo_*%`, `%rpygeo_/%`. 
 
-<!-- Marc, what kind of object is ras? I suspect it is not an r raster object, we should make this clear here, i.e. explain what arcpy$sa$Raster is doing -->
 ```{r, eval=FALSE}
-ras <- arcpy$sa$Raster("elev.tif") 
+
+ras <- arcpy$sa$Raster("dem.tif") 
+class(ras)
+#>"python.builtin.Raster" "python.builtin.object"
 
 ras %rpygeo_+% 2 %>%
-  rpygeo_save("elev_2.tif")
+  rpygeo_save("dem_2.tif")
 ```
 
-In this example we created a raster object from the elevation raster. 
-Then we added 2 to each pixel value. For map algebra the `rpygeo_save` function is very handy, because the output of map algebra is always a temporary file. 
+In this example, `arcpy$sa$Raster()` first creates a Python raster object, which is linked to a temporary Esri Arc/Info Binary Grid stored in the scratch workspace.
+Using `%rpygeo_+%` we added 2 to each pixel value. 
+For map algebra the `rpygeo_save()` and `rpygeo_load()` functions are very handy, because the output of map algebra operations is always a temporary file. 
 
-## Conclusions
+# Conclusions
 
 Please note that we could not tested each ArcPy function.
 Therefore, if you encounter any bugs please report them in our [github repository](https://github.com/fapola/RPyGeo/) under issues or help us fix them them via a pull request.
