@@ -409,18 +409,14 @@ rpygeo_help <- function(arcpy_function) {
     )
   }
 
-  # Create temporary directory for viewer
-  temp_dir <- tempfile()
-  if(!dir.exists(temp_dir)) {
-    dir.create(temp_dir)
-  }
-
   # Render help file
-  help_file <- rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
-                    output_file = "help.html",
-                    output_dir = temp_dir,
-                    params = template_parameter,
-                    quiet = TRUE)
+  help_file <-
+    rmarkdown::render(file.path(system.file(package = "RPyGeo"),
+                                "template", template),
+                      output_file = "help.html",
+                      output_dir = tempdir(),
+                      params = template_parameter,
+                      quiet = TRUE)
 
   # Check if viewer is available
   if (!is.null(getOption("viewer"))){
