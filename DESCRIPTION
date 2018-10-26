@@ -16,9 +16,8 @@ URL: https://github.com/fapola/RPyGeo
 BugReports: https://github.com/fapola/RPyGeo/issues
 License: GPL-3
 LazyData: TRUE
-Depends:
-        reticulate (>= 1.2)
 Imports:
+        reticulate (>= 1.2)
         sf,
         raster,
         tools,
