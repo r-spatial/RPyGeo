@@ -50,4 +50,9 @@ Authors:
   \item Marc Becker \email{marc.becker@uni-jena.de}
 }
 
+Other contributors:
+\itemize{
+  \item Jannes Muenchow (0000-0001-7834-4717) [contributor]
+}
+
 }

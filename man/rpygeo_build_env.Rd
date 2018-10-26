@@ -67,5 +67,5 @@ arcpy <- rpygeo_build_env(overwrite = TRUE,
 
 }
 \author{
-Fabian Polakowski und Marc Becker
+Fabian Polakowski, Marc Becker
 }
