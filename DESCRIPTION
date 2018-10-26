@@ -27,10 +27,10 @@ Imports:
         magrittr,
         stats
 SystemRequirements: Python (>= 2.6.0), ArcGIS (>= 10.0)
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: 
     testthat,
     knitr,
     spData,
-    rstudioapiP
+    rstudioapi
 VignetteBuilder: knitr
