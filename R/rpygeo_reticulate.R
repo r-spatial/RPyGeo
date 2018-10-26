@@ -195,7 +195,7 @@ rpygeo_build_env <- function(path = NULL,
 #'
 #' @importFrom magrittr "%>%"
 
-rpygeo_search <- function(search_term = NULL, module = NULL) {
+rpygeo_search <- function(search_term = "", module = NULL) {
 
   # Get all ArcPy functions
   functions <- reticulate::py_list_attributes(module)
