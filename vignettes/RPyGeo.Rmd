@@ -95,26 +95,24 @@ To change the default scratch workspace location, use parameter `scratch_workspa
 `rpygeo_search()` is a helper function to find out about the commandline name of all ArcGIS geoalgorithms at our disposal.
 `rpygeo_search()` returns all available algorithms that contain the term specified in `search_term` in their name. 
 The search term can be plain text or a regular expression.
-For example, to find all functions of the ArcPy main module that contain `3d` in their name, we can type: 
+For example, to find all ArcPy functions that contain `Classify` in their name, we can type: 
 
 ```{r, eval=FALSE}
-rpygeo_search(search_term = "3d", module = arcpy) %>%
-  head
-#> [1] "ASCII3DToFeatureClass_3d"        
-#> [2] "AddFeatureClassToTerrain_3d"     
-#> [3] "AddSurfaceInformation_3d"        
-#> [4] "AddTerrainPyramidLevel_3d"       
-#> [5] "AddZInformation_3d"              
-#> [6] "Adjust3DZ_management"  
+rpygeo_search(search_term = "Classify")
+#> $toolbox
+#> [1] "ClassifyLasByHeight_3d" "ClassifyLasGround_3d"   "Reclassify_3d"         
+#>
+#> $sa
+#> [1] "ClassifyRaster" "MLClassify"     "Reclassify"    
+#>
+#> $main
+#> [1] "ClassifyLasByHeight_3d" "ClassifyLasGround_3d"   "Reclassify_3d"         
+#> 
+#> $ddd
+#> [1] "ClassifyLasByHeight" "ClassifyLasGround"   "Reclassify"
 ```
 
-If we want to search another module we have to set `module` parameter accordingly.
-To search for functions that contain the word `Classify` in their names and that are available via the spatial analyst extension, we write:
-
-```{r, eval=FALSE}
-rpygeo_search(search_term = "Classify", module = arcpy$sa)
-#> "ClassifyRaster" "MLClassify"     "Reclassify" 
-```
+The search result list is divided according to the corresponding modules of the functions (see section [Modules and extensions](#modules-and-extensions)).
 
 If `search_term` remains unspecified all available functions of the corresponding module will be returned.
 
@@ -129,7 +127,7 @@ If you use RPyGeo in another IDE, the help file is displayed in the default brow
 
 ## Geoprocessing with ArcPy
 
-ArcPy functions can be accessed via the `$` operator.
+ArcPy functions of the main module can be accessed via the `$` operator.
 Taking advantage of the (tab) code completion feature of RStudio, all functions of the ArcPy module are listed after typing the `$` operator (which represents an interactive alternative to `rpygeo_search()`).
 (Tab) code completion will also list the available function parameters for a specific function, e.g. for `arcpy$Slope_3d()`.
 We will use `arcpy$Slope_3d()` to compute the slope from the digital elevation model (DEM) we have exported at the beginning of this tutorial:
