@@ -175,14 +175,12 @@ rpygeo_build_env <- function(path = NULL,
 #'
 #' @details The list members are referenced by the ArcPy module names. Each
 #' member contains a character vector of matching ArcPy functions and classes.
-#' Except for the main module, functions and classes must be accessed by their
+#' Except for the main module, functions and classes have to be accessed by their
 #' module names (s. examples).
 #'
 #' @return Named list of character vectors of matching ArcPy functions and classes
 #'
 #' @author Marc Becker
-#'
-#' @seealso \code{\link{rpygeo_build_env}}
 #'
 #' @examples
 #'
@@ -191,10 +189,12 @@ rpygeo_build_env <- function(path = NULL,
 #' data(dem, package = "RQGIS")
 #'
 #' # Load the ArcPy module and build environment
-#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
+#' arcpy <- rpygeo_build_env(overwrite = TRUE,
+#'                           workspace = tempdir(),
+#'                           extensions = "Spatial")
 #'
 #' # Write raster to workspace directory
-#' writeRater(file.path(tempdir(), "dem.tif"))
+#' writeRaster(dem, file.path(tempdir(), "dem.tif"))
 #'
 #' # Search for ArcPy functions, which contain the term slope
 #' rpygeo_search("slope")
@@ -228,8 +228,8 @@ rpygeo_search <- function(search_term = NULL) {
 
   # Query available functions
   modules$module %>%
-    map(function(a) str_subset(a, regex(search_term, ignore_case = TRUE))) %>%
-    keep(function(a) length(a) > 0) -> search_result
+    purrr::map(function(a) stringr::str_subset(a, stringr::regex(search_term, ignore_case = TRUE))) %>%
+    purrr::keep(function(a) length(a) > 0) -> search_result
 
   if(length(search_result) < 1) {
     return(NULL)
