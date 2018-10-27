@@ -22,3 +22,6 @@ cat(params$input)
 ```{r, comment=NA, echo=FALSE}
 cat(paste0("env$", params$example))
 ```
+
+
+More information available on ArcGIS [help pages](`r paste0("https://pro.arcgis.com/search/?q=", params$name, "&collection=help&product=arcgis-pro&version=pro2.2&language=en")`).

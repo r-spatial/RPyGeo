@@ -17,4 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 cat(params$description)
 ```
 
+
 RPygeo could not phrase the ArcPy help file. Above is the raw help file.
+
+More information available on ArcGIS [help pages](`r paste0("https://pro.arcgis.com/search/?q=", params$name, "&collection=help&product=arcgis-pro&version=pro2.2&language=en")`).
