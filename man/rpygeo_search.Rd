@@ -2,31 +2,58 @@
 % Please edit documentation in R/rpygeo_reticulate.R
 \name{rpygeo_search}
 \alias{rpygeo_search}
-\title{Search for ArcPy functions}
+\title{Search for ArcPy functions and classes}
 \usage{
-rpygeo_search(search_term = NULL, module = NULL)
+rpygeo_search(search_term = NULL)
 }
 \arguments{
 \item{search_term}{Search term. Regular expressions are possible.}
-
-\item{module}{ArcPy or ArcGIS API modules created with \code{\link{rpygeo_build_env}}.}
 }
 \value{
-Character vector of matching ArcPy functions
+Named list of character vectors of matching ArcPy functions and classes
 }
 \description{
-Search for ArcPy functions with a character string or regular expression.
+Search for ArcPy functions and classes with a character string or regular expression.
+}
+\details{
+The list members are referenced by the ArcPy module names. Each
+member contains a character vector of matching ArcPy functions and classes.
+Except for the main module, functions and classes must be accessed by their
+module names (s. examples).
 }
 \examples{
 
 \dontrun{
+# Get data
+data(dem, package = "RQGIS")
+
 # Load the ArcPy module and build environment
-arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 
-# Search for ArcPy functions, which contain the term 3d
-rpygeo_search("3d", arcpy)
+# Write raster to workspace directory
+writeRater(file.path(tempdir(), "dem.tif"))
+
+# Search for ArcPy functions, which contain the term slope
+rpygeo_search("slope")
+
+#> $toolbox
+#> [1] "Slope_3d"        "SurfaceSlope_3d"
+#>
+#> $main
+#> [1] "Slope_3d"        "SurfaceSlope_3d"
+#>
+#> $sa
+#> [1] "Slope"
+#>
+#> $ddd
+#> [1] "Slope"        "SurfaceSlope"
+
+# Run function from sa module
+arcpy$sa$Slope(in_raster="dem.tif")
+
+# Run function from main module
+arcpy$Slope_3d(in_raster="dem.tif")
 }
-
 }
 \seealso{
 \code{\link{rpygeo_build_env}}
