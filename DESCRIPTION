@@ -6,7 +6,8 @@ Date: 2018-10-23
 Authors@R: c(
     person("Alexander", "Brenning", , "alexander.brenning@uni-jena.de", c("aut", "cre")),
     person("Fabian", "Polakowski", , "fabian.polakowski@gmail.com", role = "aut"),
-    person("Marc", "Becker", ,"marc.becker@uni-jena.de", role = "aut")
+    person("Marc", "Becker", ,"marc.becker@uni-jena.de", role = "aut"),
+    person("Jannes", "Muenchow", role = "ctb", comment = c(ORCID = '0000-0001-7834-4717'))
     )
 Description: Provides access to ArcGIS geoprocessing tools by building an 
              interface between R and the ArcPy Python side-package via the 
@@ -27,10 +28,11 @@ Imports:
         stats,
         purrr
 SystemRequirements: Python (>= 2.6.0), ArcGIS (>= 10.0)
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: 
     testthat,
     knitr,
     spData,
-    rstudioapi
+    rstudioapi,
+    bookdown
 VignetteBuilder: knitr

@@ -4,7 +4,7 @@
 \alias{rpygeo_search}
 \title{Search for ArcPy functions and classes}
 \usage{
-rpygeo_search(search_term = NULL)
+rpygeo_search(search_term = "")
 }
 \arguments{
 \item{search_term}{Search term. Regular expressions are possible.}

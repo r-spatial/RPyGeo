@@ -40,7 +40,7 @@
 #'
 #' @return Returns ArcPy or ArcGIS modules in R
 #'
-#' @author Fabian Polakowski und Marc Becker
+#' @author Fabian Polakowski, Marc Becker
 #'
 #' @examples
 #'
@@ -221,7 +221,7 @@ rpygeo_build_env <- function(path = NULL,
 #'
 #' @importFrom magrittr "%>%"
 
-rpygeo_search <- function(search_term = NULL) {
+rpygeo_search <- function(search_term = "") {
 
   # Get modules with functions and classes
   modules <- reticulate::py_run_file(paste0(find.package("RPyGeo", lib.loc = .libPaths()), "/python/get_modules.py"))
@@ -442,13 +442,8 @@ rpygeo_help <- function(arcpy_function) {
     )
   }
 
-  # Create temporary directory for viewer
-  temp_dir <- tempfile()
-  if(!dir.exists(temp_dir)) {
-    dir.create(temp_dir)
-  }
-
   # Render help file
+
   help_file <- rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
                                  output_file = "help.html",
                                  output_dir = temp_dir,
