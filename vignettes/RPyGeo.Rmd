@@ -71,7 +71,7 @@ st_write(nz, file.path(tempdir(), "nz.shp"))
 Powered by **reticulate**, `rpygeo_build_env()` will establish an R interface to Python.
 ArcPy will only work with the Python binary that comes with the ArcGIS installation.
 If this Python binary is not installed in the default location (`C:/Python27` in the case of ArcMap and `C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3` in the case of ArcGIS Pro), one has to set it explicitly with the `path` parameter of `rpygeo_build_env()`. 
-Secondly, `rpygeo_build_env()` loads the `arcpy` library.
+Secondly, `rpygeo_build_env()` loads the `arcpy` modules.
 
 ```{r, eval = FALSE}
 arcpy <- rpygeo_build_env(workspace = tempdir(),
