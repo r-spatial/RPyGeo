@@ -167,15 +167,18 @@ rpygeo_build_env <- function(path = NULL,
   }
 }
 
-#' @title Search for ArcPy functions
+#' @title Search for ArcPy functions and classes
 #'
-#' @description Search for ArcPy functions with a character string or regular expression.
+#' @description Search for ArcPy functions and classes with a character string or regular expression.
 #'
 #' @param search_term Search term. Regular expressions are possible.
 #'
-#' @param module ArcPy or ArcGIS API modules created with \code{\link{rpygeo_build_env}}.
+#' @details The list members are referenced by the ArcPy module names. Each
+#' member contains a character vector of matching ArcPy functions and classes.
+#' Except for the main module, functions and classes must be accessed by their
+#' module names (s. examples).
 #'
-#' @return Character vector of matching ArcPy functions
+#' @return Named list of character vectors of matching ArcPy functions and classes
 #'
 #' @author Marc Becker
 #'
@@ -184,25 +187,55 @@ rpygeo_build_env <- function(path = NULL,
 #' @examples
 #'
 #' \dontrun{
+#' # Get data
+#' data(dem, package = "RQGIS")
+#'
 #' # Load the ArcPy module and build environment
-#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 #'
-#' # Search for ArcPy functions, which contain the term 3d
-#' rpygeo_search("3d", arcpy)
+#' # Write raster to workspace directory
+#' writeRater(file.path(tempdir(), "dem.tif"))
+#'
+#' # Search for ArcPy functions, which contain the term slope
+#' rpygeo_search("slope")
+#'
+#' #> $toolbox
+#' #> [1] "Slope_3d"        "SurfaceSlope_3d"
+#' #>
+#' #> $main
+#' #> [1] "Slope_3d"        "SurfaceSlope_3d"
+#' #>
+#' #> $sa
+#' #> [1] "Slope"
+#' #>
+#' #> $ddd
+#' #> [1] "Slope"        "SurfaceSlope"
+#'
+#' # Run function from sa module
+#' arcpy$sa$Slope(in_raster="dem.tif")
+#'
+#' # Run function from main module
+#' arcpy$Slope_3d(in_raster="dem.tif")
 #' }
-#'
 #' @export
 #'
 #' @importFrom magrittr "%>%"
 
-rpygeo_search <- function(search_term = NULL, module = NULL) {
+rpygeo_search <- function(search_term = NULL) {
 
-  # Get all ArcPy functions
-  functions <- reticulate::py_list_attributes(module)
+  # Get modules with functions and classes
+  modules <- reticulate::py_run_file(paste0(find.package("RPyGeo", lib.loc = .libPaths()), "/python/get_modules.py"))
 
   # Query available functions
-  grep(search_term, functions, ignore.case = TRUE, value = TRUE) %>%
-    return()
+  modules$module %>%
+    map(function(a) str_subset(a, regex(search_term, ignore_case = TRUE))) %>%
+    keep(function(a) length(a) > 0) -> search_result
+
+  if(length(search_result) < 1) {
+    return(NULL)
+  } else {
+    return(search_result)
+  }
 }
 
 #' @title Load output of ArcPy functions into R session
@@ -417,10 +450,10 @@ rpygeo_help <- function(arcpy_function) {
 
   # Render help file
   help_file <- rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
-                    output_file = "help.html",
-                    output_dir = temp_dir,
-                    params = template_parameter,
-                    quiet = TRUE)
+                                 output_file = "help.html",
+                                 output_dir = temp_dir,
+                                 params = template_parameter,
+                                 quiet = TRUE)
 
   # Check if viewer is available
   if (!is.null(getOption("viewer"))){
@@ -509,5 +542,5 @@ rpygeo_save <- function(data, filename) {
     # Workspace and scratch workspace are directories
     raster::raster(info$info$catalogpath) %>%
       raster::writeRaster(paste0(workspace$workspace, "/", filename), overwrite = overwrite$overwrite)
-    }
+  }
 }
