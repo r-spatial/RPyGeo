@@ -443,10 +443,9 @@ rpygeo_help <- function(arcpy_function) {
   }
 
   # Render help file
-
   help_file <- rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
                                  output_file = "help.html",
-                                 output_dir = temp_dir,
+                                 output_dir = tempdir(),
                                  params = template_parameter,
                                  quiet = TRUE)
 
