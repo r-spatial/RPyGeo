@@ -18,7 +18,7 @@ Search for ArcPy functions and classes with a character string or regular expres
 \details{
 The list members are referenced by the ArcPy module names. Each
 member contains a character vector of matching ArcPy functions and classes.
-Except for the main module, functions and classes must be accessed by their
+Except for the main module, functions and classes have to be accessed by their
 module names (s. examples).
 }
 \examples{
@@ -28,10 +28,12 @@ module names (s. examples).
 data(dem, package = "RQGIS")
 
 # Load the ArcPy module and build environment
-arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
+arcpy <- rpygeo_build_env(overwrite = TRUE,
+                          workspace = tempdir(),
+                          extensions = "Spatial")
 
 # Write raster to workspace directory
-writeRater(file.path(tempdir(), "dem.tif"))
+writeRaster(dem, file.path(tempdir(), "dem.tif"))
 
 # Search for ArcPy functions, which contain the term slope
 rpygeo_search("slope")
@@ -54,9 +56,6 @@ arcpy$sa$Slope(in_raster="dem.tif")
 # Run function from main module
 arcpy$Slope_3d(in_raster="dem.tif")
 }
-}
-\seealso{
-\code{\link{rpygeo_build_env}}
 }
 \author{
 Marc Becker
