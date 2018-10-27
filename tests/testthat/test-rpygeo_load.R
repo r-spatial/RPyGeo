@@ -36,25 +36,6 @@ test_that("Load img raster file", {
     expect_s4_class("RasterLayer")
 })
 
-
-test_that("Load adf raster file", {
-  skip_on_cran()
-
-  temp_dir <- tempdir()
-  dir.create(paste0(temp_dir, "/test1_3"))
-  temp_dir <- paste0(temp_dir, "/test1_3")
-  writeRaster(elev, paste0(temp_dir, "/elev.tif"), overwrite=TRUE)
-
-
-  arcpy <- rpygeo_build_env(workspace = temp_dir,
-                            overwrite = TRUE)
-
-  arcpy$sa$Raster(paste0("elev.tif")) %rpygeo_+% 1 %>%
-    rpygeo_load() %>%
-    expect_s4_class("RasterLayer")
-})
-
-
 test_that("Load asc raster file", {
   skip_on_cran()
 
