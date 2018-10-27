@@ -34,7 +34,7 @@ ArcPy is organized into modules which are Python files with functions and classe
 Further modules (e.g., `data access`) and extensions (e.g., `spatial analysis`) further extend the ArcPy main module.
 We do recommend to get familiar with ArcPy through the official [help pages](https://pro.arcgis.com/en/pro-app/arcpy/main/arcgis-pro-arcpy-reference.htm). 
 There also several books available on ArcGIS and ArcPy such as 
-@zandbergen_python_2013 and [@pimpler_programming_2015].
+@zandbergen_python_2013 and @pimpler_programming_2015.
 
 # Tutorial
 
