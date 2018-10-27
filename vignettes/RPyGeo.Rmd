@@ -62,7 +62,7 @@ Therefore, we export `nz` and `dem` to a temporary directory.
 ```{r, eval = FALSE}
 data(dem, package = "RQGIS")
 data(nz, package = "spData")
-writeRaster(dem, file.path(tempdir(), "dem.tiff"), format = "GTiff")
+writeRaster(dem, file.path(tempdir(), "dem.tif"), format = "GTiff")
 st_write(nz, file.path(tempdir(), "nz.shp"))
 ```
 
