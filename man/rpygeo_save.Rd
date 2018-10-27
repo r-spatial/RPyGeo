@@ -31,17 +31,20 @@ How the file is written depends on the workspace and scratch workspace environme
 \dontrun{
 # Load packages
 library(RPyGeo)
-library(spData)
-library(dplyr)
+library(RQGIS)
+library(magrittr)
+
+# Get data
+data(dem, package = "RQGIS")
 
 # Load the ArcPy module and build environment
-arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 
 # Write raster to workspace directory
-writeRater(elev, "C:/workspace/elev.tif")
+writeRaster(dem, file.path(tempdir(), "dem.tif"), format = "GTiff")
 
 # Calculate temporary aspect file and save to workspace
-arcpy$sa$Aspect(in_raster = "elev.tif") \%>\%
+arcpy$sa$Aspect(in_raster = "dem.tif") \%>\%
   rpygeo_save("aspect.tif")
 }
 

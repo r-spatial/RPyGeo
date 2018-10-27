@@ -42,25 +42,31 @@ This function can be used with the \code{\%>\%} operator from the \code{dplyr} p
 \dontrun{
 # Load packages
 library(RPyGeo)
+library(magrittr)
+library(RQGIS)
 library(spData)
-library(dplyr)
+
+# Get data
+data(dem, package = "RQGIS")
+data(nz, package = "spData")
+
+# Write data to disk
+writeRaster(dem, file.path(tempdir(), "dem.tif"), format = "GTiff")
+st_write(nz, file.path(tempdir(), "nz.shp"))
 
 # Load the ArcPy module and build environment
-arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace")
-
-# Write raster to workspace directory
-writeRater(elev, "C:/workspace/elev.tif")
+arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 
 # Create a slope raster and load it into the R session (Example 1)
-arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") \%>\%
+arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif") \%>\%
   rpygeo_load() -> slope
 
 # Create a aspect raster and load it into the R session (Example 2)
-ras_aspect <- arcpy$sa$Aspect(in_raster = "elev.tif")
+ras_aspect <- arcpy$sa$Aspect(in_raster = "dem.tif")
 rpygeo_load(ras_aspect)
 
 # Convert elevation raster to polygon shapefile and load it into R session (Example 3)
-arcpy$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
+arcpy$RasterToPolygon_conversion("dem.tif", "elev.shp")
 rpygeo_load("elev.shp")
 }
 

@@ -16,7 +16,7 @@ This function opens the help file for ArcPy function in viewer panel or if not a
 
 \dontrun{
 # Load the ArcPy module and build environment
-arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 
 # Open help file
 rpygeo_help(arcpy$Slope_3d)

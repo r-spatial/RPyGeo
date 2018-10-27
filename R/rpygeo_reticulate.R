@@ -46,14 +46,14 @@
 #'
 #' \dontrun{
 #' # Load ArcPy side-package of ArcGIS Pro with 3D and Spatial Analysis extension.
-#' # and set environment setting 'overwrite' to TRUE.
+#' # Set environment setting 'overwrite' to TRUE.
 #' # Note that no path parameter is necessary because Python is located in the
 #' # default location.
 #' arcpy <- rpygeo_build_env(overwrite = TRUE,
 #'                           extensions = c("3d", "Spatial"),
 #'                           pro = TRUE)}
 #'
-#' # load the ArcPy module when your Python version is located in a different
+#' # Load the ArcPy module when your Python version is located in a different
 #' # folder
 #  arcpy <- rpygeo_build_env(path = "C:/YourPath/YourSubPath/python.exe")
 #'
@@ -185,16 +185,21 @@ rpygeo_build_env <- function(path = NULL,
 #' @examples
 #'
 #' \dontrun{
+#' # Load packages
+#' library(RPyGeo)
+#' library(magrittr)
+#' library(RQGIS)
+#'
 #' # Get data
 #' data(dem, package = "RQGIS")
+#'
+#' # Write data to disk
+#' writeRaster(dem, file.path(tempdir(), "dem.tif"), format = "GTiff")
 #'
 #' # Load the ArcPy module and build environment
 #' arcpy <- rpygeo_build_env(overwrite = TRUE,
 #'                           workspace = tempdir(),
 #'                           extensions = "Spatial")
-#'
-#' # Write raster to workspace directory
-#' writeRaster(dem, file.path(tempdir(), "dem.tif"))
 #'
 #' # Search for ArcPy functions, which contain the term slope
 #' rpygeo_search("slope")
@@ -274,25 +279,31 @@ rpygeo_search <- function(search_term = "") {
 #' \dontrun{
 #' # Load packages
 #' library(RPyGeo)
+#' library(magrittr)
+#' library(RQGIS)
 #' library(spData)
-#' library(dplyr)
+#'
+#' # Get data
+#' data(dem, package = "RQGIS")
+#' data(nz, package = "spData")
+#'
+#' # Write data to disk
+#' writeRaster(dem, file.path(tempdir(), "dem.tif"), format = "GTiff")
+#' st_write(nz, file.path(tempdir(), "nz.shp"))
 #'
 #' # Load the ArcPy module and build environment
-#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace")
-#'
-#' # Write raster to workspace directory
-#' writeRater(elev, "C:/workspace/elev.tif")
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 #'
 #' # Create a slope raster and load it into the R session (Example 1)
-#' arcpy$Slope_3d(in_raster = "elev.tif", out_raster = "slope.tif") %>%
+#' arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif") %>%
 #'   rpygeo_load() -> slope
 #'
 #' # Create a aspect raster and load it into the R session (Example 2)
-#' ras_aspect <- arcpy$sa$Aspect(in_raster = "elev.tif")
+#' ras_aspect <- arcpy$sa$Aspect(in_raster = "dem.tif")
 #' rpygeo_load(ras_aspect)
 #'
 #' # Convert elevation raster to polygon shapefile and load it into R session (Example 3)
-#' arcpy$RasterToPolygon_conversion("elev.tif", "C:/workspace/elev.shp")
+#' arcpy$RasterToPolygon_conversion("dem.tif", "elev.shp")
 #' rpygeo_load("elev.shp")
 #' }
 #'
@@ -364,7 +375,7 @@ rpygeo_load <- function(data) {
 #'
 #' \dontrun{
 #' # Load the ArcPy module and build environment
-#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 #'
 #' # Open help file
 #' rpygeo_help(arcpy$Slope_3d)
@@ -483,17 +494,20 @@ rpygeo_help <- function(arcpy_function) {
 #' \dontrun{
 #' # Load packages
 #' library(RPyGeo)
-#' library(spData)
-#' library(dplyr)
+#' library(RQGIS)
+#' library(magrittr)
+#'
+#' # Get data
+#' data(dem, package = "RQGIS")
 #'
 #' # Load the ArcPy module and build environment
-#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = "C:/workspace/")
+#' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 #'
 #' # Write raster to workspace directory
-#' writeRater(elev, "C:/workspace/elev.tif")
+#' writeRaster(dem, file.path(tempdir(), "dem.tif"), format = "GTiff")
 #'
 #' # Calculate temporary aspect file and save to workspace
-#' arcpy$sa$Aspect(in_raster = "elev.tif") %>%
+#' arcpy$sa$Aspect(in_raster = "dem.tif") %>%
 #'   rpygeo_save("aspect.tif")
 #' }
 #'

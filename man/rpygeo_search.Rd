@@ -24,16 +24,21 @@ module names (s. examples).
 \examples{
 
 \dontrun{
+# Load packages
+library(RPyGeo)
+library(magrittr)
+library(RQGIS)
+
 # Get data
 data(dem, package = "RQGIS")
+
+# Write data to disk
+writeRaster(dem, file.path(tempdir(), "dem.tif"), format = "GTiff")
 
 # Load the ArcPy module and build environment
 arcpy <- rpygeo_build_env(overwrite = TRUE,
                           workspace = tempdir(),
                           extensions = "Spatial")
-
-# Write raster to workspace directory
-writeRaster(dem, file.path(tempdir(), "dem.tif"))
 
 # Search for ArcPy functions, which contain the term slope
 rpygeo_search("slope")

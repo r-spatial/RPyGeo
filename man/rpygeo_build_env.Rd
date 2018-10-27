@@ -55,14 +55,14 @@ Initialises the Python ArcPy site-package in R via the
 
 \dontrun{
 # Load ArcPy side-package of ArcGIS Pro with 3D and Spatial Analysis extension.
-# and set environment setting 'overwrite' to TRUE.
+# Set environment setting 'overwrite' to TRUE.
 # Note that no path parameter is necessary because Python is located in the
 # default location.
 arcpy <- rpygeo_build_env(overwrite = TRUE,
                           extensions = c("3d", "Spatial"),
                           pro = TRUE)}
 
-# load the ArcPy module when your Python version is located in a different
+# Load the ArcPy module when your Python version is located in a different
 # folder
 
 }
