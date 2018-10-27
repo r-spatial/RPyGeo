@@ -32,5 +32,6 @@ Suggests:
     testthat,
     knitr,
     spData,
-    rstudioapi
+    rstudioapi,
+    bookdown
 VignetteBuilder: knitr
