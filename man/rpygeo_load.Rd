@@ -58,8 +58,9 @@ st_write(nz, file.path(tempdir(), "nz.shp"))
 arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 
 # Create a slope raster and load it into the R session (Example 1)
-arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif") \%>\%
-  rpygeo_load() -> slope
+slope <-
+  arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif") \%>\%
+  rpygeo_load()
 
 # Create a aspect raster and load it into the R session (Example 2)
 ras_aspect <- arcpy$sa$Aspect(in_raster = "dem.tif")
