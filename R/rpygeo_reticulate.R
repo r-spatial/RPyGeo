@@ -229,8 +229,8 @@ rpygeo_build_env <- function(path = NULL,
 rpygeo_search <- function(search_term = "") {
 
   # Get modules with functions and classes
-  modules <- reticulate::py_run_file(paste0(find.package("RPyGeo", lib.loc = .libPaths()), "/python/get_modules.py"))
-
+  modules <- reticulate::py_run_file(system.file("python", "get_modules.py",
+                                                 package = "RPyGeo"))
   # Query available functions
   modules$module %>%
     purrr::map(function(a) stringr::str_subset(a, stringr::regex(search_term, ignore_case = TRUE))) %>%
@@ -453,12 +453,13 @@ rpygeo_help <- function(arcpy_function) {
     )
   }
 
-  # Render help file
-  help_file <- rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
-                                 output_file = "help.html",
-                                 output_dir = tempdir(),
-                                 params = template_parameter,
-                                 quiet = TRUE)
+  # Render help file system.file(template)
+  help_file <-
+    rmarkdown::render(system.file("template", template, package = "RPyGeo"),
+                      output_file = "help.html",
+                      output_dir = tempdir(),
+                      params = template_parameter,
+                      quiet = TRUE)
 
   # Check if viewer is available
   if (!is.null(getOption("viewer"))){
