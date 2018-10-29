@@ -66,7 +66,7 @@ ArcPy will only work with the Python binary that comes with the ArcGIS installat
 If this Python binary is not installed in the default location (`C:/Python27` in the case of ArcMap and `C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3` in the case of ArcGIS Pro), one has to set it explicitly with the `path` parameter of `rpygeo_build_env()`. 
 Secondly, `rpygeo_build_env()` loads the `arcpy` modules.
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 arcpy <- rpygeo_build_env(workspace = tempdir(),
                           overwrite = TRUE,
                           extensions = "Spatial")
@@ -74,13 +74,23 @@ arcpy <- rpygeo_build_env(workspace = tempdir(),
 
 `rpygeo_build_env()` lets the user also specify further common ArcGIS environment settings.
 For instance, setting `overwrite` to `TRUE` lets the user overwrite already existing spatial objects later on with outputs created by ArcPy geoalgorithms.
-The `extensions` parameter allows also the activation of extensions.^[The availability of extensions is dependent on the purchased ArcGIS license.] The keywords for the `extension` parameter are listed on the ArcGIS [help page](http://desktop.arcgis.com/de/arcmap/10.3/analyze/arcpy-functions/checkoutextension.htm). 
+The `extensions` parameter allows also the activation of extensions.
 In the code chunk above, we have enabled the Spatial Analysis extension.
 The `workspace` parameter defines the default directory where to save the outputs of geoprocessing functions and in which to look for spatial objects. 
 Note that the workspace can be a directory or an ESRI file geodatabase.^[If you work with large raster files we would recommend to use a directory, because it takes a long time to load raster datasets from a file geodatabase into an R session.]
 A scratch workspace folder is automatically created inside the workspace. 
 The scratch workspace usually contains the output files of functions that do not explicitly provide an output parameter as is the case for most spatial analyst raster algorithms.
 To change the default scratch workspace location, use parameter `scratch_workspace`.
+
+Please note that the availability of extensions is dependent on the purchased ArcGIS license.
+The `extension` codewords are listed on the ArcGIS [help page](http://desktop.arcgis.com/de/arcmap/10.3/analyze/arcpy-functions/checkoutextension.htm). 
+One can check the availability using `CheckExtension()` and a specific extension codeword:
+
+```{r, eval=FALSE}
+# codewords are case insensitive
+arcpy$CheckExtension("spatial")
+#> [1] Available
+```
 
 ## Find out about ArcPy functionality
 
@@ -188,10 +198,9 @@ Map algebra expressions can be used in **RPyGeo** with special operators.
 The four basic calculus functions are implemented as `%rpygeo_+%`, `%rpygeo_-%`, `%rpygeo_*%`, `%rpygeo_/%`. 
 
 ```{r, eval=FALSE}
-
 ras <- arcpy$sa$Raster("dem.tif") 
 class(ras)
-#>"python.builtin.Raster" "python.builtin.object"
+#> [1] "python.builtin.Raster" "python.builtin.object"
 
 ras %rpygeo_+% 2 %>%
   rpygeo_save("dem_2.tif")
@@ -203,7 +212,7 @@ For map algebra the `rpygeo_save()` and `rpygeo_load()` functions are very handy
 
 # Conclusions
 
-Please note that we could not tested each ArcPy function.
-Therefore, if you encounter any bugs please report them in our [github repository](https://github.com/fapola/RPyGeo/) under issues or help us fix them them via a pull request.
+Please note that we could not test each ArcPy function.
+Therefore, if you encounter any bugs please report them through the issue tracker of our [github repository](https://github.com/fapola/RPyGeo/) or help us fix them via a pull request.
 
 # References
