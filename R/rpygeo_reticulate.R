@@ -226,10 +226,15 @@ rpygeo_build_env <- function(path = NULL,
 #'
 #' @importFrom magrittr "%>%"
 
-rpygeo_search <- function(search_term = "") {
+rpygeo_search <- function(search_term = NULL) {
 
   # Get modules with functions and classes
   modules <- reticulate::py_run_file(paste0(find.package("RPyGeo", lib.loc = .libPaths()), "/python/get_modules.py"))
+
+  # Return all functions if search term is empty
+  if(is.null(search_term)) {
+    return(modules$module)
+  }
 
   # Query available functions
   search_result <-
