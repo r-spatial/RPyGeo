@@ -26,11 +26,9 @@ input_check = function (overwrite, extensions) {
   # handle extensions
   if (!is.null(extensions)) {
 
-    sapply(extensions, function(x) {
-
+    lapply(extensions, function(x) {
       ext <- paste0("arcpy.CheckOutExtension('", x, "')")
       reticulate::py_run_string(ext)
-
       })
   }
 
@@ -44,7 +42,7 @@ input_check = function (overwrite, extensions) {
 
 set_workspace = function (path) {
 
-  e <- paste0("arcpy.env.workspace = '",path,"'" )
+  e <- paste0("arcpy.env.workspace = '", path, "'" )
   reticulate::py_run_string(e)
 }
 
@@ -56,6 +54,6 @@ set_workspace = function (path) {
 
 set_scratch_workspace = function (path) {
 
-  e <- paste0("arcpy.env.scratchWorkspace = '",path,"'" )
+  e <- paste0("arcpy.env.scratchWorkspace = '", path, "'" )
   reticulate::py_run_string(e)
 }
