@@ -147,7 +147,7 @@ rpygeo_build_env <- function(path = NULL,
     if (!is.null(workspace) & !is.null(scratch_workspace)) {
       set_scratch_workspace(scratch_workspace)
     } else if (!is.null(workspace) & is.null(scratch_workspace)) {
-      if(tools::file_ext(basename(workspace)) == "gdb") {
+      if (tools::file_ext(basename(workspace)) == "gdb") {
         dir.create(paste0(dirname(workspace), "/scratch"), showWarnings = FALSE)
         set_scratch_workspace(paste0(dirname(workspace), "/scratch"))
       } else {
@@ -232,15 +232,15 @@ rpygeo_search <- function(search_term = "") {
   modules <- reticulate::py_run_file(paste0(find.package("RPyGeo", lib.loc = .libPaths()), "/python/get_modules.py"))
 
   # Query available functions
-  modules$module %>%
+  search_result <-
+    modules$module %>%
     purrr::map(function(a) stringr::str_subset(a, stringr::regex(search_term, ignore_case = TRUE))) %>%
-    purrr::keep(function(a) length(a) > 0) -> search_result
+    purrr::keep(function(a) length(a) > 0)
 
-  if(length(search_result) < 1) {
+  if (length(search_result) < 1) {
     return(NULL)
-  } else {
-    return(search_result)
   }
+  search_result
 }
 
 #' @title Load output of ArcPy functions into R session
@@ -295,8 +295,9 @@ rpygeo_search <- function(search_term = "") {
 #' arcpy <- arcpy_build_env(overwrite = TRUE, workspace = tempdir())
 #'
 #' # Create a slope raster and load it into the R session (Example 1)
-#' arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif") %>%
-#'   rpygeo_load() -> slope
+#' slope <-
+#'   arcpy$Slope_3d(in_raster = "dem.tif", out_raster = "slope.tif") %>%
+#'   rpygeo_load()
 #'
 #' # Create a aspect raster and load it into the R session (Example 2)
 #' ras_aspect <- arcpy$sa$Aspect(in_raster = "dem.tif")
@@ -314,28 +315,29 @@ rpygeo_search <- function(search_term = "") {
 rpygeo_load <- function(data) {
 
   # Get path from reticulate object
-  data %>%
+  path <-
+    data %>%
     utils::type.convert() %>%
-    as.character() -> path
+    as.character()
 
   # Get info
-  info <- reticulate::py_run_string(paste0("info = arcpy.Describe('", path,"')"))
+  info <- reticulate::py_run_string(paste0("info = arcpy.Describe('", path, "')"))
 
   # File or dataset in file geodatabase
-  if(tools::file_ext(basename(info$info$path)) == "gdb") {
+  if (tools::file_ext(basename(info$info$path)) == "gdb") {
     # File geodatabase
-    if(info$info$dataType == "FeatureClass") {
+    if (info$info$dataType == "FeatureClass") {
       # Vector
-      sf::st_read(dsn = info$info$path, layer = info$info$baseName, quiet=TRUE) %>%
+      sf::st_read(dsn = info$info$path, layer = info$info$baseName, quiet = TRUE) %>%
         return()
-    } else if(info$info$dataType == "RasterDataset") {
+    } else if (info$info$dataType == "RasterDataset") {
       # Raster
       # Create temporary file with less than 8 characters
       tempdir() %>%
-        paste0("/r", paste0(floor(stats::runif(7, min=0, max=9)), collapse = ""), ".asc") ->  temp_file
+        paste0("/r", paste0(floor(stats::runif(7, min = 0, max = 9)), collapse = ""), ".asc") -> temp_file
 
       # Export raster from geodatabase to temporary directory
-      reticulate::py_run_string(paste0("arcpy.RasterToASCII_conversion('", info$info$baseName,"', '", temp_file,"')"))
+      reticulate::py_run_string(paste0("arcpy.RasterToASCII_conversion('", info$info$baseName, "', '", temp_file, "')"))
 
       raster::raster(temp_file) %>%
         return()
@@ -347,15 +349,15 @@ rpygeo_load <- function(data) {
     # Check file extension
     if (any(info$info$extension %in% c("tif", "img", "asc"))) {
       # Raster
-      raster::raster(paste0(info$info$path, "/" ,info$info$file)) %>%
+      raster::raster(paste0(info$info$path, "/", info$info$file)) %>%
         return()
     } else if (any(info$info$extension %in% c("shp"))) {
       # Vector
-      sf::st_read(paste0(info$info$path, "/" ,info$info$file), quiet=TRUE) %>%
+      sf::st_read(paste0(info$info$path, "/", info$info$file), quiet = TRUE) %>%
         return()
-    } else if(info$info$extension == "" & file.exists(paste0(info$info$path, "/" ,info$info$file, "/hdr.adf"))) {
+    } else if (info$info$extension == "" & file.exists(paste0(info$info$path, "/", info$info$file, "/hdr.adf"))) {
       # Arc/Info Binary Grid
-      raster::raster(paste0(info$info$path, "/" ,info$info$file)) %>%
+      raster::raster(paste0(info$info$path, "/", info$info$file)) %>%
         return()
     } else {
       stop("Unsupported data type. rpygeo_load supports Tagged Image File Format (.tif), Erdas Imagine Images (.img), Arc/Info Binary Grid (.adf), Esri ASCII Raster (.asc) and Shapefiles (.shp)")
@@ -388,15 +390,17 @@ rpygeo_load <- function(data) {
 rpygeo_help <- function(arcpy_function) {
 
   # Get function documentation
-  substitute(arcpy_function) %>%
+  doc <-
+    substitute(arcpy_function) %>%
     deparse() %>%
-    reticulate::py_function_docs() -> doc
+    reticulate::py_function_docs()
 
   # Get parameters
-  arcpy_function$func_doc %>%
-    stringr::str_match("(INPUTS:|Arguments:)") -> help_type
+  help_type <-
+    arcpy_function$func_doc %>%
+    stringr::str_match("(INPUTS:|Arguments:)")
 
-  if(is.na(help_type[[1]])) {
+  if (is.na(help_type[[1]])) {
     # No parameters
     parameters <- c("No input parameters", "No output parameters")
     template <- "help_template_generic.Rmd"
@@ -404,18 +408,20 @@ rpygeo_help <- function(arcpy_function) {
       name = doc$name,
       description = arcpy_function$func_doc
     )
-  } else if(help_type[[1]] == "INPUTS:") {
+  } else if (help_type[[1]] == "INPUTS:") {
     # Main module help file
-    arcpy_function$func_doc %>%
-      stringr::str_match("OUTPUTS:") -> output_type
-
-    if(is.na(output_type)) {
-      # No output
+    output_type <-
       arcpy_function$func_doc %>%
+      stringr::str_match("OUTPUTS:")
+
+    if (is.na(output_type)) {
+      # No output
+      res <-
+        arcpy_function$func_doc %>%
         stringr::str_match("(INPUTS:)([\\S\\s]*)") %>%
         stringr::str_replace_all("\\n {6}", "\\\n") %>%
         stringr::str_replace("^\\n", "") %>%
-        stringr::str_replace("\\s*$", "") -> res
+        stringr::str_replace("\\s*$", "")
       template <- "help_template_no_output.Rmd"
       template_parameter <- list(
         name = doc$name,
@@ -424,11 +430,12 @@ rpygeo_help <- function(arcpy_function) {
       )
     } else {
       # Input and output
-      arcpy_function$func_doc %>%
+      res <-
+        arcpy_function$func_doc %>%
         stringr::str_match("(INPUTS:)([\\S\\s]*)(OUTPUTS:)([\\S\\s]*)") %>%
         stringr::str_replace_all("\\n {6}", "\\\n") %>%
         stringr::str_replace("^\\n", "") %>%
-        stringr::str_replace("\\s*$", "") -> res
+        stringr::str_replace("\\s*$", "")
       template <- "help_template.Rmd"
       template_parameter <- list(
         name = doc$name,
@@ -437,13 +444,14 @@ rpygeo_help <- function(arcpy_function) {
         example = doc$signature
       )
     }
-  } else if (help_type[[1]] == "Arguments:"){
+  } else if (help_type[[1]] == "Arguments:") {
     # Spatial Analylist help file
-    arcpy_function$func_doc %>%
+    res <-
+      arcpy_function$func_doc %>%
       stringr::str_match("(Arguments:)([\\S\\s]*)(Results:)([\\S\\s]*)") %>%
       stringr::str_replace_all("\\n {4}", "\\\n") %>%
       stringr::str_replace("^\\n", "") %>%
-      stringr::str_replace("\\s*$", "") -> res
+      stringr::str_replace("\\s*$", "")
     template <- "help_template.Rmd"
     template_parameter <- list(
       name = doc$name,
@@ -454,14 +462,19 @@ rpygeo_help <- function(arcpy_function) {
   }
 
   # Render help file
-  help_file <- rmarkdown::render(paste0(find.package("RPyGeo"), "/template/", template),
-                                 output_file = "help.html",
-                                 output_dir = tempdir(),
-                                 params = template_parameter,
-                                 quiet = TRUE)
+  help_file <- rmarkdown::render(paste0(
+    find.package("RPyGeo"),
+    "/template/",
+    template
+  ),
+  output_file = "help.html",
+  output_dir = tempdir(),
+  params = template_parameter,
+  quiet = TRUE
+  )
 
   # Check if viewer is available
-  if (!is.null(getOption("viewer"))){
+  if (!is.null(getOption("viewer"))) {
     rstudioapi::viewer(help_file)
   } else {
     utils::browseURL(help_file)
@@ -518,9 +531,10 @@ rpygeo_help <- function(arcpy_function) {
 rpygeo_save <- function(data, filename) {
 
   # Get file path from environment object
-  data %>%
+  path <-
+    data %>%
     utils::type.convert() %>%
-    as.character() -> path
+    as.character()
 
   # Get overwrite setting
   overwrite <- reticulate::py_run_string("overwrite = arcpy.env.overwriteOutput")
@@ -529,23 +543,23 @@ rpygeo_save <- function(data, filename) {
   workspace <- reticulate::py_run_string("workspace = arcpy.env.workspace")
 
   # Get info
-  info <- reticulate::py_run_string(paste0("info = arcpy.Describe('", path,"')"))
+  info <- reticulate::py_run_string(paste0("info = arcpy.Describe('", path, "')"))
 
-  if(info$info$dataType != "RasterDataset") {
+  if (info$info$dataType != "RasterDataset") {
     stop("Only raster files or raster datasets in file geodatabases are supported.")
   }
 
   # File or dataset in file geodatabase
-  if(tools::file_ext(basename(info$info$path)) == "gdb" & tools::file_ext(basename(workspace$workspace)) == "gdb") {
+  if (tools::file_ext(basename(info$info$path)) == "gdb" & tools::file_ext(basename(workspace$workspace)) == "gdb") {
     # Workspace and scratch workspace are file geodatabase
     # Copy from scratch file geodatabase to workspace file geodatabase
-    reticulate::py_run_string(paste0("arcpy.Copy_management('", info$info$catalogpath,"', '", workspace$workspace,"/",filename,"')"))
+    reticulate::py_run_string(paste0("arcpy.Copy_management('", info$info$catalogpath, "', '", workspace$workspace, "/", filename, "')"))
   } else if (tools::file_ext(basename(workspace$workspace)) == "gdb") {
     # Workspace is file geodatabase and scratch workspace is directory
-    reticulate::py_run_string(paste0("arcpy.Copy_management('", info$info$catalogpath,"', '", workspace$workspace,"/",filename,"')"))
+    reticulate::py_run_string(paste0("arcpy.Copy_management('", info$info$catalogpath, "', '", workspace$workspace, "/", filename, "')"))
   } else if (tools::file_ext(basename(info$info$path)) == "gdb") {
     # Workspace is directory and scratch workspace is file geodatabase
-    reticulate::py_run_string(paste0("arcpy.RasterToOtherFormat_conversion('", info$info$catalogpath,"', '", workspace$workspace,"')"))
+    reticulate::py_run_string(paste0("arcpy.RasterToOtherFormat_conversion('", info$info$catalogpath, "', '", workspace$workspace, "')"))
   } else {
     # Workspace and scratch workspace are directories
     raster::raster(info$info$catalogpath) %>%
