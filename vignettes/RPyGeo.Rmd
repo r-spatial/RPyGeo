@@ -66,7 +66,7 @@ ArcPy will only work with the Python binary that comes with the ArcGIS installat
 If this Python binary is not installed in the default location (`C:/Python27` in the case of ArcMap and `C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3` in the case of ArcGIS Pro), one has to set it explicitly with the `path` parameter of `rpygeo_build_env()`. 
 Secondly, `rpygeo_build_env()` loads the `arcpy` modules.
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 arcpy <- rpygeo_build_env(workspace = tempdir(),
                           overwrite = TRUE,
                           extensions = "Spatial")
@@ -89,7 +89,7 @@ One can check the availability using `CheckExtension()` and a specific extension
 ```{r, eval=FALSE}
 # codewords are case insensitive
 arcpy$CheckExtension("spatial")
-#> Available
+#> [1] Available
 ```
 
 ## Find out about ArcPy functionality
@@ -198,10 +198,9 @@ Map algebra expressions can be used in **RPyGeo** with special operators.
 The four basic calculus functions are implemented as `%rpygeo_+%`, `%rpygeo_-%`, `%rpygeo_*%`, `%rpygeo_/%`. 
 
 ```{r, eval=FALSE}
-
 ras <- arcpy$sa$Raster("dem.tif") 
 class(ras)
-#>"python.builtin.Raster" "python.builtin.object"
+#> [1] "python.builtin.Raster" "python.builtin.object"
 
 ras %rpygeo_+% 2 %>%
   rpygeo_save("dem_2.tif")
