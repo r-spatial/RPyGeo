@@ -122,10 +122,10 @@ rpygeo_build_env <- function(path = NULL,
   reticulate::use_python(python = path, required = TRUE)
 
   if (!arcgisAPI) {
-    reticulate::import("arcpy")
+    reticulate::py_run_string("import arcpy")
   }
   if (arcgisAPI) {
-    reticulate::import("arcgis")
+    reticulate::py_run_string("import arcgis")
   }
 
 
@@ -135,7 +135,6 @@ rpygeo_build_env <- function(path = NULL,
   }
 
   # set workspace if set in function parameter
-
   if (!arcgisAPI) {
     if (!is.null(workspace)) {
       set_workspace(workspace)
@@ -159,11 +158,11 @@ rpygeo_build_env <- function(path = NULL,
 
   # return Python ArcGIS library as R object
   if (!arcgisAPI) {
-    return(reticulate::import("arcpy"))
+    return(reticulate::py_run_string("import arcpy"))
   }
 
   if (arcgisAPI) {
-    return(reticulate::import("arcgis"))
+    return(reticulate::py_run_string("import arcgis"))
   }
 }
 
