@@ -88,7 +88,7 @@ rpygeo_build_env <- function(path = NULL,
     if (pro) {
       dirs <- list.files(
         path = "C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3",
-        pattern = "python.exe", recursive = TRUE, full.names = TRUE
+        pattern = "python.exe", full.names = TRUE
       )
     }
 
@@ -474,7 +474,7 @@ rpygeo_help <- function(arcpy_function) {
                       output_dir = tempdir(),
                       params = template_parameter,
                       quiet = TRUE)
-  
+
   # Check if viewer is available
   if (!is.null(getOption("viewer"))) {
     rstudioapi::viewer(help_file)
