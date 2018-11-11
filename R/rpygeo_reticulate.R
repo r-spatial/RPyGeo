@@ -158,11 +158,11 @@ rpygeo_build_env <- function(path = NULL,
 
   # return Python ArcGIS library as R object
   if (!arcgisAPI) {
-    return(reticulate::py_run_string("import arcpy"))
+    return(reticulate::py_run_string("import arcpy")$arcpy)
   }
 
   if (arcgisAPI) {
-    return(reticulate::py_run_string("import arcgis"))
+    return(reticulate::py_run_string("import arcgis")$arcpy)
   }
 }
 
