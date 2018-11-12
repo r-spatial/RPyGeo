@@ -1,8 +1,8 @@
 Package: RPyGeo
 Type: Package
-Title: ArcGIS Geoprocessing in R via Python
+Title: ArcGIS Geoprocessing via Python
 Version: 1.0.0
-Date: 2018-10-23
+Date: 2018-11-12
 Authors@R: c(
     person("Alexander", "Brenning", , "alexander.brenning@uni-jena.de", c("aut", "cre")),
     person("Fabian", "Polakowski", , "fabian.polakowski@gmail.com", role = "aut"),
