@@ -1,3 +1,9 @@
+# RPyGeo 1.0.1
+
+## General
+
+* We integrated RPyGeo into the r-spatial.org community. If you find any bugs please report them at our new development repository (https://github.com/r-spatial/RPyGeo).
+
 # RPyGeo 1.0.0
 
 ## General
