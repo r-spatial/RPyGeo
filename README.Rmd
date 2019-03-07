@@ -198,7 +198,7 @@ For map algebra the `rpygeo_save()` and `rpygeo_load()` functions are very handy
 # Conclusions
 
 Please note that we could not tested each ArcPy function.
-Therefore, if you encounter any bugs please report them in our [github repository](https://github.com/fapola/RPyGeo/) under issues or help us fix them them via a pull request.
+Therefore, if you encounter any bugs please report them in our [github repository](https://github.com/r-spatial/RPyGeo) under issues or help us fix them them via a pull request.
 
 
 

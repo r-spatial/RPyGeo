@@ -36,8 +36,8 @@ The package utilizes the ArcPy Python site-package or the ArcGIS API
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/fapola/RPyGeo}
-  \item Report bugs at \url{https://github.com/fapola/RPyGeo/issues}
+  \item \url{https://github.com/r-spatial/RPyGeo}
+  \item Report bugs at \url{https://github.com/r-spatial/RPyGeo/issues}
 }
 
 }
