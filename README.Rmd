@@ -7,6 +7,16 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Status
+
+<!-- badges: start -->
+[![Lifecycle: retired](https://img.shields.io/badge/lifecycle-dormant-blue.svg)](https://www.tidyverse.org/lifecycle/#dormant)
+<!-- badges: end -->
+
+RPyGeo is no longer under active development and no support is available. 
+
+## Introduction
+
 **RPyGeo** establishes an interface to the geoprocessing tools of ArcGIS from within R.
 Since ArcGIS only provides a Python API for a low-level access of its C++ based geoalgorithms, **RPyGeo** establishes a tunnel to Python via the **reticulate** package.
 This extends R's spatial capabilities (Bivand, Pebesma, & Gómez-Rubio, 2013; Hijmans, 2017) by the geoalgorithms and the geoprocessing power of ArcGIS.
@@ -25,7 +35,7 @@ Zandbergen (2013) and Pimpler (2015).
 You can get the latest RPyGeo version with dependencies from Github:
 
 ```{r, eval = FALSE}
-devtools::install_github("fapola/RPyGeo", dependencies = TRUE, force = TRUE)
+devtools::install_github("r-spatial/RPyGeo", dependencies = TRUE, force = TRUE)
 ```
 
 In order to use RPyGeo you need to install ArcMap or ArcGIS Pro. ArcPy is included in a full ArcGIS installation. 
